@@ -5,5 +5,5 @@
 
 ### Nice tips
 
-* How to move files / edit folder names
+* How to move files / edit folder names:
 https://github.blog/2013-03-15-moving-and-renaming-files-on-github/
