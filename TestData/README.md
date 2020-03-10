@@ -18,4 +18,4 @@ When you propose to add a recipe to our repository, we recommend testing it on e
 
 See an example of an enhancement issue for adding a new Python recipe to the repository [here](https://github.com/AiviaCommunity/PythonForAivia/issues/3).
 
-Note that not all scripts need to pass these tests to be added. In some cases, your script may not apply to images of certain dimensions (e.g. an "in-place maximum intensity projection" recipe as shown here: ). This is OK! Please explain which cases are not applicable, and preferably use a try/catch or if/else structure to report these issues to the user in the Aivia log.
+Note that not all scripts need to pass these tests to be added. In some cases, your script may not apply to images of certain dimensions (e.g. an "in-place maximum intensity projection" recipe only makes sense in 3D). This is OK! Please explain which cases are not applicable, and preferably use a try/catch or if/else structure to report these issues to the user in the Aivia log.
