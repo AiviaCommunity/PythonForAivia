@@ -26,12 +26,18 @@ scikit-image
 Parameters
 ----------
 Input Image : Aivia channel
-  Input channel to use for the transform.
+    Input channel to use for the transform.
+
+Cutoff : double
+    Percentile of the histogram from which to center the transform.
+
+Gain : double
+    Scaling factor that controls the strength of the transform.
 
 Returns
 -------
 Aivia channel
-  Result of the transform
+    Result of the transform
 """
 
 # [INPUT Name:inputImagePath Type:string DisplayName:'Input Image']
