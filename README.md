@@ -15,3 +15,8 @@ how the folders are organized
 ## Style Guidelines
 
 code styling and guidelines specific to Aivia extensions
+
+Name of script:
+* Camelcase with no spaces
+* No versioning
+* No special characters
