@@ -16,12 +16,15 @@ scikit-image
 Parameters
 ----------
 Input Image : Aivia channel
-  Input channel to use for the transform.
+    Input channel to use for the transform.
+
+Gamma : double
+    Value to use for the gamma transform.
 
 Returns
 -------
 Aivia channel
-  Result of the transform
+    Result of the transform
 
 """
 
