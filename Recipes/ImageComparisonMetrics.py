@@ -74,7 +74,6 @@ def run(params):
 	# Extracting map (second item)
 	outSSIM = outFullSSIM[1]
 	print(f'Bit depth of SSIM array: {outSSIM.dtype}')
-
 	
 	# Convert output array whose range is [0-1] to adjusted bit range (8- or 16-bit)
 	if RTData.dtype is np.dtype('u2'):
@@ -84,16 +83,5 @@ def run(params):
 	else:
 		outputData = img_as_ubyte(outSSIM)
 	
-	#print(outputData[0:10,0])	# DEBUG info
-
-	
 	imsave(resultLocation, outputData)	
 	imsave(resultLocationAdj, matched_GTData)
-
-# CHANGELOG
-# v02 TL - Reorganized import functions to only import specific functions
-#        - skimage.measure is still not found - do we not install this?
-#
-# v2.01 PM - Added conditional conversion of float64 output of SSIM calculation
-#
-# v3.00 PM - Added histogram matching function and output of GT adjusted image
