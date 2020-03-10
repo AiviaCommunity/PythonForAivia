@@ -1,7 +1,8 @@
 import os.path
 import numpy as np
 from skimage.io import imread, imsave
-from skimage.exposure import adjust_sigmoid, rescale_intensity
+from skimage.exposure import adjust_sigmoid
+from skimage.util import img_as_uint, img_as_ubyte
 
 np.seterr(divide='ignore', invalid='ignore')
 
@@ -13,6 +14,24 @@ representing a percentile of the histogram, above and below which the histogram 
 "squished" to its bounds. The gain controls the amount of "squishing".
 
 In mathematical terms, O = 1 / (1 + exp*(gain*(cutoff - I))).
+
+Note that this transform is prone to returning a wildly different dynamic range than
+the input image and should be parameterized carefully.
+
+Requirements
+------------
+numpy
+scikit-image
+
+Parameters
+----------
+Input Image : Aivia channel
+  Input channel to use for the transform.
+
+Returns
+-------
+Aivia channel
+  Result of the transform
 """
 
 # [INPUT Name:inputImagePath Type:string DisplayName:'Input Image']
@@ -24,18 +43,18 @@ def run(params):
     result_location = params['resultPath']
     cutoff = float(params['cutoff'])
     gain = float(params['gain'])
+    
     if not os.path.exists(image_location):
         print(f'Error: {image_location} does not exist')
         return;
         
     image_data = imread(image_location)
-    
     output_data = np.empty_like(image_data)
-    
     sigmoid_image = adjust_sigmoid(image_data, cutoff=cutoff, gain=gain, inv=False)
-    
-    output_data = rescale_intensity(sigmoid_image, out_range='uint8').astype(image_data.dtype)
-
+    if image_data.dtype == np.uint16:
+        output_data = img_as_uint(sigmoid_image)
+    else:
+        output_data = img_as_ubyte(sigmoid_image)
     imsave(result_location, output_data)
 
 
@@ -48,6 +67,3 @@ if __name__ == '__main__':
     
     run(params)
 
-# CHANGELOG
-# v1.00 TL - Original script by Trevor Lancon (trevorl@drvtechnologies.com)
-#
