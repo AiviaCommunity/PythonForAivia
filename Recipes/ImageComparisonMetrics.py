@@ -58,10 +58,6 @@ def run(params):
 	valMSE = mean_squared_error(RTData, matched_GTData)
 	print(f'___ MSE = {valMSE} ___')	# Value appears in the log if Verbosity option is set to 'Everything'
 	
-	# print(f'Restored: {RTData[0:10,0]}')	# DEBUG info
-	# print(f'GT: {GTData[0:10,0]}')
-	# print(f'Histogram matched GT: {matched_GTData[0:10,0]}')
-	
 	# SSIM measurement
 	# outFullSSIM = skimage.measure.compare_ssim(RTData, GTData, full=True) # deprecated in scikit-image 0.18 
 	# outFullSSIM = skimage.measure.compare_ssim(RTData, GTData, full=True, gaussian_weights=True, sigma=1.5, use_sample_covariance=False) # deprecated in scikit-image 0.18 
