@@ -1,10 +1,10 @@
-# PythonForAivia
+# Python for Aivia
 
 Here you will find Python recipes and helper functions for Aivia users.
 
 The goal of this repository is to organize the work of the DRVision team and the Aivia community at large.
 
-_Note that this currently a work in progress, but we wanted to begin sharing it with our user community so they can use what we've created and make their own contributions._
+_Note: This is currently a work in progress, but we wanted to begin sharing it with our user community so they can use what we've created and make their own contributions._
 
 ## Installation
 
@@ -22,7 +22,12 @@ Each recipe is intended for use on its own, without requiring the user to downlo
 
 ### Naming
 
-The name of your recipe is how it will show in the Aivia recipe console. We recommend (and may enfore) the following guidelines for file naming: 
+The name of your recipe is how it will show in the Aivia recipe console:
+
+![Recipe name in the Aivia console.](DRVisionFiles/Snapshots/PythonFilenameInAivia.png "Recipe Naming Example")
+
+
+We recommend (and may enfore) the following guidelines for file naming: 
 
 * CamelCase with no spaces
 * No versioning
