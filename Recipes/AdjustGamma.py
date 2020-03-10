@@ -38,7 +38,6 @@ def run(params):
         return;
         
     image_data = imread(image_location)
-    print(image_data.shape)
     output_data = empty_like(image_data)
     output_data = adjust_gamma(image_data, gamma, 1)
     imsave(result_location, output_data)
