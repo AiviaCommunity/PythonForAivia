@@ -6,13 +6,24 @@ The goal of this repository is to organize the work of the DRVision team and the
 
 _Note: This is currently a work in progress, but we wanted to begin sharing it with our user community so they can use what we've created and make their own contributions._
 
+## Repository Organization
+
+In this main repository you will find a few different folders:
+
+* `DRVision/Snapshots/` is for storing files necessary to build proper documentation, and can be ignored unless you are contributing to that documentation.
+* `TestData/` contains images for testing recipes. See `TestData/README.md` for more information.
+* `Recipes/` contains .py files that can be dragged into Aivia and used as recipes in Aivia's Analysis Tools panel. Each of these recipes is a single, self-contained piece of code that can be used independently, except in cases where the .py file has accompanying files of the same name (e.g. .ui files to describe PyQt interfaces for .py files).
+* `Utilities/` contains useful companion scripts for the Aivia workflow, but that must be used in a Python interpreter separate from Aivia.
+
 ## Installation
 
-How to get Aivia scripts onto your computer for use.
+Download and drag any file from the `Recipes/` directory into Aivia. Your recipe will show up in the Recipe Console of Aivia's Analysis Tools panel.
 
-## Organization
+For debugging purposes we recommend that you navigate to File > Options > Logging in Aivia, then set the "Verbosity" to "Everything":
 
-How the folders are organized.
+![Turn on the most verbose logging.](DRVisionFiles/Snapshots/LogEverything.png "Set Verbosity of Everything")
+
+From this panel you can also click the "Open" button to see the log file. Python errors are printed here with full tracebacks to help you diagnose issues with code.
 
 ## Style Guidelines
 
@@ -34,6 +45,8 @@ We recommend (and may enfore) the following guidelines for file naming:
 * No special characters
 
 For example, instead of naming your recipe "Track_Objects_2D+t_v02.py", name it "TrackObjects2D.py" or "TrackObjects2DandT.py".
+
+For organizational purposes we currently recommend that if you have a multi-file structure, such as a .json containing data that your .py file depends on, you name the files the same thing except for the different extensions. This will group files together and make it obvious to users that the files go together. If you have a better suggestion for how to organize multi-file recipes, please make a documentation issue.
 
 More importantly, it is important that your script names do not conflict with any other module names in your PATH environment variable! Uniquely name your file to avoid this conflict. For example, if you make a wrapper for a function from scikit-image, do not name the file with the same name as the file that defines the original function within scikit-image.
 
