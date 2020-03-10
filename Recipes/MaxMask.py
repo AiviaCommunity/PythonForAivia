@@ -7,6 +7,27 @@ Given an input image (I) and a mask image (M), returns (O) the input image only 
 the mask image is BELOW a specified threshold (t).
 
 O(x,y) = I(X,Y) * [M(X,Y)<t]
+
+Requirements
+------------
+numpy
+scikit-image
+
+Parameters
+----------
+Input Image : Aivia channel
+    Input channel to be masked.
+
+Input Mask : Aivia channel
+    Input channel to use for the mask after thresholding.
+
+Threshold : int
+    Grayvalue in above which we would like to mask.
+
+Returns
+-------
+Aivia channel
+    Result of the transform
 """
 
 # [INPUT Name:inputImagePath Type:string DisplayName:'Input Image']
@@ -24,11 +45,8 @@ def run(params):
         
     image_data = imread(image_location)
     mask_data = imread(mask_location)
-    
     output_data = np.empty_like(image_data)
-    
     output_data = np.where(mask_data<threshold, image_data, 0)
-    
     output_data = output_data.astype(image_data.dtype)
     imsave(result_location, output_data)
 
@@ -42,6 +60,3 @@ if __name__ == '__main__':
     
     run(params)
 
-
-# CHANGELOG
-# v1.00 TL - Original script by Trevor Lancon (trevorl@drvtechnologies.com)
