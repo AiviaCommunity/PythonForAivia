@@ -7,6 +7,25 @@ from skimage.exposure import adjust_gamma
 See: https://scikit-image.org/docs/dev/api/skimage.exposure.html#skimage.exposure.adjust_gamma
 
 Adjusts gamma of the input channel pixelwise according to O = I**gamma.
+
+Requirements
+------------
+numpy
+scikit-image
+
+Parameters
+----------
+Input Image : Aivia channel
+    Input channel to use for the transform.
+
+Gamma : double
+    Value to use for the gamma transform.
+
+Returns
+-------
+Aivia channel
+    Result of the transform
+
 """
 
 # [INPUT Name:inputImagePath Type:string DisplayName:'Input Image']
@@ -16,16 +35,14 @@ def run(params):
     image_location = params['inputImagePath']
     result_location = params['resultPath']
     gamma = float(params['gamma'])
+    
     if not os.path.exists(image_location):
         print(f'Error: {image_location} does not exist')
         return;
         
     image_data = imread(image_location)
-    
     output_data = empty_like(image_data)
-    
     output_data = adjust_gamma(image_data, gamma, 1)
-
     imsave(result_location, output_data)
 
 
@@ -37,8 +54,3 @@ if __name__ == '__main__':
     
     run(params)
 
-# TODO: why doesn't gamma default to 0.75? truncates to 0
-
-# CHANGELOG
-# v1.00 TL - Original script by Trevor Lancon (trevorl@drvtechnologies.com)
-#
