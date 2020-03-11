@@ -12,6 +12,27 @@ channel, but wishes to retain the maximum amount of information from each.
 The luminance has a 30% contribution from the red channel, 59%
 contribution from the green channel, and 11% contribution from the
 blue channel.
+
+Requirements
+------------
+numpy
+scikit-image
+
+Parameters
+----------
+Red : Aivia channel
+    Red channel.
+
+Green : Aivia channel
+    Green channel.
+
+Blue : Aivia channel
+    Blue channel.
+
+Returns
+-------
+Aivia channel
+    Result of the transform
 """
 
 # [INPUT Name:red_c Type:string DisplayName:'Red Channel']
@@ -57,7 +78,3 @@ if __name__ == '__main__':
     params['gray_c'] = 'testResult.png';
     
     run(params)
-
-# CHANGELOG
-# v1.00 TL - Original script by Trevor Lancon (trevorl@drvtechnologies.com)
-#
