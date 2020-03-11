@@ -19,6 +19,27 @@ Computes a skeleton of the input image based on the thinning of its binarization
     If the "Radius" is 0, no closing is performed.
  4. The skeleton is converted to the bit space from the original image.
  5. The skeleton is passed to Aivia's mesh creation engine to output the result as a mesh.
+ 
+Requirements
+------------
+numpy
+scikit-image
+
+Parameters
+----------
+Input Image : Aivia channel
+    Input channel to use for the transform.
+
+Threshold : int
+    Grayvalue above which to mask.
+
+Closing Radius : int
+    Size of kernel used to "fill in" concavities or connect close ends of the skeleton.
+
+Returns
+-------
+Aivia channel
+    Result of the transform
 """
 
 # [INPUT Name:inputImagePath Type:string DisplayName:'Input Image']
@@ -32,36 +53,56 @@ def run(params):
     result_object_location = params['resultObjectPath']
     threshold = int(params['threshold'])
     radius = int(params['radius'])
+    tCount = int(params['TCount'])
+    zCount = int(params['ZCount'])
     if not os.path.exists(image_location):
         print(f'Error: {image_location} does not exist')
         return;
         
-    image_data = imread(image_location)
+    if zCount == 1:
+        print('Mesh creation with Python is currently only supported in 3D.')
+        print('Try using Skeletonize.py instead.')
+        return
     
+    image_data = imread(image_location)
+    dims = image_data.shape
     temp_array = np.empty_like(image_data)
     output_data = np.empty_like(image_data)
     
-    # 1. Apply a mask given the input threshold
     temp_array = np.where(image_data>threshold, 1, 0)
-    
-    # 2. Skeletonize using default methods
-    if len(image_data.shape) == 2:
-        temp_array = skeletonize(temp_array)
-    else:
-        temp_array = skeletonize_3d(temp_array)
-    
-    # 3. Apply a closing if user inputs radius > 0
+
     if radius != 0:
-        if len(image_data.shape) == 2:
-            structure = disk(radius)
-        else:
+        if zCount > 1:
             structure = ball(radius)
-        temp_array = closing(temp_array, selem=structure)
-        
-    # 4. Put back into appropriate range for the bit depth
+        else:
+            structure = disk(radius)
+    
+    # 3D+T
+    if tCount > 1 and zCount > 1:
+        for t in range(0, dims[0]):
+            temp_array[t, :, :, :] = skeletonize_3d(temp_array[t, :, :, :])
+            if radius != 0:
+                temp_array[t, :, :, :] = closing(temp_array[t, :, :, :], selem=structure)
+    # 2D+T
+    elif tCount > 1 and zCount == 1:
+        for t in range(0, dims[0]):
+            temp_array[t, :, :] = skeletonize(temp_array[t, :, :])
+            if radius != 0:
+                temp_array[t, :, :] = closing(temp_array[t, :, :], selem=structure)
+    # 3D
+    elif tCount ==1 and zCount > 1:
+        temp_array = skeletonize_3d(temp_array)
+        if radius != 0:
+            temp_array = closing(temp_array, selem=structure)
+    # 2D
+    else:
+        temp_array = skeletonize(temp_array)
+        if radius != 0:
+            temp_array = closing(temp_array, selem=structure)
+
+
     temp_array = np.where(temp_array.astype(image_data.dtype)>0, image_data.max(), 0)
     
-    # 5. Finally assign the output
     output_data = temp_array.astype(image_data.dtype)
     imsave(result_image_location, output_data)
     imsave(result_object_location, output_data)
@@ -76,8 +117,3 @@ if __name__ == '__main__':
     params['radius'] = 0
     
     run(params)
-
-# TODO: test skimage.morphology.medial_axis instead of skeletonize
-
-# CHANGELOG
-# v1.00 TL - Created as a fork from Skeletonize v1.01
