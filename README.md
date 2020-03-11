@@ -38,9 +38,9 @@ The name of your recipe is how it will show in the Aivia recipe console:
 ![Recipe name in the Aivia console.](DRVisionFiles/Snapshots/PythonFilenameInAivia.png "Recipe Naming Example")
 
 
-We recommend (and may enfore) the following guidelines for file naming: 
+We recommend (and may enforce) the following guidelines for file naming: 
 
-* CamelCase with no spaces
+* PascalCase with no spaces
 * No versioning
 * No special characters
 
