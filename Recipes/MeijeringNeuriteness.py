@@ -2,7 +2,7 @@ import os.path
 import numpy as np
 from skimage.io import imread, imsave
 from skimage.filters import meijering
-from skimage.exposure import rescale_intensity
+from skimage.util import img_as_uint, img_as_ubyte
 
 np.seterr(divide='ignore', invalid='ignore')
 
@@ -20,9 +20,28 @@ https://docs.scipy.org/doc/numpy/reference/generated/numpy.arange.html
 For example, if the user specifies min and max sigmas of 0.1 and 0.6, respectively,
 the transform is performed for Gaussian sigma values of 0.1, 0.2, 0.3, 0.4, 0.5.
 The maximum values from all of the transforms is output at every voxel.
-"""
 
-print('Imports complete')
+Requirements
+------------
+numpy
+scikit-image
+
+Parameters
+----------
+Input Image : Aivia channel
+    Input channel to use for the transform.
+
+Min Sigma : double
+    Mininim kernel size for Gaussian smoothing.
+
+Max Sigma : double
+    Maximum kernel size for Gaussian smoothing.
+
+Returns
+-------
+Aivia channel
+    Result of the transform
+"""
 
 # [INPUT Name:inputImagePath Type:string DisplayName:'Input Image']
 # [INPUT Name:sigma_min Type:double DisplayName:'Min Sigma' Default:0.5 Min:0.0 Max:25.0]
@@ -33,35 +52,45 @@ def run(params):
     result_location = params['resultPath']
     sigma_min = float(params['sigma_min'])
     sigma_max = float(params['sigma_max'])
-    
-    print('inputs defined')
+    tCount = int(params['TCount'])
+    zCount = int(params['ZCount'])
     
     if not os.path.exists(image_location):
         print(f'Error: {image_location} does not exist')
         return;
         
     image_data = imread(image_location)
-    
+    dims = image_data.shape
+    meijering_image = np.empty_like(image_data)
     output_data = np.empty_like(image_data)
     
-    print('arrays set up')
+    sigmas = np.arange(sigma_min, sigma_max, round((sigma_max-sigma_min)/5, 1))
     
-    # Tried to allow user to input another double to represent the increment of
-    # sigma scales, but it broke everything. Here I replace that with an
-    # automatic increment to go from minimum to maximum sigma with 5 steps
-    sigmas = np.arange(sigma_min, sigma_max, round((sigma_max-sigma_min)/5,1))
-    
+    if tCount > 1:
+        print('Time series are currently not supported.')
+        return
+            
     meijering_image = meijering(image_data, sigmas=sigmas, black_ridges=False)
     
-    # Four corners of Meijering image are pure white and throw off the histogram
-    # Erase them based on the max of 1% of the image size or 4, whichever is more
-    crop_size = max(int(max(list(image_data.shape))/100),4)
-    meijering_image[0:crop_size, 0:crop_size] = 0
-    meijering_image[0:crop_size, -crop_size:] = 0
-    meijering_image[-crop_size:, 0:crop_size] = 0
-    meijering_image[-crop_size:, -crop_size:] = 0
+    # Cropping is performed in 2D to get rid of bright pixels at edges of the image.
     
-    output_data = rescale_intensity(meijering_image, out_range='uint8').astype(image_data.dtype)
+    if zCount > 1:
+        crop_size = max(int(max(list(dims[1:]))/100), 4)
+        meijering_image[:, 0:crop_size, 0:crop_size] = 0
+        meijering_image[: ,0:crop_size, -crop_size:] = 0
+        meijering_image[: ,-crop_size:, 0:crop_size] = 0
+        meijering_image[: ,-crop_size:, -crop_size:] = 0
+    else:
+        crop_size = max(int(max(list(dims))/100), 4)
+        meijering_image[0:crop_size, 0:crop_size] = 0
+        meijering_image[0:crop_size, -crop_size:] = 0
+        meijering_image[-crop_size:, 0:crop_size] = 0
+        meijering_image[-crop_size:, -crop_size:] = 0
+    
+    if image_data.dtype == np.uint16:
+        output_data = img_as_uint(meijering_image)
+    else:
+        output_data = img_as_ubyte(meijering_image)
 
     imsave(result_location, output_data)
 
@@ -74,7 +103,3 @@ if __name__ == '__main__':
     params['sigma_max'] = 1.5
     
     run(params)
-
-# CHANGELOG
-# v1.00 TL - Original script by Trevor Lancon (trevorl@drvtechnologies.com)
-#
