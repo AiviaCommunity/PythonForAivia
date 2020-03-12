@@ -6,23 +6,34 @@ from skimage.metrics import mean_squared_error, structural_similarity
 from skimage.exposure import match_histograms
 
 """
-See: https://scikit-image.org/docs/dev/api/skimage.metrics.html?highlight=structural#skimage.metrics.structural_similarity
+Calculates SSIM map as a result of the comparison of 2 channels and metrics values (in the log file). 
 
-Outputs SSIM map as a result of the comparison of 2 channels. Second channel (Ground Truth Image) is adjusted by histogram matching.
-First output channel is the GT adjusted image.
-
-It is highly recommended to:
-- Use LUT color mapping to better see the variations in the SSIM values
-
+For the output image, it is highly recommended to use LUT color mapping to better see the variations in the SSIM values
 All real SSIM values (ranging from 0 to 1) can be retrieved from the map doing the following: divide intensities by 255 if image is 8-bit, or by 65535 if 16-bit.
 
 Side note: MSE and mean SSIM (and NRMSE, PSNR) values are output in the log
-
 To be able to see the printed info in the log file, set:
 File > Options > Logging > Verbosity = everything
 
-Other source:
+Sources: 
+https://scikit-image.org/docs/dev/api/skimage.metrics.html?highlight=structural#skimage.metrics.structural_similarity
 https://scikit-image.org/docs/dev/auto_examples/color_exposure/plot_histogram_matching.html#sphx-glr-auto-examples-color-exposure-plot-histogram-matching-py
+
+
+Requirements
+------------
+numpy (comes with Aivia installer)
+scikit-image (comes with Aivia installer)
+
+Parameters
+----------
+First input: image to compare (e.g.Deep Learning restored image)
+Second input: reference (e.g. Ground Truth image), the one adjusted by histogram matching.
+
+Returns
+----------
+First output: calculated SSIM map
+Second output: reference image transformed with histogram matching
 
 """
 
@@ -59,8 +70,6 @@ def run(params):
 	print(f'___ MSE = {valMSE} ___')	# Value appears in the log if Verbosity option is set to 'Everything'
 	
 	# SSIM measurement
-	# outFullSSIM = skimage.measure.compare_ssim(RTData, GTData, full=True) # deprecated in scikit-image 0.18 
-	# outFullSSIM = skimage.measure.compare_ssim(RTData, GTData, full=True, gaussian_weights=True, sigma=1.5, use_sample_covariance=False) # deprecated in scikit-image 0.18 
 	outFullSSIM = structural_similarity(RTData, matched_GTData, full=True)
 	
 	# Extracting mean value (first item)
