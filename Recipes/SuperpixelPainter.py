@@ -130,9 +130,9 @@ class SuperpixelPainter:
         self.markers.set(300)
         self.markers.grid(row=1, column=0, sticky=tk.W)
 
-        self.compactness = tk.Scale(master, label='Compactness', orient=tk.VERTICAL, from_=0.01, to=1,
-                                    resolution=0.01)
-        self.compactness.set(0.1)
+        self.compactness = tk.Scale(master, label='Compactness', orient=tk.VERTICAL, from_=0.001, to=0.01,
+                                    resolution=0.001)
+        self.compactness.set(0.005)
         self.compactness.grid(row=2, column=0, sticky=tk.W)
 
         self.clear = tk.Button(master, text='Clear', command=self.clear_mask)
