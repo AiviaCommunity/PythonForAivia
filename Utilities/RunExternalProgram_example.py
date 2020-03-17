@@ -2,6 +2,26 @@ import os.path
 from skimage.io import imread, imsave
 import shlex, subprocess
 
+"""
+This is script has no real function (yet) and constitutes more like a diverted way to couple python to Aivia.
+It only shows an example of code, from line 41, on how to run any external program.
+The example here also shows that calling Aivia.exe to open an image whereas it is already running 
+leads to loading the new image in the existing Aivia window.
+
+Requirements
+------------
+scikit-image
+
+Parameters
+----------
+Input Image : In this example, it can be any image
+
+Returns
+-------
+The same image in a new channel 
+
+"""
+
 # [INPUT Name:inputImagePath Type:string DisplayName:'Input']
 # [OUTPUT Name:resultPath Type:string DisplayName:'Output']
 def run(params):
