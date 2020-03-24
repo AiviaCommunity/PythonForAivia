@@ -1,6 +1,5 @@
 import os.path
 import tkinter as tk
-from tkinter import font
 import numpy as np
 from PIL import ImageTk, Image
 from skimage.io import imread, imsave
