@@ -25,6 +25,7 @@ watchdog
 
 log_dir = os.path.join(os.getenv('LOCALAPPDATA'),'DRVision Technologies LLC/Aivia 8.8.2.33255/')
 
+
 class HandleLogUpdates(FileSystemEventHandler):
     """
     Prints lines relevant to Python usage from the Aivia log as they are added
@@ -49,6 +50,7 @@ class HandleLogUpdates(FileSystemEventHandler):
     def __del__(self):
         if self.f is not None:
             self.f.close()
+
 
 update_handler = HandleLogUpdates()
 observer = Observer()
