@@ -1,5 +1,6 @@
 import os.path
 import tkinter as tk
+from tkinter import font
 import numpy as np
 from PIL import ImageTk, Image
 from skimage.io import imread, imsave
@@ -87,6 +88,11 @@ def paint_superpixels(image):
     """
     root_ps = tk.Tk()
     root_ps.title('Superpixel Painter')
+    root_ps.configure(bg='#232121')
+    root_ps.option_add('*HighlightThickness', 0)
+    root_ps.option_add('*Background', '#232121')
+    root_ps.option_add('*Foreground', '#F1E7E3')
+    root_ps.option_add('*Font', '{MS Sans Serif}')
     painter_app = SuperpixelPainter(root_ps, image=image)
     root_ps.mainloop()
     return painter_app.mask[:, :, 0]
@@ -120,6 +126,7 @@ class SuperpixelPainter:
 
         self.input_image = image
         max_markers = int(0.01 * (self.input_image.shape[0] * self.input_image.shape[1]))
+        marker_color = [1.00, 0.73, 0.03]
 
         user_instructions = 'Drag left mouse button to paint superpixels. Drag right mouse button to erase. ' \
                             'Middle click to fill a contour. Close the app when finished.'
@@ -143,7 +150,7 @@ class SuperpixelPainter:
 
         self.superpixels = watershed(sobel(self.input_image), markers=self.markers.get(), 
                                      compactness=self.compactness.get())
-        self.boundaries = img_as_ubyte(mark_boundaries(self.input_image, self.superpixels))
+        self.boundaries = img_as_ubyte(mark_boundaries(self.input_image, self.superpixels, color=marker_color))
         self.mask = np.zeros_like(self.boundaries)
         self.display_image = np.copy(self.boundaries)
 
@@ -177,7 +184,7 @@ class SuperpixelPainter:
         if event.widget in [self.markers, self.compactness]:
             self.superpixels = watershed(sobel(self.input_image), markers=self.markers.get(), 
                                      compactness=self.compactness.get())
-            self.boundaries = img_as_ubyte(mark_boundaries(self.input_image, self.superpixels))
+            self.boundaries = img_as_ubyte(mark_boundaries(self.input_image, self.superpixels, color=marker_color))
             self.mask = np.zeros_like(self.boundaries)
             self.display_image = np.copy(self.boundaries)
             self.update_image()
