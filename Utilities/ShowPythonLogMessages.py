@@ -42,9 +42,9 @@ class HandleLogUpdates(FileSystemEventHandler):
         """
         if event.src_path.endswith('.log'):
             if self.f is None:
-                f = open(event.src_path, mode='r')
-            for line in f.readlines():
-                if line.startswith('I Python'):
+                self.f = open(event.src_path, mode='r')
+            for line in self.f.readlines():
+                if line.startswith('I Python') or line.startswith('E Python'):
                     print(line)
 
     def __del__(self):
@@ -59,7 +59,7 @@ observer.start()
 
 try:
     while True:
-        time.sleep(3)
+        time.sleep(1)
 except KeyboardInterrupt:
     observer.stop()
     del update_handler
