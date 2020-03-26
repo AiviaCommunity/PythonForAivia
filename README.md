@@ -56,7 +56,7 @@ Create a docstring towards the top of your recipe file. Use this docstring to pr
 
 ### Dependencies
 
-Aivia uses the Python environment that your PATH environment variable points to. Each recipe may require its own set of modules to be installed in that environment. Using a global `requirements.txt` for the entire repository may lead users to install many modules that aren't required for the given that they want to use recipe. Therefore, we recommend you include a requirements section in your recipe file's docstring to indicate which packages are required for that one recipe. For example, consider a script with the following import statements:
+Aivia uses the Python environment that your PATH environment variable points to. Each recipe may require its own set of modules to be installed in that environment. Using a global `requirements.txt` for the entire repository may lead users to install many modules that aren't required for the given that they want to use recipe. Therefore, we recommend you include a requirements section in your recipe file's docstring to indicate which non-standard packages are required for that one recipe. For example, consider a script with the following import statements:
 
 ```python
 import os
