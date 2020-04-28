@@ -75,8 +75,8 @@ Creates a pop-up window for parameterizing a Sigmoid transform.
 
 Requirements
 ------------
-numpy
-scikit-image
+numpy (comes with Aivia installer)
+scikit-image (comes with Aivia installer)
 PyQt5
 
 Parameters
