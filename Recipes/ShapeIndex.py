@@ -59,7 +59,6 @@ def run(params):
     image_data = imread(image_location)
     dims = image_data.shape
     shape_image = np.empty(image_data.shape, dtype=np.float32)
-    output_data = np.empty(image_data.shape)
     
     # 3D+T
     if tCount > 1 and zCount > 1:
@@ -85,11 +84,11 @@ def run(params):
     shape_image = np.nan_to_num(shape_image)
     
     if image_data.dtype == np.uint16:
-        output_data = img_as_uint(shape_image)
+        shape_image = img_as_uint(shape_image)
     else:
-        output_data = img_as_ubyte(shape_image)
+        shape_image = img_as_ubyte(shape_image)
 
-    imsave(result_location, output_data)
+    imsave(result_location, shape_image)
 
 
 if __name__ == '__main__':
