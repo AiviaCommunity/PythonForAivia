@@ -62,23 +62,25 @@ def run(params):
     
     # 3D+T
     if tCount > 1 and zCount > 1:
-        print('3dt')
-        print(image_data.shape, shape_image.shape)
-        print(shape_index(image_data[0,0,:,:], sigma=sigma, mode='reflect').dtype)
+        print(f"Applying to 3D+T case with dims: {image_data.shape}")
         for t in range(0, dims[0]):
             for z in range(0, dims[1]):
                 shape_image[t,z,:,:] = shape_index(image_data[t,z,:,:], sigma=sigma, mode='reflect').astype(np.float32)
+        axes = 'YXZT'
     # 2D+T or 3D
     elif (tCount > 1 and zCount == 1) or (tCount == 1 and zCount > 1):
-        print('2dt or 3d')
-        print(image_data.shape, shape_image.shape)
-        for t in range(0, dims[0]):
-            shape_image[t,:,:] = shape_index(image_data[t,:,:], sigma=sigma, mode='reflect').astype(np.float32)
+        print(f"Applying to 2D+T or 3D case with dims: {image_data.shape}")
+        for d in range(0, dims[0]):
+            shape_image[d,:,:] = shape_index(image_data[d,:,:], sigma=sigma, mode='reflect').astype(np.float32)
+        if tCount > 1:
+            axes = 'YXT'
+        else:
+            axes = 'YXZ'
     # 2D
     else:
-        print('2d')
-        print(image_data.shape, shape_image.shape)
+        print(f"Applying to 2D case with dims: {image_data.shape}")
         shape_image = shape_index(image_data, sigma=sigma, mode='reflect')
+        axes = 'YX'
     
     # NaNs are usually returned - convert these to possible pixel values
     shape_image = np.nan_to_num(shape_image)
@@ -88,7 +90,7 @@ def run(params):
     else:
         shape_image = img_as_ubyte(shape_image)
 
-    imsave(result_location, shape_image)
+    imsave(result_location, shape_image, metadata={'axes': axes})
 
 
 if __name__ == '__main__':
