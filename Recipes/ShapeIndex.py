@@ -1,6 +1,6 @@
 import os.path
 import numpy as np
-from skimage.io import imread, imsave
+from tifffile import imread, imsave
 from skimage.feature import shape_index
 from skimage.util import img_as_ubyte, img_as_uint
 
