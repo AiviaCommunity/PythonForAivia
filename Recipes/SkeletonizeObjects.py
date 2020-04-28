@@ -22,8 +22,8 @@ Computes a skeleton of the input image based on the thinning of its binarization
  
 Requirements
 ------------
-numpy
-scikit-image
+numpy (comes with Aivia installer)
+scikit-image (comes with Aivia installer)
 
 Parameters
 ----------

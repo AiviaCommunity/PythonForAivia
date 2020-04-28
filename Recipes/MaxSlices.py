@@ -14,8 +14,8 @@ Works only in 3D.
 
 Requirements
 ------------
-numpy
-scikit-image
+numpy (comes with Aivia installer)
+scikit-image (comes with Aivia installer)
 
 Parameters
 ----------

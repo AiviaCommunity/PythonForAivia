@@ -20,8 +20,8 @@ the input image and should be parameterized carefully.
 
 Requirements
 ------------
-numpy
-scikit-image
+numpy (comes with Aivia installer)
+scikit-image (comes with Aivia installer)
 
 Parameters
 ----------

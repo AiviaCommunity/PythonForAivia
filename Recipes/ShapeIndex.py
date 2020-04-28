@@ -26,8 +26,9 @@ For more information, see Koenderink & van Doorn as linked in the skimage docume
 
 Requirements
 ------------
-numpy
-scikit-image
+numpy (comes with Aivia installer)
+scikit-image (comes with Aivia installer)
+tifffile (installed with scikit-image)
 
 Parameters
 ----------

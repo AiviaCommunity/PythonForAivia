@@ -23,8 +23,8 @@ The maximum values from all of the transforms is output at every voxel.
 
 Requirements
 ------------
-numpy
-scikit-image
+numpy (comes with Aivia installer)
+scikit-image (comes with Aivia installer)
 
 Parameters
 ----------

@@ -24,8 +24,10 @@ Improvements that would make this more usable are:
  
 Requirements
 ------------
-numpy
-scikit-image
+numpy (comes with Aivia installer)
+scikit-image (comes with Aivia installer)
+tkinter (part of the standard Python library)
+PIL (installed with scikit-image)
 
 Parameters
 ----------
