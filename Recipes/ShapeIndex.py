@@ -53,7 +53,7 @@ def run(params):
     tCount = int(params['TCount'])
     zCount = int(params['ZCount'])
     if not os.path.exists(image_location):
-        print(f'Error: {image_location} does not exist')
+        print(f"Error: {image_location} does not exist")
         return;
         
     image_data = imread(image_location)
