@@ -54,7 +54,7 @@ def run(params):
     zCount = int(params['ZCount'])
     if not os.path.exists(image_location):
         print(f"Error: {image_location} does not exist")
-        return;
+        return
         
     image_data = imread(image_location)
     dims = image_data.shape
