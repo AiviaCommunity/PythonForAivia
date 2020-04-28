@@ -95,8 +95,4 @@ def run(params):
 
 if __name__ == '__main__':
     params = {}
-    params['inputImagePath'] = 'test.png'
-    params['resultPath'] = 'testResult.png'
-    params['sigma'] = 3.0;
-    
     run(params)
