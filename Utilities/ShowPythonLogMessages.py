@@ -34,6 +34,7 @@ class HandleLogUpdates(FileSystemEventHandler):
 
     def __init__(self):
         self.f = None
+        self.messages = ['I Python', 'E Python', 'D PythonRecipe', 'E Measurement']
     
     def on_modified(self, event):
         """
@@ -44,7 +45,7 @@ class HandleLogUpdates(FileSystemEventHandler):
             if self.f is None:
                 self.f = open(event.src_path, mode='r')
             for line in self.f.readlines():
-                if line.startswith('I Python') or line.startswith('E Python'):
+                if any([line.startswith(m) for m in self.messages]):
                     print(line)
 
     def __del__(self):
