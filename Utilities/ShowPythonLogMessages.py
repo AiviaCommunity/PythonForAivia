@@ -30,6 +30,9 @@ class HandleLogUpdates(FileSystemEventHandler):
     """
     Prints lines relevant to Python usage from the Aivia log as they are added
     in near-real time.
+
+    Modify self.messages in __init__ with more/less message codes and they will automatically
+    be picked up by the watchdog.
     """
 
     def __init__(self):
