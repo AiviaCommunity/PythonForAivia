@@ -1,5 +1,6 @@
 import os.path
 import numpy as np
+import matplotlib.pyplot as plt
 from skimage.io import imread, imsave
 
 """
@@ -29,6 +30,12 @@ Green : Aivia channel
 Blue : Aivia channel
     Blue channel.
 
+Histogram : int (bool)
+    Boolean to determine whether to display the resulting luminance histogram.
+    0 : Do not display
+    1 : Display
+    Displaying the histogram halts the script until the Matplotlib popup is closed.
+
 Returns
 -------
 Aivia channel
@@ -38,12 +45,14 @@ Aivia channel
 # [INPUT Name:red_c Type:string DisplayName:'Red Channel']
 # [INPUT Name:blue_c Type:string DisplayName:'Blue Channel']
 # [INPUT Name:green_c Type:string DisplayName:'Green Channel']
+# [INPUT Name:histogram Type:int DisplayName:'Show Histogram (0=no, 1=yes)' Default:0 Min:0 Max:1]
 # [OUTPUT Name:gray_c Type:string DisplayName:'Luminance']
 def run(params):
     red_c = params['red_c']
     blue_c = params['blue_c']
     green_c = params['green_c']
     gray_c = params['gray_c']
+    show_histogram = int(params['histogram'])
     if not os.path.exists(red_c):
         print(f'Error: {red_c} does not exist')
         return;
@@ -66,15 +75,14 @@ def run(params):
     print(f'Gray: {gray_data.nbytes}')
     
     gray_data = (0.3*red_data + 0.59*green_data + 0.11*blue_data).astype(red_data.dtype)
+    
+    if show_histogram == 1:
+        ax = plt.hist(gray_data.ravel(), bins=256)
+        plt.show()
 
     imsave(gray_c, gray_data)
 
 
 if __name__ == '__main__':
     params = {}
-    params['red_c'] = 'test.png'
-    params['blue_c'] = 'test.png'
-    params['green_c'] = 'test.png'
-    params['gray_c'] = 'testResult.png';
-    
     run(params)
