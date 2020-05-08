@@ -127,7 +127,7 @@ class SuperpixelPainter:
 
         self.input_image = image
         max_markers = int(0.01 * (self.input_image.shape[0] * self.input_image.shape[1]))
-        marker_color = [1.00, 0.73, 0.03]
+        self.marker_color = [1.00, 0.73, 0.03]
 
         user_instructions = 'Drag left mouse button to paint superpixels. Drag right mouse button to erase. ' \
                             'Middle click to fill a contour. Close the app when finished.'
@@ -151,7 +151,7 @@ class SuperpixelPainter:
 
         self.superpixels = watershed(sobel(self.input_image), markers=self.markers.get(), 
                                      compactness=self.compactness.get())
-        self.boundaries = img_as_ubyte(mark_boundaries(self.input_image, self.superpixels, color=marker_color))
+        self.boundaries = img_as_ubyte(mark_boundaries(self.input_image, self.superpixels, color=self.marker_color))
         self.mask = np.zeros_like(self.boundaries)
         self.display_image = np.copy(self.boundaries)
 
@@ -185,7 +185,7 @@ class SuperpixelPainter:
         if event.widget in [self.markers, self.compactness]:
             self.superpixels = watershed(sobel(self.input_image), markers=self.markers.get(), 
                                      compactness=self.compactness.get())
-            self.boundaries = img_as_ubyte(mark_boundaries(self.input_image, self.superpixels, color=marker_color))
+            self.boundaries = img_as_ubyte(mark_boundaries(self.input_image, self.superpixels, color=self.marker_color))
             self.mask = np.zeros_like(self.boundaries)
             self.display_image = np.copy(self.boundaries)
             self.update_image()
