@@ -25,6 +25,10 @@ For debugging purposes we recommend that you navigate to File > Options > Loggin
 
 From this panel you can also click the "Open" button to see the log file. Python errors are printed here with full tracebacks to help you diagnose issues with code.
 
+## Templates
+
+The creation of a global template is somewhat hindered by how arrays of different dimensions are handled differently by each image processing function. For now, AdjustGamma.py is the simplest example of an Aivia recipe that can be used as a template. For a more complex recipe with proper handling of all image properties encountered in Aivia (8bit, 16bit,  2D, 3D, 2D+T, 3D+T), see ShapeIndex.py.
+
 ## Style Guidelines
 
 Unless otherwise specified here, we recommend you follow [PEP 8](https://www.python.org/dev/peps/pep-0008/ "PEP 8").
