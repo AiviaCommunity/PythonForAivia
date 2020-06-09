@@ -1,5 +1,5 @@
-import drvdeeplearning as drv
 import logging
+import numexpr
 import numpy as np
 import pathlib
 import tifffile
@@ -75,7 +75,6 @@ tifffile (installed with scikit-image)
 TensorFlow 1.X (StarDist is developed in TF 1.x, please do not use TensorFlow 2.x.
 If you want GPU acceleration, please install tensorflow-gpu and respective version
 of CUDA and cuDNN)
-drvdeeplearning (comes with Aivia installer)
 StarDist 0.5.0
 CSBDeep (installed with StarDist)
 
@@ -120,6 +119,14 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 logger.addHandler(handler)
 logger.propagate = False
+
+def normalize(image, p_min=2, p_max=99.9, dtype='float32'):
+    '''
+    Normalizes the image intensity so that the `p_min`-th and the `p_max`-th
+    percentiles are converted to 0 and 1 respectively.
+    '''
+    low, high = np.percentile(image, (p_min, p_max))
+    return numexpr.evaluate('(image - low) / (high - low)').astype(dtype)
 
 # [INPUT Name:inputImagePath Type:string DisplayName:'Input Image']
 # [INPUT Name:modelSelection Type:int DisplayName:'Model(0:demo,1:fluor, 2:DSB,3:3D)' Default:0 Min:0 Max:4]
@@ -219,10 +226,9 @@ def run(params):
 
     logger.info(f'normalizationLow = {p_min}, normalizationHigh = {p_max}')
 
-    # Apply StartDist model to generate labeled image
     for t in range(t_count):
         labels[t] = model.predict_instances(
-            drv.utils.normalize(image[t], p_min=p_min, p_max=p_max),
+            normalize(image[t], p_min=p_min, p_max=p_max),
             prob_thresh=prob_thresh,
             nms_thresh=nms_thresh,
             n_tiles=n_tiles,
