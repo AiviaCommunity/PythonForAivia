@@ -14,6 +14,12 @@ Cellpose is set up with some parameters provided by the user:
 
 Note that the GPU model is called, but will not run unless Cellpose is properly
 installed as described here: http://www.cellpose.org/static/docs/installation.html
+Example of installation:
+    pip install cellpose == 0.0.2.0
+    pip uinstall mxnet-mkl
+    pip uinstall mxnet
+    pip install mxnet-cu100
+    pip install mxnet-cu100mkl
 
 Sources of the pretrained cellpose models are listed below:
     Cellpsoe GitHub: https://github.com/mpicbg-csbd/stardist
@@ -29,7 +35,7 @@ Cellpose 0.0.2.0 (the recipe is only tested in this version)
 CUDA 10.x
 mxnet-cu10x (remove mxnet and install gpu version of mxnet​)
 mxnet-cu10xmkl (remove mxnet-mkl and install gpu version of mxnet​-mkl)
-​
+
 
 Parameters
 ----------
