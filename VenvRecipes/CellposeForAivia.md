@@ -3,7 +3,7 @@ Installation
 ------------
 1. Download the Cellpose virtual environment ZIP file "Cellpose_virtualEnvironment.zip" from dropbox
    https://www.dropbox.com/s/0dczdliehhqj0wr/Cellpose_virtualEnvironment.zip?dl=1
-2. Unzip "Cellpose_venv.zip" to a local folder
+2. Unzip "Cellpose_virtualEnvironment.zip" to a local folder
 3. The Cellpose python recipe for Aivia is "\Cellpose_venv\Cellpose_Aivia.py"
 
 
