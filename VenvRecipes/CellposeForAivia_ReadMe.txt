@@ -19,7 +19,7 @@ Execution
 
 Cellpose Information
 --------------------
-This Aivia python recipe applies the the Cellpose deep learning model to
+This Aivia python recipe applies the Cellpose deep learning model to
 generate segmentation for cells/nucleus in 2D or 3D images.
 
 Sources of the pre-trained cellpose models are listed below:
