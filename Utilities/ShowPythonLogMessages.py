@@ -23,7 +23,7 @@ Requirements
 watchdog
 """
 
-log_dir = os.path.join(os.getenv('LOCALAPPDATA'),'DRVision Technologies LLC/Aivia 8.8.2.33255/')
+log_dir = os.path.join(os.getenv('LOCALAPPDATA'),'DRVision Technologies LLC/Aivia 9.0.0.34168/')
 
 
 class HandleLogUpdates(FileSystemEventHandler):
