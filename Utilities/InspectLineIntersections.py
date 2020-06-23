@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import tkinter as tk
-from skimage import io
+from tifffile import TiffFile, imread
 from skimage.measure import regionprops
 
 """
@@ -31,10 +31,11 @@ assigned to each object in Aivia.
 
 Requirements
 ------------
-numpy
+numpy (installed with Aivia)
+scikit-image (installed with Aivia)
+matplotlib (installed with scikit-image)
+tifffile (installed with scikit-image)
 pandas
-matplotlib
-scikit-image
 
 """
 
@@ -111,8 +112,8 @@ class InspectLineIntersections:
         """
         Perform line inspection processing on multiple frames within one Aivia image.
         """
-        masks = io.imread(os.path.abspath(self.input_image.get()))
-        
+        masks = TiffFile(os.path.abspath(self.input_image.get()))
+
         measures = ['Image Index',  # Linear position in the mosaic
                     'Object Index', # Object label from Aivia
                     'Length',       # Longitudinal length of the major axis
@@ -123,16 +124,16 @@ class InspectLineIntersections:
         
         all_measures = pd.DataFrame(columns=measures)
         
-        for f in range(0, masks.shape[2]):
+        for f in range(0, len(masks.pages)):
     
-            frame = masks[:, :, f]
+            frame = masks.pages[f].asarray()
             frame_labels = np.zeros(shape=frame.shape, dtype=frame.dtype)
             
             if self.orientation.get() == 1:     # Vertical case
-                line_idx = int(masks.shape[1]/2)
+                line_idx = int(frame.shape[1]/2)
                 line_arr = frame[:, line_idx]
             else:                               # Horizontal case
-                line_idx = int(masks.shape[0]/2)
+                line_idx = int(frame.shape[0]/2)
                 line_arr = frame[line_idx, :]
 
             values_on_line = np.unique(line_arr)
