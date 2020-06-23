@@ -112,7 +112,7 @@ class InspectLineIntersections:
         Perform line inspection processing on multiple frames within one Aivia image.
         """
         masks = io.imread(os.path.abspath(self.input_image.get()))
-
+        
         measures = ['Image Index',  # Linear position in the mosaic
                     'Object Index', # Object label from Aivia
                     'Length',       # Longitudinal length of the major axis
@@ -120,9 +120,9 @@ class InspectLineIntersections:
                     'Aspect Ratio', # Length / Breadth
                     'Circularity',  # (4*pi*area) / (perimeter^2)
                     ]
-
+        
         all_measures = pd.DataFrame(columns=measures)
-
+        
         for f in range(0, masks.shape[2]):
     
             frame = masks[:, :, f]
