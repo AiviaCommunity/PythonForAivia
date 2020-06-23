@@ -161,13 +161,18 @@ class InspectLineIntersections:
                 ax[0].axhline(line_idx, color='w')
                 ax[1].axhline(line_idx, color='w')
             plt.savefig(os.path.join(self.output_dir.get(), f"Image Index {f:03}.png"))
+            plt.close()
 
             for prop in measurements:
+                if prop.minor_axis_length == 0:
+                    aspect_ratio = 1.0
+                else:
+                    aspect_ratio = prop.major_axis_length / prop.minor_axis_length
                 frame_measures = {'Image Index': int(f),
                                   'Object Index': int(prop.label),
                                   'Length': prop.major_axis_length,
                                   'Breadth': prop.minor_axis_length,
-                                  'Aspect Ratio': prop.major_axis_length / prop.minor_axis_length,
+                                  'Aspect Ratio': aspect_ratio,
                                   'Circularity': (4 * np.pi * prop.area) / (prop.perimeter**2)
                                   }
                 all_measures = all_measures.append(frame_measures, ignore_index=True)
