@@ -11,10 +11,10 @@ Execution
 ---------
 1. Load StarDist python recipe "StarDist_Aivia.py" onto Aivia
    - "StarDist_Aivia.py" is stored under the top folder "\StarDist_venv"
-   - Load the recipe by using "File>Open" or drag-and-drop
-2. Load target image onto Aivia
-3. In Aivia analysis tools, adjust input, output, and processing parameters
-3. Click on "Start" button and wait for the result
+2. Load the recipe by using "File>Open" or drag-and-drop
+3. Load target image onto Aivia
+4. In Aivia analysis tools, adjust input, output, and processing parameters
+5. Click on "Start" button and wait for the result
 
 
 StarDist Information
