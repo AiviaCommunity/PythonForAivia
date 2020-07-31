@@ -1,7 +1,4 @@
-import time
-
 from matplotlib import cm
-from collections import OrderedDict
 import numpy as np
 from skimage.io import imread, imsave
 
@@ -78,7 +75,6 @@ def run(params):
             current_col = final_color_map.colors[z, :3]
 
             for t in range(input_dims[0]):
-                # print('Time: ', time.ctime(time.time()), ' T: ', t, ' Z: ', z)
                 for c in range(3):
                     output_data[c, t, z, :, :] = image_data[t, z, :, :] * current_col[c]
 
