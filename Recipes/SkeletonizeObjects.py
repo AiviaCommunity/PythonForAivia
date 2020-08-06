@@ -38,7 +38,7 @@ Closing Radius : int
 
 Returns
 -------
-Aivia channel
+Aivia objects
     Result of the transform
 """
 
@@ -60,7 +60,7 @@ def run(params):
         return;
         
     if zCount == 1:
-        print('Mesh creation with Python is currently only supported in 3D.')
+        print('Mesh creation for skeletons is currently only supported in 3D.')
         print('Try using Skeletonize.py instead.')
         return
     
