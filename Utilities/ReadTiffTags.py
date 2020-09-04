@@ -6,7 +6,13 @@ import textwrap
 
 """
 Simple script to read TIFF tags and display them in a tkinter window.
+Run this with the commandline and a file dialog window will pop up.
 
+Requirements
+------------
+tifffile (comes with Aivia installer)
+tkinter (comes with Aivia installer)
+textwrap (comes with Aivia installer)
 
 """
 
