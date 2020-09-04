@@ -4,6 +4,12 @@ import tkinter as tk
 from tkinter import ttk
 import textwrap
 
+"""
+Simple script to read TIFF tags and display them in a tkinter window.
+
+
+"""
+
 max_char_len = 150
 
 def run(params):
@@ -25,7 +31,6 @@ def run(params):
     master = tk.Tk()
     master.bind('<Escape>', lambda e: master.quit())     # Press Esc to stop mainloop
     tk.Label(master, text="Tiff Tags", font=("Arial", 14)).grid(row=0, column=0)
-            # .pack(anchor=tk.N, fill=tk.X, side=tk.TOP)
     tk.Label(master, text="press Esc to close window", font=("Arial", 8)).grid(row=1, column=0)
     cols = ('Tag name', 'Value')
     tree = ttk.Treeview(master, columns=cols, show='headings')
@@ -52,13 +57,6 @@ def run(params):
             tree.insert("", "end", values=(tag_name, final_val))
     tree.column(cols[1], width=1000, stretch=tk.YES)
 
-    # Scrollbar
-    # xsb = ttk.Scrollbar(master, orient='horizontal', command=tree.xview)
-    # tree.configure(xscrollcommand=xsb.set)
-    # xsb.grid(row=3, column=0)
-    # xsb.pack(anchor=tk.S, fill=tk.X, side=tk.BOTTOM)
-
-    # tree.pack(expand=True, fill=tk.BOTH)
     master.mainloop()
 
 
