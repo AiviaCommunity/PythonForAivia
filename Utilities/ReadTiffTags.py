@@ -8,6 +8,9 @@ import textwrap
 Simple script to read TIFF tags and display them in a tkinter window.
 Run this with the commandline and a file dialog window will pop up.
 
+Note: XML parts are broken into pieces (rows), which are themselves broken
+if still longer than specified "max_char_len" value.
+
 Requirements
 ------------
 tifffile (comes with Aivia installer)
