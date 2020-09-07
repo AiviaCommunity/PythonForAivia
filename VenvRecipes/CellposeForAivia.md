@@ -26,7 +26,7 @@ Online information about Cellpose are listed below:
 * Cellpose Website: http://www.cellpose.org/
 * Cellpose GitHub: https://github.com/MouseLand/cellpose
 * Cellpose documentation: http://www.cellpose.org/static/docs/index.html
-* Cellpsoe paper: https://www.biorxiv.org/content/10.1101/2020.02.02.931238v1
+* Cellpose paper: https://www.biorxiv.org/content/10.1101/2020.02.02.931238v1
 
 There are a few important parameters for running Cellpose:
 
