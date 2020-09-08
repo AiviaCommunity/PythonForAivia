@@ -10,6 +10,9 @@ In Aivia, objects need to be separated to be measurable.
 
 Works only when there is no time dimension (yet).
 
+Doc for boundaries function:
+https://scikit-image.org/docs/stable/api/skimage.segmentation.html#skimage.segmentation.find_boundaries
+
 Requirements
 ------------
 numpy (comes with Aivia installer)
