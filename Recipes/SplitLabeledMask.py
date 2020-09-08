@@ -46,7 +46,7 @@ def run(params):
 
     # Checking image is not 2D+t or 3D+t
     if len(dims) > 3 or (len(dims) == 3 and tCount > 1):
-        print('Error: Maximum intensity projection cannot be applied to 2D images.')
+        print('Error: Cannot be applied to timelapses.')
         return
 
     output_data = np.empty_like(image_data)
@@ -59,7 +59,7 @@ def run(params):
 
 
 if __name__ == '__main__':
-    params = {'inputImagePath': 'D:\\python-tests\\3Dimage.aivia.tif',
+    params = {'inputImagePath': 'D:\\python-tests\\test.aivia.tif',
               'resultPath': 'D:\\python-tests\\test.tif',
               'TCount': 1}
 
