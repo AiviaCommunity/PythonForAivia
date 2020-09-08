@@ -1,3 +1,5 @@
+import ctypes
+import sys
 import os.path
 import numpy as np
 from skimage.io import imread, imsave
@@ -46,8 +48,9 @@ def run(params):
 
     # Checking image is not 2D+t or 3D+t
     if len(dims) > 3 or (len(dims) == 3 and tCount > 1):
-        print('Error: Cannot be applied to timelapses.')
-        return
+        message = 'Error: Cannot be applied to timelapses.'
+        Mbox('No info found', message, 0)
+        sys.exit(message)
 
     output_data = np.empty_like(image_data)
 
@@ -56,6 +59,10 @@ def run(params):
     output_data = image_data - image_data * boundaries
 
     imsave(result_location, output_data)
+
+
+def Mbox(title, text, style):
+    return ctypes.windll.user32.MessageBoxW(0, text, title, style)
 
 
 if __name__ == '__main__':
