@@ -20,8 +20,8 @@ Online information about Cellpose are listed below:
 ## Installation
 
 1. Download the Cellpose virtual environment ZIP file from Dropbox:
-    1. (New version) [Cellpose_virtualEnvironment_0031.zip](https://www.dropbox.com/s/5cjusygca6ibdeo/Cellpose_virtualEnvironment_0031.zip?dl=0). The new version allows user to adjust Cell Prabability Threshold and Flow Threshold
-    2. (Old version) [Cellpose_virtualEnvironment.zip](https://www.dropbox.com/s/0dczdliehhqj0wr/Cellpose_virtualEnvironment.zip?dl=1)
+    1. (New version, Cellpose 0.0.3.1) [Cellpose_virtualEnvironment_0031.zip](https://www.dropbox.com/s/5cjusygca6ibdeo/Cellpose_virtualEnvironment_0031.zip?dl=0). The new version allows user to adjust Cell Prabability Threshold and Flow Threshold
+    2. (Old version, Cellpose 0.0.2.0) [Cellpose_virtualEnvironment.zip](https://www.dropbox.com/s/0dczdliehhqj0wr/Cellpose_virtualEnvironment.zip?dl=1)
 
 2. Unzip "Cellpose_virtualEnvironment_0031.zip" to a local folder
 
@@ -49,14 +49,14 @@ Online information about Cellpose are listed below:
     * 0 : Choose the cytoplasm model (segment the whole cell).
     * 1 : Choose the nuclei model
 
-* [Cell Probability Threshold](https://cellpose.readthedocs.io/en/latest/settings.html?highlight=threshold#cell-probability-threshold) : double, default is 0.0, range from -6.0 to 6.0
+* (New Version Only) [Cell Probability Threshold](https://cellpose.readthedocs.io/en/latest/settings.html?highlight=threshold#cell-probability-threshold) : double, default is 0.0, range from -6.0 to 6.0
 
     The pixels greater than the Cell Probability(confidence) are used to
     run dynamics and determine masks. The threshold is calculated using a
     Sigmoid function centered at zero (1 / (1 + e^-x)). So the value is
     around -6.0 to 6.0. Decrease this threshold will return more cell masks.
 
-* [Flow Threshold](https://cellpose.readthedocs.io/en/latest/settings.html?highlight=threshold#flow-threshold) : double, suggested default is 0.4
+* (New Version Only) [Flow Threshold](https://cellpose.readthedocs.io/en/latest/settings.html?highlight=threshold#flow-threshold) : double, suggested default is 0.4
 
     The Flow Threshold is the maximum allowed error of the flows for each mask.
     Increase this threshold if cellpose is not returning as many masks as
