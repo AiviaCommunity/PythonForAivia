@@ -4,7 +4,8 @@ from skimage.io import imread, imsave
 import shlex, subprocess
 
 """
-Performs a maximum intensity projection through Z for a single channel.
+Performs a maximum intensity projection through Z for a single channel. 
+Repeats the operation for the two other channels of the RGB image.
 
 Works only in 3D (not 3D+t yet).
 
