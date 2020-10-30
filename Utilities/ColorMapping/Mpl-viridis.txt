@@ -1,4 +1,4 @@
-"mpl-viridis-Fiji"
+"Mpl-viridis"
 0 440154
 1 440255
 2 440357
