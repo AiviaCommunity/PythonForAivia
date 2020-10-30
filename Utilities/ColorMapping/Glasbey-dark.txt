@@ -1,4 +1,4 @@
-"Glasbey-dark-Fiji"
+"Glasbey-dark"
 0 FFFF00
 1 FF19FF
 2 009393
