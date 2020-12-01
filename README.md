@@ -13,7 +13,7 @@ In this main repository you will find a few different folders:
 * `DRVision/Snapshots/` is for storing files necessary to build proper documentation, and can be ignored unless you are contributing to that documentation.
 * `TestData/` contains images for testing recipes. See `TestData/README.md` for more information.
 * `Recipes/` contains .py files that can be dragged into Aivia and used as recipes in Aivia's Analysis Tools panel. Each of these recipes is a single, self-contained piece of code that can be used independently, except in cases where the .py file has accompanying files of the same name (e.g. .ui files to describe PyQt interfaces for .py files).
-* `VenvRecipes/` contains links to `VenvRecipes.zip`. Each of these .zip files include a .py recipe and virtual environment for the recipe. Each of these recipes is also ready-to-use except they will be executed under the required virtual environment automatically.
+* `VenvRecipes/` contains VenvRecipe folders. Each of these folders include a .py recipe and data. Each of these recipes is also ready-to-use except they will create required virtual environment and execute under the environment automatically. To use these recipes, please download the whole subfolder of that recipe.
 * `Utilities/` contains useful companion scripts for the Aivia workflow that must be used in a Python interpreter separate from Aivia.
 
 ## Installation
