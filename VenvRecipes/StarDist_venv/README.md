@@ -16,7 +16,7 @@ The source of the pre-trained 2D and 3D StarDist Models are listed below:
 
 ## Installation
 
-1. Download the whole `StarDist_venv` folder. Although GitHub does not support subfolder download, you still can use website like [DownGit](https://minhaskamal.github.io/DownGit/#/home) to download the `StarDist_venv` subfolder.
+1. Download the whole `StarDist_venv` folder. Since GitHub does not support subfolder download, please click the following [link](https://minhaskamal.github.io/DownGit/#/home?url=https://github.com/AiviaCommunity/PythonForAivia/tree/master/VenvRecipes/StarDist_venv) to download the folder. The link was generated from DownGit, an open source website for create GitHub repo subfolder download link.
 
 2. Unzip the the downloaded folder `StarDist_venv`. The tree structure of the folder is as follow
 
