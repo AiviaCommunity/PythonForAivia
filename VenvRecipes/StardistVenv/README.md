@@ -16,7 +16,7 @@ The source of the pre-trained 2D and 3D StarDist Models are listed below:
 
 ## Installation
 
-1. Download the whole `StarDistVenv` folder. Since GitHub does not support subfolder download, we zipped the folder here for you: [StarDistVenv.zip](../ZippedVenvFolders/StarDistVenv.zip).
+1. Download the whole `StarDistVenv` folder. Since GitHub does not support subfolder download, we zipped the folder here for you: [StarDistVenv.zip](../ZippedVenvFolders/StardistVenv.zip).
 
 2. Unzip the the downloaded folder `StardistVenv`. The tree structure of the folder is as follow
 
