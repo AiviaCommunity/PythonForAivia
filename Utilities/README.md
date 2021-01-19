@@ -1,5 +1,6 @@
 # Utilities
 
+- CalculateIntersectionOverUnion.py
 - ConvertSpreadsheetToSingleTab.py: 
 - DICOMStackToTIFF.py: 
 - InspectLineIntersections.py: 
