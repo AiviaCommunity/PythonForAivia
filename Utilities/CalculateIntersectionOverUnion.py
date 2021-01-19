@@ -24,7 +24,8 @@ Second input: reference (e.g. Ground Truth image)
 
 Returns
 -------
-New channel to show intersection mask
+New channel to show intersection mask.
+Pressing CTRL+C after the popup window appears allow you to copy the text in the window.
 
 """
 
