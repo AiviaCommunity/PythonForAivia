@@ -2,7 +2,7 @@
 
 ## StarDist Information
 
-This Aivia python recipe applies the StraDist 2D or 3D deep learning model to generate segmentation for convex shape objects in 2D or 3D images.
+This Aivia python recipe applies the StarDist 2D or 3D deep learning model to generate segmentation for convex shape objects in 2D or 3D images.
 
 - StarDist GitHub: [https://github.com/mpicbg-csbd/stardist](https://github.com/mpicbg-csbd/stardist)
 
