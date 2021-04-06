@@ -15,4 +15,4 @@ Each of these recipes will create the required virtual environment for itself at
 Segmentation:
 
 1. [CellposeVenv](./CellposeVenv)
-2. [StarDistVenv](./StarDistVenv)
+2. [StarDistVenv](./StardistVenv)
