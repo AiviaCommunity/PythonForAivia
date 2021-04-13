@@ -92,8 +92,7 @@ def run_Cellpose(inputImagePath, z_count, t_count, diameter, model_type,
     dtype = image_data.dtype
     dims = image_data.shape
 
-    # confidence = np.empty(shape=dims, dtype=dtype)
-    confidence = np.empty_like(image_data)
+    confidence = np.empty_like(image_data, dtype=float)
     mask = np.empty_like(image_data, dtype=dtype)
 
     # Get model type
@@ -145,7 +144,7 @@ def run_Cellpose(inputImagePath, z_count, t_count, diameter, model_type,
                                         diameter=diameter,
                                         cellprob_threshold=cellprob_threshold,
                                         flow_threshold=flow_threshold)
-            confidence[t] = flow[2].astype(dtype)
+            confidence[t] = flow[2]
             mask[t] = mask_i.astype(dtype)
         axes = 'YXT'
 
