@@ -8,7 +8,8 @@ from skimage.exposure import match_histograms
 """
 Calculates SSIM map as a result of the comparison of 2 channels and metrics values (in the log file). 
 
-For the output image, it is highly recommended to use LUT color mapping to better see the variations in the SSIM values
+For the output image, it is highly recommended to use LUT color mapping to better see the variations in the SSIM values 
+(e.g. "Amber" in Aivia Advanced Coloring / LUT Mapping).
 All real SSIM values (ranging from 0 to 1) can be retrieved from the map doing the following: divide intensities by 255 if image is 8-bit, or by 65535 if 16-bit.
 
 Side note: MSE and mean SSIM (and NRMSE, PSNR) values are output in the log
