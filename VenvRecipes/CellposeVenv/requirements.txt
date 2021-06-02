@@ -26,5 +26,5 @@ scipy==1.5.2
 six==1.15.0
 tifffile==2020.9.3
 tqdm==4.49.0
-urllib3==1.22
+urllib3==1.26.5
 intel-openmp
