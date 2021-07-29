@@ -24,6 +24,7 @@ def run(params):
     env_dir = pathlib.Path(os.path.dirname(os.path.realpath(__file__))) / 'env'
 
     if not os.path.exists(env_dir):
+        import venv
         env_dir.mkdir(parents=False, exist_ok=True)
         venv.create(env_dir, system_site_packages=True)
 
