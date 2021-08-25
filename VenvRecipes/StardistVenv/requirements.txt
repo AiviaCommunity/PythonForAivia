@@ -1,5 +1,7 @@
 numpy==1.16.6
+numexpr
+packaging
 scikit-image==0.17.2
 tifffile==2020.9.3
 Tensorflow-gpu==1.13.1
-StarDist==0.5.0
+keras==2.2.4

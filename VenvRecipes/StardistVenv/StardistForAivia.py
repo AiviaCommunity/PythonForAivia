@@ -1,8 +1,10 @@
 import os.path
 import subprocess
 import pathlib
-import venv
+import virtualenv
+from shutil import copyfile
 from pathlib import Path
+import sys
 
 """
 This Aivia python recipe invokes the subprocess to execute StarDist_venv.py
@@ -24,20 +26,20 @@ def run(params):
     env_dir = pathlib.Path(os.path.dirname(os.path.realpath(__file__))) / 'env'
 
     if not os.path.exists(env_dir):
-        import venv
         env_dir.mkdir(parents=False, exist_ok=True)
-        venv.create(env_dir, system_site_packages=True)
+        subprocess.check_call([str(Path(sys.executable).parent / 'Scripts/virtualenv.exe'), f'{env_dir}'])
 
-        exec_path = env_dir / 'Scripts' / 'python.exe'
+    # copy essential python packages(python36.zip) to virtual environment
+    # see https://github.com/pypa/virtualenv/issues/1185
+    if not os.path.exists(env_dir/'Scripts/python36.zip'):
+        copyfile(Path(sys.executable).parent / 'python36.zip', env_dir/'Scripts/python36.zip')
 
-        requirement_dir = pathlib.Path(os.path.dirname(os.path.realpath(__file__)))
-        file1 = open(requirement_dir / 'requirements.txt', 'r')
-        Lines = file1.readlines()
-        Lines = {l.strip() for l in Lines}
-
-        subprocess.check_call(
-            [str(exec_path), '-m', 'pip', 'install', *Lines])
-
+    # install requirements
+    pip_path = env_dir / 'Scripts' / 'pip.exe'
+    requirement_dir = pathlib.Path(os.path.dirname(os.path.realpath(__file__)))
+    subprocess.check_call(
+        [str(pip_path), 'install', '-r', str(requirement_dir/'requirements.txt')])
+    subprocess.check_call([str(pip_path), 'install', 'StarDist==0.7.0'])
 
     # Check if input image exists
     inputImagePath_ = params['inputImagePath']
