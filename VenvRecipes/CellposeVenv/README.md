@@ -13,7 +13,7 @@ Online information about Cellpose are listed below:
 
 ## Requirements
 
-* Vuitual Environment for Cellpose - the required virtual environment will be created automatically when you run Cellpose_Aivia.py for the first time. All required python packages will be installed in this virtual environment. You can check the `requirements.txt` to see what packages will be installed.
+* Virtual Environment for Cellpose - the required virtual environment will be created automatically when you run Cellpose_Aivia.py for the first time. All required python packages will be installed in this virtual environment. You can check the `requirements.txt` to see what packages will be installed.
 
 * Python 3.6+ - comes with Aivia
 
