@@ -1,6 +1,6 @@
 # VenvRecipes for Aivia
 
-**Important note: The current VenvRecipes only compatable with Aivia 10.0.1 or above. Please upgrade to Aivia 10.0.1 or above to run VenvRecipes.**
+**Important note: The current VenvRecipes are only compatible with Aivia 10.0.1 or above. Please upgrade to Aivia 10.0.1 or above to run VenvRecipes.**
 
 VenvRecipes are ready-to-use except they will be executed under the required virtual environment automatically.
 
