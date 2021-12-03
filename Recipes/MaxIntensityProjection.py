@@ -28,7 +28,7 @@ New 2D image:
     Opens Aivia (again) to display the 2D projection as a new image.
 
 """
-
+#Get path to the Aivia executable
 def getParentDir(currDir, level=1):
 
     for i in range(level):
