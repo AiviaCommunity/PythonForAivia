@@ -2,6 +2,8 @@ import os.path
 import numpy as np
 from skimage.io import imread, imsave
 import shlex, subprocess
+import sys
+from os.path import dirname as up
 
 """
 Performs a maximum intensity projection through Z for a single channel. 
@@ -29,8 +31,18 @@ New 3-channel 2D image:
 
 """
 
-aivia_version = 'Aivia 9.0.0'
-aivia_path = 'C:\\Program Files\\DRV Technologies\\'+ aivia_version +'\\Aivia.exe'
+#Get path to the Aivia executable
+def getParentDir(currDir, level=1):
+
+    for i in range(level):
+        parentDir = up(currDir)
+        currDir=parentDir
+
+    return currDir
+
+exeDir=sys.executable
+parentDir=getParentDir(exeDir, level=2)
+aivia_path = parentDir +'\\Aivia.exe'
 
 
 # [INPUT Name:inputRedPath Type:string DisplayName:'Red channel']
