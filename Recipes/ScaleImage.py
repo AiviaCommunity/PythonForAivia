@@ -5,8 +5,9 @@ import imagecodecs
 import numpy as np
 from tifffile import imread, imwrite
 from skimage import transform, img_as_uint, img_as_ubyte
+import sys
+from os.path import dirname as up
 
-aivia_version = 'Aivia 10.0.1'
 
 """
 Scales the input channel up or down (isotropic factor). Option for interpolation is in the code.
@@ -39,8 +40,20 @@ New image:
 """
 interpolation_mode = 1  # 0: Nearest-neighbor, 1: Bi-linear , 2: Bi-quadratic, 3: Bi-cubic, 4: Bi-quartic, 5: Bi-quintic
 
+#Get path to the Aivia executable
+def getParentDir(currDir, level=1):
+
+    for i in range(level):
+        parentDir = up(currDir)
+        currDir=parentDir
+
+    return currDir
+
+exeDir=sys.executable
+parentDir=getParentDir(exeDir, level=2)
+aivia_path = parentDir +'\\Aivia.exe'
+
 # automatic parameters
-aivia_path = 'C:\\Program Files\\Leica Microsystems\\' + aivia_version + '\\Aivia.exe'
 
 
 # [INPUT Name:inputImagePath Type:string DisplayName:'Input Channel']
@@ -97,7 +110,7 @@ def run(params):
     else:
         out_data = img_as_ubyte(scaled_img)
 
-    tmp_path = result_location.replace('.tif', '-tmp.tif')
+    tmp_path = result_location.replace('.tif', '.tif')
     imwrite(tmp_path, out_data, photometric='minisblack', metadata={'axes': axes})
 
     # Dummy save
