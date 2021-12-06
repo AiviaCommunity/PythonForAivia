@@ -59,26 +59,26 @@ The source of the pre-trained 2D and 3D StarDist Models are listed below:
   - Input channel to segment.
 
 - Percentile Normalization High (0.0-100.0) : double
-  - The percentile to be normalized to 1.
+  - The percentile to be normalized to 1. Default is 99.9
 
 - Percentile Normalization Low (0.0-100.0) : double
-  - The percentile to be normalized to 0.
+  - The percentile to be normalized to 0. Default is 2.0
 
 - NMS Threshold (0.0-1.0) : double
-  - Non maximum suppression threshold. A higher NMS threshold allows segmented objects to overlap substantially. A lower NMS threshold suppresses the object with lower confidence.
+  - Non maximum suppression threshold. A higher NMS threshold allows segmented objects to overlap substantially. A lower NMS threshold suppresses the object with lower confidence. Default is 0.5
 
 - Probability Threshold (0.0-1.0) : double
-  - If an object's confidence is lower than this threshold, it will be removed.
+  - If an object's confidence is lower than this threshold, it will be removed. Default is 0.5
 
 - Model(0:demo,1:fluor, 2:DSB,3:3D) : int
-  - To determine which pre-trained StarDist model you wish to run.
+  - To determine which pre-trained StarDist model you wish to run. Default is 0
     - 0 : 2D_demo
     - 1 : 2D_fluor_nuc
     - 2 : 2D_DSB
     - 3 : 3D_demo
 
 - Output(0:Lb,1:Msk) : int
-  - To set the output type for the segmentation mask.
+  - To set the output type for the segmentation mask. Default is 0
     - 0 : labeled segmentation mask
     - 1 : binary segmentation mask
 
