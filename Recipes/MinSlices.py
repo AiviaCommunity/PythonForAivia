@@ -2,6 +2,7 @@ import os.path
 import numpy as np
 from skimage.io import imread, imsave
 import ctypes
+import sys
 
 """
 Performs a slicewise minimum intensity projection through Z with a given
