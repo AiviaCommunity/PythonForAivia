@@ -1,6 +1,7 @@
 import os.path
 import numpy as np
 from skimage.io import imread, imsave
+import ctypes
 
 """
 Performs a slicewise maximum intensity projection through Z with a given
@@ -49,8 +50,9 @@ def run(params):
     output_data = np.empty_like(image_data)
     
     if len(dims) == 2 or (len(dims) == 3 and tCount > 1):
-        print('Error: Maximum intensity projection cannot be applied to 2D images.')
-        return;
+        error_mes = "Error: Maximum intensity projection cannot be applied to 2D images."
+        ctypes.windll.user32.MessageBoxW(0, error_mes, 'Error', 0)
+        sys.exit(error_mes)
     
     if tCount == 1:
         max_slice = int(dims[0])
