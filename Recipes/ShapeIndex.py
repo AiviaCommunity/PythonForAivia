@@ -28,7 +28,7 @@ Requirements
 ------------
 numpy (comes with Aivia installer)
 scikit-image (comes with Aivia installer)
-tifffile (installed with scikit-image)
+tifffile (comes with Aivia installer)
 
 Parameters
 ----------
