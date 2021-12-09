@@ -41,7 +41,7 @@ Aivia channel
 """
 
 # [INPUT Name:inputImagePath Type:string DisplayName:'Input Image']
-# [INPUT Name:cutoff Type:double DisplayName:'Cutoff (%)' Default:0.5 Min:0.0 Max:1.0]
+# [INPUT Name:cutoff Type:double DisplayName:'Cutoff [0-1]' Default:0.5 Min:0.0 Max:1.0]
 # [INPUT Name:gain Type:double DisplayName:'Gain' Default:10.0 Min:0.0 Max:20.0]
 # [OUTPUT Name:resultPath Type:string DisplayName:'Sigmoid']
 def run(params):
