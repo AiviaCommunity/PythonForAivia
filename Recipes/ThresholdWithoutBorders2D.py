@@ -8,7 +8,7 @@ from skimage.util import img_as_ubyte, img_as_uint
 """
 See: https://scikit-image.org/docs/dev/api/skimage.segmentation.html#skimage.segmentation.clear_border
 
-Tresholds an image for segmentation, then clears any objects intersecting the image borders before
+Thresholds an image for segmentation, then clears any objects intersecting the image borders before
 creating an object set in Aivia.
 
 This recipe only works in 2D. Use ThresholdWithoutBorders3D instead for 3D cases.
