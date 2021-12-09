@@ -54,7 +54,7 @@ def run(params):
 
     output_data = np.empty_like(image_data)
 
-    # Detecting boundaries to be subrtracted to original image
+    # Detecting boundaries to be subtracted from original image
     boundaries = segmentation.find_boundaries(image_data)
     output_data = image_data - image_data * boundaries
 
