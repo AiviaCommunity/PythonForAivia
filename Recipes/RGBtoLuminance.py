@@ -18,6 +18,7 @@ Requirements
 ------------
 numpy (comes with Aivia installer)
 scikit-image (comes with Aivia installer)
+matplotlib (comes with Aivia installer)
 
 Parameters
 ----------
@@ -42,9 +43,9 @@ Aivia channel
     Result of the transform
 """
 
-# [INPUT Name:red_c Type:string DisplayName:'Red Channel']
 # [INPUT Name:blue_c Type:string DisplayName:'Blue Channel']
 # [INPUT Name:green_c Type:string DisplayName:'Green Channel']
+# [INPUT Name:red_c Type:string DisplayName:'Red Channel']
 # [INPUT Name:histogram Type:int DisplayName:'Show Histogram (0=no, 1=yes)' Default:0 Min:0 Max:1]
 # [OUTPUT Name:gray_c Type:string DisplayName:'Luminance']
 def run(params):
