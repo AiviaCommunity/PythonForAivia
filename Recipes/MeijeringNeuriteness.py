@@ -44,8 +44,8 @@ Aivia channel
 """
 
 # [INPUT Name:inputImagePath Type:string DisplayName:'Input Image']
-# [INPUT Name:sigma_min Type:double DisplayName:'Min Sigma' Default:0.5 Min:0.0 Max:25.0]
 # [INPUT Name:sigma_max Type:double DisplayName:'Max Sigma' Default:1.5 Min:0.0 Max:25.0]
+# [INPUT Name:sigma_min Type:double DisplayName:'Min Sigma' Default:0.5 Min:0.0 Max:25.0]
 # [OUTPUT Name:resultPath Type:string DisplayName:'Neuriteness']
 def run(params):
     image_location = params['inputImagePath']
