@@ -1,13 +1,15 @@
 import os.path
-import tkinter as tk
 import numpy as np
-from PIL import ImageTk, Image
 from skimage.io import imread, imsave
 from skimage.io import imread
 from skimage.filters import sobel
 from skimage.segmentation import watershed, mark_boundaries
 from skimage.morphology import flood_fill
 from skimage.util import img_as_ubyte
+from skimage.transform import rescale, resize
+
+import wx
+import wx.lib.agw.floatspin as FS
 
 """
 Compute watershed superpixels on an Aivia channel and create a mask from that painting.
@@ -26,8 +28,14 @@ Requirements
 ------------
 numpy (comes with Aivia installer)
 scikit-image (comes with Aivia installer)
-tkinter (part of the standard Python library)
 PIL (installed with scikit-image)
+wxPython (needs manual install)
+
+For Aivia 10.x with embedded python, the guide to install non-standard packages (windows and macOS):
+
+* Open terminal
+* Change directory: cd "path/to/Aivia/Python/directory/" (For e.g. C:\Program Files\Leica Microsystems\Aivia 10.5.0\Python)
+* Run: python -m pip install <name_of_the_module>
 
 Parameters
 ----------
@@ -48,11 +56,13 @@ Aivia objects
 # [OUTPUT Name:resultMaskPath Type:string DisplayName:'Mask Image']
 # [OUTPUT Name:resultObjectPath Type:string DisplayName:'Mask Objects' Objects:2D MinSize:0.0 MaxSize:1000000000.0]
 def run(params):
+    print('reading')
     image_location = params['inputImagePath']
     result_mask_location = params['resultMaskPath']
     result_object_location = params['resultObjectPath']
     tCount = int(params['TCount'])
     zCount = int(params['ZCount'])
+    print('read')
     if not os.path.exists(image_location):
         print(f'Error: {image_location} does not exist')
         return;
@@ -61,15 +71,19 @@ def run(params):
         print('Currently this only supports 2D images with no time dimension.')
         return
     
-    image_data = imread(image_location)
-    mask_data = np.empty(shape=image_data.shape, dtype=np.uint8)
     
-    mask_data = paint_superpixels(image_data)
+    image_data=imread(image_location)
+    mask_data = paint_superpixels(image_location)
+    
+    
+    mask_data = resize(mask_data, image_data.shape, anti_aliasing=False)
+    mask_data=img_as_ubyte(mask_data)
     
     imsave(result_mask_location, mask_data)
     imsave(result_object_location, mask_data)
+    
 
-def paint_superpixels(image):
+def paint_superpixels(image_location):
     """
     Calls the Superpixel Painter window for the user to interactively segment using superpixels.
 
@@ -87,19 +101,18 @@ def paint_superpixels(image):
     (N, M) array
         Binary mask based on the user's painting.
     """
-    root_ps = tk.Tk()
-    root_ps.title('Superpixel Painter')
-    root_ps.configure(bg='#232121')
-    root_ps.option_add('*HighlightThickness', 0)
-    root_ps.option_add('*Background', '#232121')
-    root_ps.option_add('*Foreground', '#F1E7E3')
-    root_ps.option_add('*Font', '{MS Sans Serif}')
-    painter_app = SuperpixelPainter(root_ps, image=image)
-    root_ps.mainloop()
-    return painter_app.mask[:, :, 0]
+    
 
+    app = wx.App()    
+    frame = MyFrame(image_location)
+    app.MainLoop()
 
-class SuperpixelPainter:
+    
+    return frame.mask[:, :, 0]
+    
+
+class MyFrame(wx.Frame):
+
     """
     An app that the user can use to manually paint their object by dragging their mouse
     across watershed superpixels.
@@ -122,55 +135,97 @@ class SuperpixelPainter:
         Image showing composite of the input_image, superpixel boundaries, and the mask.
 
     """
-    def __init__(self, master, image):
-        self.master = master
+        
+    def __init__(self, image_location):
+        super().__init__(parent=None, title='Superpixel Painter', size = wx.Size( 800,800 ))
 
-        self.input_image = image
-        max_markers = int(0.01 * (self.input_image.shape[0] * self.input_image.shape[1]))
+
+       
+        image_np=imread(image_location)
+        frame_size = self.GetSize()
+        frame_h = (frame_size[0]) *0.7
+        frame_w = (frame_size[1]) *0.7
+        image_np_sc = resize(image_np, (frame_h,frame_w), anti_aliasing=False)
+        self.W = image_np_sc.shape[0]
+        self.H = image_np_sc.shape[1]
+
+        image = wx.Image(self.W, self.H)
+        image.SetData(image_np.tobytes())
+        wxBitmap = image.ConvertToBitmap()
+        
+        
+        max_markers = int(0.01 * (self.W*self.H))
         self.marker_color = [1.00, 0.73, 0.03]
+        
+        self.panel = wx.Panel(self)
+        self.panel.SetBackgroundColour("gray")
 
-        user_instructions = 'Drag left mouse button to paint superpixels. Drag right mouse button to erase. ' \
+        
+        self.mainSizer = wx.BoxSizer(wx.VERTICAL)
+        
+        user_instructions = 'Click left mouse button to paint superpixels. Click right mouse button to erase. ' \
                             'Middle click to fill a contour. Close the app when finished.'
-        self.instructions = tk.Label(master, text=user_instructions)
-        self.instructions.grid(row=0, column=1, sticky=tk.NW)
+        self.instruction = wx.StaticText(self.panel, label=user_instructions)
+        self.instruction.SetForegroundColour(wx.Colour(255,255,255))        
+        self.mainSizer.Add(self.instruction, 0,wx.ALL | wx.CENTER, 5)
+        
+        self.imageCtrl = wx.StaticBitmap(self.panel, wx.ID_ANY, 
+                                         wxBitmap)
+                
+        self.mainSizer.Add(self.imageCtrl, 0, wx.ALL, 5)        
+        self.imageCtrl.SetBitmap(wxBitmap)       
+        
+        
+        self.marker = wx.StaticText(self.panel, label='Marker')
+        self.marker.SetForegroundColour(wx.Colour(255,255,255))
+        self.mainSizer.Add(self.marker, 0, wx.ALL , 5)
+        
+        self.marker_sld = wx.Slider(self.panel, value = 1, minValue = 10, maxValue = max_markers,
+        style = wx.SL_HORIZONTAL|wx.SL_LABELS)
+        self.mainSizer.Add(self.marker_sld,1,flag = wx.EXPAND , border = 20)
 
-        self.markers = tk.Scale(master, label='Markers', orient=tk.VERTICAL, from_=10, to=max_markers, resolution=1)
-        self.markers.set(300)
-        self.markers.grid(row=1, column=0, sticky=tk.W)
+        self.compactness = wx.StaticText(self.panel, label='Compactness')
+        self.compactness.SetForegroundColour(wx.Colour(255,255,255))
+        self.mainSizer.Add(self.compactness, 0, wx.ALL , 5)
+        self.compactness_float=0.001
 
-        self.compactness = tk.Scale(master, label='Compactness', orient=tk.VERTICAL, from_=0.001, to=0.01,
-                                    resolution=0.001)
-        self.compactness.set(0.005)
-        self.compactness.grid(row=2, column=0, sticky=tk.W)
 
-        self.clear = tk.Button(master, text='Clear', command=self.clear_mask)
-        self.clear.grid(row=3, column=0, sticky=tk.S)
+        self.compactness_sld = wx.Slider(self.panel, value = 1, minValue = 1, maxValue = 10,
+        style = wx.SL_HORIZONTAL|wx.SL_LABELS)
+        self.mainSizer.Add(self.compactness_sld,1,flag = wx.EXPAND , border = 20) 
 
-        self.image_label = tk.Label(master)
-        self.image_label.grid(row=1, column=1, rowspan=3)
-
-        self.superpixels = watershed(sobel(self.input_image), markers=self.markers.get(), 
-                                     compactness=self.compactness.get())
-        self.boundaries = img_as_ubyte(mark_boundaries(self.input_image, self.superpixels, color=self.marker_color))
+        self.clear_button = wx.Button(self.panel, wx.ID_ANY, 'Clear', (10, 10))
+        self.mainSizer.Add(self.clear_button, 0, wx.ALL , 5)
+        
+        self.input_image_np=image_np_sc
+        self.superpixels = watershed(sobel(self.input_image_np), markers=self.marker_sld.GetValue(), 
+                                     compactness=self.compactness_sld.GetValue()*self.compactness_float)
+        self.boundaries = img_as_ubyte(mark_boundaries(self.input_image_np, self.superpixels, color=self.marker_color))
         self.mask = np.zeros_like(self.boundaries)
         self.display_image = np.copy(self.boundaries)
 
         self.update_image()
+        
+        self.clear_button.Bind(wx.EVT_LEFT_DOWN, self.clear_mask)
+        self.imageCtrl.Bind(wx.EVT_LEFT_DOWN, self.add_region)
+        self.imageCtrl.Bind(wx.EVT_RIGHT_DOWN, self.remove_region)
+        self.imageCtrl.Bind(wx.EVT_MIDDLE_DOWN, self.flood_fill)
+        self.compactness_sld.Bind(wx.EVT_SLIDER, self.update_superpixels)
+        self.marker_sld.Bind(wx.EVT_SLIDER, self.update_superpixels)
 
-        master.bind('<B1-Motion>', self.add_region)
-        master.bind('<B3-Motion>', self.remove_region)
-        master.bind('<ButtonRelease-1>', self.update_superpixels)
-        master.bind('<Button-2>', self.flood_fill)
+        self.panel.SetSizer(self.mainSizer)
+        
+        self.Show()
 
-    def update_image(self):
-        """
-        Updates the app's displayed image.
-        """
-        self.display_tk = ImageTk.PhotoImage(Image.fromarray(self.display_image))
-        self.image_label.configure(image=self.display_tk)
-        self.image_label.image = self.display_tk
+    def wximage_to_numpy(self, image):
 
-    def clear_mask(self):
+        arr = np.asarray(image.GetDataBuffer())
+        image_np = np.copy(np.reshape(arr, (image.GetWidth(), image.GetHeight(),3)))
+        return image_np
+        
+           
+
+    def clear_mask(self, event):
         """
         Clears the mask and updates the app's displayed image.
         """
@@ -178,57 +233,71 @@ class SuperpixelPainter:
         self.display_image = np.copy(self.boundaries)
         self.update_image()
 
+    def update_image(self):
+        """
+        Updates the app's displayed image.
+        """
+        
+        wxBitmap= wx.Image(self.W,self.H, self.display_image)
+        self.imageCtrl.SetBitmap(wx.Bitmap(wxBitmap))
+        
+
     def update_superpixels(self, event):
         """
         Recomputes superpixels with the user's selected parameters and displays the boundary image in the app.
         """
-        if event.widget in [self.markers, self.compactness]:
-            self.superpixels = watershed(sobel(self.input_image), markers=self.markers.get(), 
-                                     compactness=self.compactness.get())
-            self.boundaries = img_as_ubyte(mark_boundaries(self.input_image, self.superpixels, color=self.marker_color))
-            self.mask = np.zeros_like(self.boundaries)
-            self.display_image = np.copy(self.boundaries)
-            self.update_image()
+        
+        self.superpixels = watershed(sobel(self.input_image_np), markers=self.marker_sld.GetValue(), 
+                                     compactness=self.compactness_sld.GetValue()*self.compactness_float)
+        self.boundaries = img_as_ubyte(mark_boundaries(self.input_image_np, self.superpixels, color=self.marker_color))
+        self.mask = np.zeros_like(self.boundaries)
+        self.display_image = np.copy(self.boundaries)
+        self.update_image()
 
     def add_region(self, event):
         """
         Adds superpixels to the segmentation by dragging the left mouse button.
         """
-        if event.widget is self.image_label:
-            chosen_region = self.superpixels[event.y, event.x]
-            for i in range(3):
-                self.mask[:, :, i] = np.where(self.superpixels == chosen_region, 255, self.mask[:, :, i])
-                self.display_image[:, :, i] = np.where(self.mask[:, :, i] == 255, 255, self.display_image[:, :, i])
-            self.update_image()
-
+        
+        chosen_region = self.superpixels[event.y, event.x]
+        for i in range(3):
+            self.mask[:, :, i] = np.where(self.superpixels == chosen_region, 255, self.mask[:, :, i])
+            self.display_image[:, :, i] = np.where(self.mask[:, :, i] == 255, 255, self.display_image[:, :, i])
+        self.update_image()
+        
     def remove_region(self, event):
         """
         Removes superpixels from the segmentation by dragging the right mouse button.
         """
-        if event.widget is self.image_label:
-            chosen_region = self.superpixels[event.y, event.x]
-            for i in range(3):
-                self.mask[:, :, i] = np.where(self.superpixels == chosen_region, 0, self.mask[:, :, i])
-                self.display_image[:, :, i] = np.where(self.mask[:, :, i] == 0, self.boundaries[:, :, i],
+        
+        chosen_region = self.superpixels[event.y, event.x]
+        for i in range(3):
+            self.mask[:, :, i] = np.where(self.superpixels == chosen_region, 0, self.mask[:, :, i])
+            self.display_image[:, :, i] = np.where(self.mask[:, :, i] == 0, self.boundaries[:, :, i],
                                                        self.display_image[:, :, i])
-            self.update_image()
+        self.update_image()
 
     def flood_fill(self, event):
         """
         Fills a contour selected by the middle mouse button with the mask.
         """
-        if event.widget is self.image_label:
-            for i in range(3):
-                self.mask[:, :, i] = flood_fill(self.mask[:, :, i], seed_point=(event.y, event.x), new_value=255,
+        
+        for i in range(3):
+            self.mask[:, :, i] = flood_fill(self.mask[:, :, i], seed_point=(event.y, event.x), new_value=255,
                                                 tolerance=1)
-                self.display_image[:, :, i] = np.where(self.mask[:, :, i] == 255, 255, self.display_image[:, :, i])
-            self.update_image()
+            self.display_image[:, :, i] = np.where(self.mask[:, :, i] == 255, 255, self.display_image[:, :, i])
+        self.update_image()
+        
+
+
+    
             
 
 if __name__ == '__main__':
     params = {}
-    params['inputImagePath'] = 'test.png'
-    params['resultMaskPath'] = 'testResult.png'
-    params['resultObjectPath'] = 'testResult.png'
-    
+    params['inputImagePath'] = '2D_PigSkin.tif'
+    params['resultMaskPath'] = '2D_PigSkinMask.tif'
+    params['resultObjectPath'] = '2D_PigSkinResult.tif'
+    params['TCount']=1
+    params['ZCount']=1
     run(params)
