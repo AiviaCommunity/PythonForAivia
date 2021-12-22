@@ -53,6 +53,8 @@ exeDir=sys.executable
 parentDir=getParentDir(exeDir, level=2)
 aivia_path = parentDir +'\\Aivia.exe'
 
+
+
 # automatic parameters
 
 
@@ -62,11 +64,12 @@ aivia_path = parentDir +'\\Aivia.exe'
 # [INPUT Name:scaleFactorXY Type:double DisplayName:'XY scale factor' Default:1.0 Min:0.01 Max:20.0]
 # [OUTPUT Name:resultPath Type:string DisplayName:'Duplicate of input']
 def run(params):
+    image_org=params['EntryPoint']
     image_location = params['inputImagePath']
     result_location = params['resultPath']
     scale_factor_xy = float(params['scaleFactorXY'])
     scale_factor_z = float(params['scaleFactorZ'])
-    scale_direction = params['scaleDirection']
+    scale_direction = int(params['scaleDirection'])
     zCount = int(params['ZCount'])
     tCount = int(params['TCount'])
     if not os.path.exists(image_location):
@@ -86,12 +89,20 @@ def run(params):
         print('Error: Cannot handle timelapses yet.')
         return
 
-    # output_data = np.empty_like(image_data)
-
-    if scale_direction == 0:
-        scale_factor_xy = 1 / scale_factor_xy
-        scale_factor_z = 1 / scale_factor_z
-
+    #output_data = np.empty_like(image_data)
+    
+    if scale_factor_xy==0.0:
+        scale_factor_xy=1.0
+    if scale_factor_z==0.0:
+        scale_factor_z=1.0
+        
+    if scale_direction == 0:        
+        scale_factor_xy = 1/scale_factor_xy
+        scale_factor_z = 1/scale_factor_z
+    else:
+        scale_factor_xy = scale_factor_xy
+        scale_factor_z = scale_factor_z    
+       
     # Defining axes for output metadata and scale factor variable
     final_scale = None
     if tCount == 1 and zCount > 1:         # 3D
@@ -105,16 +116,20 @@ def run(params):
     scaled_img = transform.rescale(image_data, final_scale, interpolation_mode)
 
     # Formatting result array
+    
     if image_data.dtype is np.dtype('u2'):
         out_data = img_as_uint(scaled_img)
+        print('img_as_uint')
     else:
         out_data = img_as_ubyte(scaled_img)
-
-    tmp_path = result_location.replace('.tif', '.tif')
+        print('img_as_ubyte')
+    
+   
+    tmp_path = result_location.replace('.tif', '-scaled.tif')
     imwrite(tmp_path, out_data, photometric='minisblack', metadata={'axes': axes})
 
     # Dummy save
-    # imwrite(result_location, output_data)
+    imwrite(result_location, image_data)
 
     # Run external program
     cmdLine = 'start \"\" \"' + aivia_path + '\" \"' + tmp_path + '\"'
