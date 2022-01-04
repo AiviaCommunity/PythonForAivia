@@ -95,3 +95,8 @@ Aivia channel
   Result of the transform
 """
 ```
+For Aivia 10.x with embedded python, the guide to install non-standard packages:
+
+* Open terminal
+* Change directory: cd "path/to/Aivia/Python/directory/" (For e.g. C:\Program Files\Leica Microsystems\Aivia 10.5.0\Python)
+* Run: python -m pip install <name_of_the_module>
