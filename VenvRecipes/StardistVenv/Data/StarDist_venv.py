@@ -78,14 +78,7 @@ StarDist is set up with some parameters provided by the user:
 
 Requirements
 ------------
-numpy (comes with Aivia installer)
-scikit-image (comes with Aivia installer)
-tifffile (installed with scikit-image)
-TensorFlow 1.X (StarDist is developed in TF 1.x, please do not use TensorFlow
-2.x. If you want GPU acceleration, please install tensorflow-gpu and respective
-version of CUDA and cuDNN)
-StarDist 0.5.0
-CSBDeep (installed with StarDist)
+Check https://github.com/AiviaCommunity/PythonForAivia/blob/master/VenvRecipes/StardistVenv/requirements.txt
 
 Parameters
 ----------

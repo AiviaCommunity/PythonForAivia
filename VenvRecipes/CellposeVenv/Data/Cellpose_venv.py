@@ -5,6 +5,7 @@ from tifffile import imread, imwrite
 from cellpose import models
 from skimage.exposure import rescale_intensity
 from skimage.util import img_as_ubyte, img_as_uint
+from skimage.transform import resize
 
 """
 This python script must be executed in the Cellpose_venv virtual environment.
@@ -19,13 +20,7 @@ Sources of the pre-trained cellpose models are listed below:
 
 Requirements
 ------------
-numpy (comes with Aivia installer)
-scikit-image (comes with Aivia installer)
-tifffile (installed with scikit-image)
-Cellpose 0.0.3.1 (the recipe is only tested in this version)
-CUDA 10.x
-mxnet-cu10x (remove mxnet and install gpu version of mxnet​)
-mxnet-cu10xmkl (remove mxnet-mkl and install gpu version of mxnet​-mkl)
+Check https://github.com/AiviaCommunity/PythonForAivia/blob/master/VenvRecipes/CellposeVenv/requirements.txt
 
 
 Parameters
@@ -41,12 +36,11 @@ Model : int (bool)
     0 : Choose the cytoplasm model (segment the whole cell).
     1 : Choose the nuclei model
 
-Cell Probability Threshold : double, -6.0 to 6.0
-    https://cellpose.readthedocs.io/en/latest/settings.html?highlight=threshold#cell-probability-threshold
-    The pixels greater than the Cell Probability(confidence) are used to
-    run dynamics and determine masks. The threshold is calculated using a
-    Sigmoid function centered at zero (1 / (1 + e^-x)). So the value is
-    around -6.0 to 6.0. Decrease this threshold will return more cell masks.
+Mask threshold Threshold (Cell Probability Threshold)) : double, -6.0 to 6.0
+    https://cellpose.readthedocs.io/en/latest/settings.html#mask-threshold
+    The pixels greater than the mask_threshold are used to run dynamics and determine masks. The predictions 
+    the network makes of the probability are the inputs to a sigmoid centered at zero (1 / (1 + e^-x)), so 
+    they vary from around -6 to +6.  The default is mask_threshold=0.0.
 
 
 Flow Threshold : double, default is 0.4
@@ -68,7 +62,7 @@ Mask : Aivia channel
 
 
 def run_Cellpose(inputImagePath, z_count, t_count, diameter, model_type,
-                 conf_map_path, mask_path, cellprob_threshold, flow_threshold):
+                 conf_map_path, mask_path, mask_threshold, flow_threshold):
 
     print('------------------------------------------')
     print('       Cellpose Virtual Environment')
@@ -80,7 +74,7 @@ def run_Cellpose(inputImagePath, z_count, t_count, diameter, model_type,
     print(f'       model_type = {model_type}')
     print(f'    conf_map_path = {conf_map_path}')
     print(f'        mask_path = {mask_path}')
-    print(f'   cell_threshold = {cellprob_threshold}')
+    print(f'   mask_threshold = {mask_threshold}')
     print(f'   flow_threshold = {flow_threshold}')
 
     # Check if input image exists
@@ -116,7 +110,7 @@ def run_Cellpose(inputImagePath, z_count, t_count, diameter, model_type,
                                     channels=channels,
                                     diameter=diameter,
                                     do_3D=True,
-                                    cellprob_threshold=cellprob_threshold,
+                                    mask_threshold=mask_threshold,
                                     flow_threshold=flow_threshold)
             confidence[t] = flow[2]
             mask[t] = mask_i
@@ -124,25 +118,26 @@ def run_Cellpose(inputImagePath, z_count, t_count, diameter, model_type,
 
     # 3D
     elif t_count == 1 and z_count > 1:
-        print(f"Applying to 2D+T or 3D case with dims: {dims}")
+        print(f"Applying to 3D case with dims: {dims}")
         mask, flow, _, _ = cellpose_model.eval(
                                         image_data,
                                         channels=channels,
                                         diameter=diameter,
                                         do_3D=True,
-                                        cellprob_threshold=cellprob_threshold,
+                                        mask_threshold=mask_threshold,
                                         flow_threshold=flow_threshold)
         confidence = flow[2]
         axes = 'YXZ'
 
     # 2D+T
     elif t_count > 1 and z_count == 1:
+        print(f"Applying to 2D+T case with dims: {dims}")
         for t in range(t_count):
             mask_i, flow, _, _ = cellpose_model.eval(
                                         image_data[t],
                                         channels=channels,
                                         diameter=diameter,
-                                        cellprob_threshold=cellprob_threshold,
+                                        mask_threshold=mask_threshold,
                                         flow_threshold=flow_threshold)
             confidence[t] = flow[2]
             mask[t] = mask_i.astype(dtype)
@@ -155,7 +150,7 @@ def run_Cellpose(inputImagePath, z_count, t_count, diameter, model_type,
                                         image_data,
                                         channels=channels,
                                         diameter=diameter,
-                                        cellprob_threshold=cellprob_threshold,
+                                        mask_threshold=mask_threshold,
                                         flow_threshold=flow_threshold)
         confidence = flow[2]
         mask = mask.astype(dtype)
@@ -164,12 +159,14 @@ def run_Cellpose(inputImagePath, z_count, t_count, diameter, model_type,
     # Re-scale confidence to unsigned
     if np.min(confidence) < 0:
         confidence = rescale_intensity(confidence, out_range='float')
-
+    
+    # Re-sizing confidence(cell probaility) map to original input shape 
+    confidence = resize(confidence, image_data.shape, anti_aliasing=False)
+    
     if image_data.dtype == np.uint16:
         # randomize mask output, otherwise the default mask is gradient-like
         mask_permute = np.append([0], np.random.permutation(65535)+1)
         mask = mask_permute[mask]
-
         confidence = img_as_uint(confidence)
         mask = img_as_uint(mask)
     else:
@@ -208,7 +205,7 @@ def main():
     model_type = int(sys.argv[5])
     conf_map_path = sys.argv[6]
     mask_path = sys.argv[7]
-    cellprob_threshold = float(sys.argv[8])
+    mask_threshold = float(sys.argv[8])
     flow_threshold = float(sys.argv[9])
 
     # Perform Cellpose
@@ -219,7 +216,7 @@ def main():
                  model_type,
                  conf_map_path,
                  mask_path,
-                 cellprob_threshold,
+                 mask_threshold,
                  flow_threshold)
 
 

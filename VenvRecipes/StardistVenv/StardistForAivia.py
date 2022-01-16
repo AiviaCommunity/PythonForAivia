@@ -1,7 +1,6 @@
 import os.path
 import subprocess
 import pathlib
-import virtualenv
 from shutil import copyfile
 from pathlib import Path
 import sys
@@ -29,17 +28,17 @@ def run(params):
         env_dir.mkdir(parents=False, exist_ok=True)
         subprocess.check_call([str(Path(sys.executable).parent / 'Scripts/virtualenv.exe'), f'{env_dir}'])
 
-    # copy essential python packages(python36.zip) to virtual environment
+    # copy essential python packages(python39.zip) to virtual environment
     # see https://github.com/pypa/virtualenv/issues/1185
-    if not os.path.exists(env_dir/'Scripts/python36.zip'):
-        copyfile(Path(sys.executable).parent / 'python36.zip', env_dir/'Scripts/python36.zip')
+    if not os.path.exists(env_dir/'Scripts/python39.zip'):
+        copyfile(Path(sys.executable).parent / 'python39.zip', env_dir/'Scripts/python39.zip')
 
     # install requirements
     pip_path = env_dir / 'Scripts' / 'pip.exe'
     requirement_dir = pathlib.Path(os.path.dirname(os.path.realpath(__file__)))
     subprocess.check_call(
         [str(pip_path), 'install', '-r', str(requirement_dir/'requirements.txt')])
-    subprocess.check_call([str(pip_path), 'install', 'StarDist==0.7.0'])
+    subprocess.check_call([str(pip_path), 'install', 'stardist==0.7.3'])
 
     # Check if input image exists
     inputImagePath_ = params['inputImagePath']

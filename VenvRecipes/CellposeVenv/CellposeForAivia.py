@@ -3,7 +3,6 @@ import subprocess
 import pathlib
 from pathlib import Path
 from shutil import copyfile
-import virtualenv
 import sys
 
 """
@@ -15,7 +14,7 @@ create the required virtual environment.
 # [INPUT Name:inputImagePath Type:string DisplayName:'Input Image']
 # [INPUT Name:diameter Type:double DisplayName:'Diameter (px)' Default:30.0 Min:0.0 Max:1000.0]
 # [INPUT Name:modelType Type:int DisplayName:'Model Type (0=cyto, 1=nuc)' Default:0 Min:0 Max:1]
-# [INPUT Name:cellThreshold Type:double DisplayName:'Cell Threshold' Default:0.0 Min:0.0 Max:6.0]
+# [INPUT Name:maskThreshold Type:double DisplayName:'Mask Threshold' Default:0.0 Min:0.0 Max:6.0]
 # [INPUT Name:flowThreshold Type:double DisplayName:'Flow Threshold' Default:0.4 Min:0.0 Max:1.0]
 # [OUTPUT Name:confMapPath Type:string DisplayName:'Confidence Map']
 # [OUTPUT Name:maskPath Type:string DisplayName:'Mask']
@@ -28,10 +27,10 @@ def run(params):
         env_dir.mkdir(parents=False, exist_ok=True)
         subprocess.check_call([str(Path(sys.executable).parent / 'Scripts/virtualenv.exe'), f'{env_dir}'])
 
-    # copy essential python packages(python36.zip) to virtual environment
+    # copy essential python packages(python39.zip) to virtual environment
     # see https://github.com/pypa/virtualenv/issues/1185
-    if not os.path.exists(env_dir/'Scripts/python36.zip'):
-        copyfile(Path(sys.executable).parent / 'python36.zip', env_dir/'Scripts/python36.zip')
+    if not os.path.exists(env_dir/'Scripts/python39.zip'):
+        copyfile(Path(sys.executable).parent / 'python39.zip', env_dir/'Scripts/python39.zip')
 
     # install requirements
     pip_path = env_dir / 'Scripts' / 'pip.exe'
@@ -63,7 +62,7 @@ def run(params):
     model_type_ = params['modelType']
     conf_map_path_ = params['confMapPath']
     mask_path_ = params['maskPath']
-    cellprob_threshold_ = params['cellThreshold']
+    mask_threshold_ = params['maskThreshold']
     flow_threshold_ = params['flowThreshold']
 
     # Display input, output, and parameters
@@ -79,7 +78,7 @@ def run(params):
     print(f'        model_type_= {model_type_}')
     print(f'     conf_map_path_= {conf_map_path_}')
     print(f'         mask_path_= {mask_path_}')
-    print(f'cellprob_threshold_= {cellprob_threshold_}')
+    print(f'    mask_threshold_= {mask_threshold_}')
     print(f'    flow_threshold_= {flow_threshold_}')
     print('------------------------------------------')
 
@@ -87,7 +86,7 @@ def run(params):
     proc = subprocess.Popen(
                 [pythonExec_, scrptPath_, inputImagePath_, zCount_, tCount_,
                  diameter_, model_type_, conf_map_path_, mask_path_,
-                 cellprob_threshold_, flow_threshold_],
+                 mask_threshold_, flow_threshold_],
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT)
 
