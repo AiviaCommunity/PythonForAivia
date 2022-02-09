@@ -47,7 +47,7 @@ tensorboard==2.7.0
 tensorboard-data-server==0.6.1
 tensorboard-plugin-wit==1.8.0
 tensorflow-estimator==2.7.0
-tensorflow-gpu==2.6.0
+tensorflow-gpu==2.6.3
 termcolor==1.1.0
 tifffile==2020.9.3
 tqdm==4.62.3
