@@ -50,7 +50,7 @@ Online information about Cellpose are listed below:
 ## Parameters
 
 * Pre-Processing Deep Learning Model : aiviadl
-  * You can select an Aivia-shipped model here for pre-processing. Please leave it as "None" if you only want to use Cellpose. You can also make your own model, or load your own model and convert to aiviadl, but that is outside the scope of this. Examples of useful models could be an enhancment, cleaning, or conversion type model. Usually it is left blank. 
+  * You can select an Aivia-shipped model here for pre-processing. Please leave it as "None" if you only want to use Cellpose. You can also make your own model, or load your own model and convert to aiviadl. Examples of useful models could be an enhancment, cleaning, or conversion type model. Usually it is left blank. 
 
 * Input Image : Aivia channel
   * Input channel to segment.
