@@ -21,7 +21,7 @@ Online information about Cellpose are listed below:
 
 ## Installation
 
-0. Make sure Git is installed on your machine, the Cellpose scripts will need to download from the official Cellpose GitHub
+0. Make sure Git is installed on your machine, the Cellpose scripts may need to download from the official Cellpose GitHub.
 
 1. Download the whole `CellposeVenv` folder. Since GitHub does not support subfolder download, we zipped the folder here for you: [CellposeVenv.zip](../ZippedVenvFolders/CellposeVenv.zip).
 
