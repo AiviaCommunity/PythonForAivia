@@ -49,7 +49,7 @@ Online information about Cellpose are listed below:
 
 ## Parameters
 
-* Deep Learning Model : acmodel
+* Deep Learning Model : aiviadl
   * You can select an Aivia's built-in acmodel here for preprocessing. Please leave it as "None" if you only want to use Cellpose.
 
 * Input Image : Aivia channel
