@@ -17,7 +17,11 @@ Online information about Cellpose are listed below:
 
 * Python 3.9 - comes with Aivia
 
+* These Cellpose scripts provided to you to use at your own risk. Note that they download models and related files from GitHub directly, which could be a security risk. 
+
 ## Installation
+
+0. Make sure Git is installed on your machine, the Cellpose scripts will need to download from the offial Cellpose GitHub
 
 1. Download the whole `CellposeVenv` folder. Since GitHub does not support subfolder download, we zipped the folder here for you: [CellposeVenv.zip](../ZippedVenvFolders/CellposeVenv.zip).
 
