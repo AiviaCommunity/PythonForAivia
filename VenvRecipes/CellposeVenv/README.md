@@ -17,7 +17,7 @@ Online information about Cellpose are listed below:
 
 * Python 3.9 - comes with Aivia
 
-* These Cellpose scripts provided to you to use at your own risk. Note that they download models and related files from GitHub directly, which could be a security risk. 
+* Accept the risks that come from running Python Scripts you download from the internet. These Cellpose scripts are provided to you to use at your own risk. Note that they may download models and/or related files from GitHub directly, which could be a security risk.
 
 ## Installation
 
