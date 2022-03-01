@@ -1,4 +1,4 @@
-cellpose @ git+https://github.com/mouseland/cellpose.git@f90f0465e44e0e67f984ad2e6800623c0ec05b09
+cellpose==0.8.0
 certifi==2021.10.8
 charset-normalizer==2.0.10
 colorama==0.4.4
@@ -23,9 +23,7 @@ requests==2.27.1
 scikit-image==0.19.1
 scipy==1.7.3
 tifffile==2021.11.2
-torch==1.10.1+cu113
--f https://download.pytorch.org/whl/cu113/torch_stable.html
-torch-optimizer==0.3.0
+torch @ https://download.pytorch.org/whl/cu113/torch-1.10.2%2Bcu113-cp39-cp39-win_amd64.whl
 tqdm==4.62.3
 typing_extensions==4.0.1
 urllib3==1.26.8
