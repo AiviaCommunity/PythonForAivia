@@ -9,23 +9,22 @@ import matplotlib.pyplot as plt
 import re
 
 """
-Extracts Deep Learning training info (epochs with their relative val_loss + val_acc)
+Extracts Deep Learning training info (epochs with their relative val_loss + val_psnr)
 Some regex modifications are required if other values are needed, specific to a certain model. 
 
 Requirements
 ------------
 numpy (comes with Aivia installer)
 scikit-image (comes with Aivia installer)
-win32con (comes with Aivia installer?)
-win32gui (comes with Aivia installer?)
 matplotlib (comes with Aivia installer)
 re (comes with Aivia installer?)
+pywin32
 
 Parameters
 ----------
 Input:
 Log file from local computer in:
-C:\ Users\ {username}\ AppData\ Local\ DRVision Technologies LLC\ Aivia {version}\ 
+C:\ Users\ {username}\ AppData\ Local\ Leica Microsystems\ Aivia {version}\ 
 or from GCP storage
 
 Returns
@@ -83,13 +82,14 @@ def run():
 
     # Create second axis
     ax2 = ax1.twinx()
-    ax2.set_ylabel('val_acc', color=col2)
+    ax2.set_ylabel('val_psnr', color=col2)
     ax2.tick_params(axis='y', labelcolor=col2)
     ax2.set_ylim(0, ymax2)
     # ax2.yaxis.set_major_locator(ticker.MultipleLocator(1))
 
     # Plot values
-    ax1.plot(n_epoch, all_v1, color=col1, linewidth=1)
+    all_v1_nonsci = [float('{:.4f}'.format(v)) for v in all_v1]     # Remove scientific notation for loss value
+    ax1.plot(n_epoch, all_v1_nonsci, color=col1, linewidth=1)
     ax2.plot(n_epoch, all_v2, color=col2, linewidth=1)
 
     plt.show()
@@ -114,16 +114,17 @@ def extract_data(s):        # TODO
 
 
 def extract_epoch_val(s):       # TODO
-    # The following regex is for the Worklog from the GCP - from restoration model (see PSNR)
-    in_pattern = re.compile(r""".*\sval_loss:\s(?P<vloss>\d+\.?\d*)
-                                \s-\sval_acc:\s(?P<vacc>\d+\.?\d*)
+    # The following regex is for the Worklog from Aivia - from restoration model (see PSNR)
+    in_pattern = re.compile(r""".*\sval_loss:\s(?P<vloss>\d+\.?.*)
+                                \s-\sval_psnr:\s(?P<vpsnr>\d+\.?\d*)
+                                .*
                                 \n""", re.VERBOSE)
     in_match = in_pattern.findall(s)
 
     v_loss = [ite[0] for ite in in_match]
-    v_acc = [ite[1] for ite in in_match]
+    v_psnr = [ite[1] for ite in in_match]
 
-    return v_loss, v_acc
+    return v_loss, v_psnr
 
 
 def extract_data_GCP(s):
@@ -147,14 +148,14 @@ def extract_data_GCP(s):
 def extract_epoch_val_GCP(s):
     # The following regex is for the Worklog from the GCP - from restoration model (see PSNR)
     in_pattern = re.compile(r""".*\sval_loss:\s(?P<vloss>\d+\.?\d*)
-                                \s-\sval_acc:\s(?P<vpsnr>\d+\.?\d*)
+                                \s-\sval_psnr:\s(?P<vpsnr>\d+\.?\d*)
                                 \n""", re.VERBOSE)
     in_match = in_pattern.findall(s)
 
     v_loss = [ite[0] for ite in in_match]
-    v_acc = [ite[1] for ite in in_match]
+    v_psnr = [ite[1] for ite in in_match]
 
-    return v_loss, v_acc
+    return v_loss, v_psnr
 
 
 def pick_file():
