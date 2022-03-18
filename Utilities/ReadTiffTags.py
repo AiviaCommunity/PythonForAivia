@@ -14,8 +14,8 @@ if still longer than specified "max_char_len" value.
 Requirements
 ------------
 tifffile (comes with Aivia installer)
-tkinter (comes with Aivia installer)
-textwrap (comes with Aivia installer)
+tkinter (needs the standard version of python)
+textwrap
 
 """
 
