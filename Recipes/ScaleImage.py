@@ -40,7 +40,7 @@ New image:
 """
 interpolation_mode = 1  # 0: Nearest-neighbor, 1: Bi-linear , 2: Bi-quadratic, 3: Bi-cubic, 4: Bi-quartic, 5: Bi-quintic
 
-#Get path to the Aivia executable
+# Get path to the Aivia executable
 def getParentDir(currDir, level=1):
 
     for i in range(level):
@@ -49,10 +49,9 @@ def getParentDir(currDir, level=1):
 
     return currDir
 
-exeDir=sys.executable
-parentDir=getParentDir(exeDir, level=2)
-aivia_path = parentDir +'\\Aivia.exe'
-
+exeDir = sys.executable
+parentDir = getParentDir(exeDir, level=2)
+aivia_path = parentDir + '\\Aivia.exe'
 
 
 # automatic parameters
@@ -72,6 +71,13 @@ def run(params):
     scale_direction = int(params['scaleDirection'])
     zCount = int(params['ZCount'])
     tCount = int(params['TCount'])
+    pixel_cal_tmp = params['Calibration']
+    pixel_cal = pixel_cal_tmp[6:].split(', ')           # Expects calibration with 'XYZT: ' in front
+
+    # Getting XY and Z values                # Expecting only 'Micrometers' in this code
+    XY_cal = float(pixel_cal[0].split(' ')[0])
+    Z_cal = float(pixel_cal[2].split(' ')[0])
+    
     if not os.path.exists(image_location):
         print(f"Error: {image_location} does not exist")
         return
@@ -89,12 +95,10 @@ def run(params):
         print('Error: Cannot handle timelapses yet.')
         return
 
-    #output_data = np.empty_like(image_data)
-    
-    if scale_factor_xy==0.0:
-        scale_factor_xy=1.0
-    if scale_factor_z==0.0:
-        scale_factor_z=1.0
+    if scale_factor_xy == 0.0:
+        scale_factor_xy = 1.0                 #TODO: manual input for batch
+    if scale_factor_z == 0.0:
+        scale_factor_z = 1.0                  #TODO
         
     if scale_direction == 0:        
         scale_factor_xy = 1/scale_factor_xy
@@ -102,11 +106,15 @@ def run(params):
     else:
         scale_factor_xy = scale_factor_xy
         scale_factor_z = scale_factor_z    
+        
+    # Calculating final pixel calibration
+    final_XY_cal = XY_cal / scale_factor_xy
+    final_Z_cal = Z_cal / scale_factor_z
        
     # Defining axes for output metadata and scale factor variable
     final_scale = None
     if tCount == 1 and zCount > 1:         # 3D
-        axes = 'YXZ'
+        axes = 'ZYX'       # Data is 'YXZ'
         final_scale = (scale_factor_z, scale_factor_xy, scale_factor_xy)
 
     elif tCount == 1 and zCount == 1:      # 2D
@@ -124,9 +132,20 @@ def run(params):
         out_data = img_as_ubyte(scaled_img)
         print('img_as_ubyte')
     
-   
+    # Formatting voxel calibration values
+    formatted_XY_cal = '{0:.4g}'.format(final_XY_cal)
+
     tmp_path = result_location.replace('.tif', '-scaled.tif')
-    imwrite(tmp_path, out_data, photometric='minisblack', metadata={'axes': axes})
+    meta_info = {'axes': axes,
+                'PhysicalSizeX': formatted_XY_cal,
+                'PhysicalSizeY': formatted_XY_cal,
+                'PhysicalSizeZ': str(final_Z_cal),
+                'PhysicalSizeXUnit': '\xb5m',
+                'PhysicalSizeYUnit': '\xb5m',
+                'PhysicalSizeZUnit': '\xb5m'}       # '\xb5m' for microns?
+
+    print('Saving image in temp location:\n', tmp_path)
+    imwrite(tmp_path, out_data, ome=True, photometric='minisblack', metadata=meta_info)
 
     # Dummy save
     imwrite(result_location, image_data)
@@ -150,3 +169,5 @@ if __name__ == '__main__':
 # v1_00: - scaling in XYZ with same factor
 # v1_10: - scaling in XY and Z are now independent
 # v1_11: - tkinter not installed by default so removing all code and adding parameters in Aivia UI
+# v1_13: - Fallback values if factors equal 0 / automated detection of latest Aivia version on PC
+# v1_14: - Adding pixel/voxel calibration
