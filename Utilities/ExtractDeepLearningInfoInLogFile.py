@@ -1,4 +1,3 @@
-import ctypes
 import sys
 from os import path, listdir, environ
 import win32con
@@ -7,9 +6,10 @@ import win32gui
 # import numpy as np
 import matplotlib.pyplot as plt
 import re
+import ctypes
 
 """
-Extracts Deep Learning training info (epochs with their relative val_loss + val_psnr)
+Extracts Deep Learning training info (epochs with their relative loss and validation loss values)
 Some regex modifications are required if other values are needed, specific to a certain model. 
 
 Requirements
@@ -17,7 +17,7 @@ Requirements
 numpy (comes with Aivia installer)
 scikit-image (comes with Aivia installer)
 matplotlib (comes with Aivia installer)
-re (comes with Aivia installer)
+re (comes with Aivia installer?)
 pywin32
 pyside2 (needed for UI created by matplotlib)
 
@@ -76,14 +76,14 @@ def run():
     fig = plt.figure(figsize=plt.figaspect(0.5))
     ax1 = fig.add_subplot(111)
     ax1.set_xlabel('epochs')
-    ax1.set_ylabel('val_loss', color=col1)
+    ax1.set_ylabel('loss', color=col1)
     ax1.tick_params(axis='y', labelcolor=col1)
     ax1.set_ylim(0, ymax1)
     # ax1.yaxis.set_major_locator(ticker.MultipleLocator(0.1))
 
     # Create second axis
     ax2 = ax1.twinx()
-    ax2.set_ylabel('val_psnr', color=col2)
+    ax2.set_ylabel('validation_loss', color=col2)
     ax2.tick_params(axis='y', labelcolor=col2)
     ax2.set_ylim(0, ymax2)
     # ax2.yaxis.set_major_locator(ticker.MultipleLocator(1))
@@ -116,16 +116,16 @@ def extract_data(s):        # TODO
 
 def extract_epoch_val(s):       # TODO
     # The following regex is for the Worklog from Aivia - from restoration model (see PSNR)
-    in_pattern = re.compile(r""".*\sval_loss:\s(?P<vloss>\d+\.?.*)
-                                \s-\sval_psnr:\s(?P<vpsnr>\d+\.?\d*)
+    in_pattern = re.compile(r""".*\sloss:\s(?P<vloss>\d+\.?\d*e?-?\d*)
+                                \s.*-\sval_loss:\s(?P<vdloss>\d+\.?\d*e?-?\d*)
                                 .*
                                 \n""", re.VERBOSE)
     in_match = in_pattern.findall(s)
 
     v_loss = [ite[0] for ite in in_match]
-    v_psnr = [ite[1] for ite in in_match]
+    vd_loss = [ite[1] for ite in in_match]
 
-    return v_loss, v_psnr
+    return v_loss, vd_loss
 
 
 def extract_data_GCP(s):
@@ -148,22 +148,22 @@ def extract_data_GCP(s):
 
 def extract_epoch_val_GCP(s):
     # The following regex is for the Worklog from the GCP - from restoration model (see PSNR)
-    in_pattern = re.compile(r""".*\sval_loss:\s(?P<vloss>\d+\.?\d*)
-                                \s-\sval_psnr:\s(?P<vpsnr>\d+\.?\d*)
+    in_pattern = re.compile(r""".*\sloss:\s(?P<vloss>\d+\.?\d*e?-?\d*)
+                                \s.*-\sval_loss:\s(?P<vdloss>\d+\.?\d*e?-?\d*)
                                 \n""", re.VERBOSE)
     in_match = in_pattern.findall(s)
 
     v_loss = [ite[0] for ite in in_match]
-    v_psnr = [ite[1] for ite in in_match]
+    vd_loss = [ite[1] for ite in in_match]
 
-    return v_loss, v_psnr
+    return v_loss, vd_loss
 
 
 def pick_file():
     fname, filt, flags = win32gui.GetOpenFileNameW(
         InitialDir=environ['temp'],
         Flags=win32con.OFN_EXPLORER,
-        File='somefilename', DefExt='log',
+        File='chooseYourLogFile', DefExt='log',
         Title='GetOpenFileNameW',
         Filter='Selected extensions\0*.*\0',
         FilterIndex=0)
