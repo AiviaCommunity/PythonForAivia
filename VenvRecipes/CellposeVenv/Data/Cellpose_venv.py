@@ -6,6 +6,7 @@ from cellpose import models
 from skimage.exposure import rescale_intensity
 from skimage.util import img_as_ubyte, img_as_uint
 from skimage.transform import resize
+from scipy.special import expit
 
 """
 This python script must be executed in the Cellpose_venv virtual environment.
@@ -83,11 +84,11 @@ def run_Cellpose(inputImagePath, z_count, t_count, diameter, model_type,
 
     # Load input image
     image_data = imread(inputImagePath)
-    dtype = image_data.dtype
+    image_type = image_data.dtype
     dims = image_data.shape
 
     confidence = np.empty_like(image_data, dtype=float)
-    mask = np.empty_like(image_data, dtype=dtype)
+    mask = np.empty_like(image_data, dtype=image_type)
 
     # Get model type
     if model_type == 0:
@@ -111,7 +112,8 @@ def run_Cellpose(inputImagePath, z_count, t_count, diameter, model_type,
                                     diameter=diameter,
                                     do_3D=True,
                                     mask_threshold=mask_threshold,
-                                    flow_threshold=flow_threshold)
+                                    flow_threshold=flow_threshold,
+                                    resample=True)
             confidence[t] = flow[2]
             mask[t] = mask_i
         axes = 'YXZT'
@@ -125,7 +127,8 @@ def run_Cellpose(inputImagePath, z_count, t_count, diameter, model_type,
                                         diameter=diameter,
                                         do_3D=True,
                                         mask_threshold=mask_threshold,
-                                        flow_threshold=flow_threshold)
+                                        flow_threshold=flow_threshold,
+                                        resample=True)
         confidence = flow[2]
         axes = 'YXZ'
 
@@ -138,9 +141,10 @@ def run_Cellpose(inputImagePath, z_count, t_count, diameter, model_type,
                                         channels=channels,
                                         diameter=diameter,
                                         mask_threshold=mask_threshold,
-                                        flow_threshold=flow_threshold)
+                                        flow_threshold=flow_threshold,
+                                        resample=True)
             confidence[t] = flow[2]
-            mask[t] = mask_i.astype(dtype)
+            mask[t] = mask_i.astype(image_type)
         axes = 'YXT'
 
     # 2D
@@ -151,19 +155,20 @@ def run_Cellpose(inputImagePath, z_count, t_count, diameter, model_type,
                                         channels=channels,
                                         diameter=diameter,
                                         mask_threshold=mask_threshold,
-                                        flow_threshold=flow_threshold)
+                                        flow_threshold=flow_threshold,
+                                        resample=True)
         confidence = flow[2]
-        mask = mask.astype(dtype)
+        mask = mask.astype(image_type)
         axes = 'YX'
 
-    # Re-scale confidence to unsigned
-    if np.min(confidence) < 0:
-        confidence = rescale_intensity(confidence, out_range='float')
+    # Convert raw model output to 0-1 using expit
+    confidence = expit(confidence)
+
+    # Re-scale confidence to input image range
+    confidence = rescale_intensity(confidence, in_range=(0.0, 1.0), 
+                                   out_range=image_type.name).astype(image_type)
     
-    # Re-sizing confidence(cell probaility) map to original input shape 
-    confidence = resize(confidence, image_data.shape, anti_aliasing=False)
-    
-    if image_data.dtype == np.uint16:
+    if image_type == np.uint16:
         # randomize mask output, otherwise the default mask is gradient-like
         mask_permute = np.append([0], np.random.permutation(65535)+1)
         mask = mask_permute[mask]
