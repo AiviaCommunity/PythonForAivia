@@ -49,7 +49,7 @@ def run(params):
     output_file = os.path.join(os.path.dirname(xl_file), output_basename)
     
     df_raw = pd.read_excel(xl_file, sheet_name=None)
-    df_grouped = pd.DataFrame()
+    df_grouped = {}
     df_temp = pd.DataFrame()
     object_name = ''
 
