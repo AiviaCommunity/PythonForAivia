@@ -11,6 +11,8 @@ Online information about Cellpose are listed below:
 * Cellpose documentation: https://cellpose.readthedocs.io/en/latest/
 * Cellpose paper: https://www.biorxiv.org/content/10.1101/2020.02.02.931238v1
 
+Important note: If you use this plugin, please cite the original research paper:  https://www.nature.com/articles/s41592-020-01018-x
+
 ## Requirements
 
 * Virtual Environment for Cellpose - the required virtual environment will be created automatically when you run CellposeForAivia.py for the first time. All required python packages will be installed in this virtual environment. You can check the `requirements.txt` to see what packages will be installed.
