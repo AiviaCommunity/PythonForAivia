@@ -14,6 +14,9 @@ The source of the pre-trained 2D and 3D StarDist Models are listed below:
    - Please also check: [https://github.com/mpicbg-csbd/stardist/issues/46](https://github.com/mpicbg-csbd/stardist/issues/46)
 4. 3D_demo model: [https://github.com/mpicbg-csbd/stardist/tree/master/models/examples/3D_demo](https://github.com/mpicbg-csbd/stardist/tree/master/models/examples/3D_demo)
 
+Important note: if you use this tool in your project, please cite the two papers which are provided here:
+https://github.com/stardist/stardist#how-to-cite
+
 ## Installation
 
 1. Download the whole `StarDistVenv` folder. Since GitHub does not support subfolder download, we zipped the folder here for you: [StarDistVenv.zip](../ZippedVenvFolders/StardistVenv.zip).
