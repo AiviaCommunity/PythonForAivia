@@ -18,7 +18,7 @@ Requirements
 ------------
 numpy (comes with Aivia installer)
 scikit-image (comes with Aivia installer)
-matplotlib (comes with Aivia installer)
+matplotlib
 
 Parameters
 ----------
