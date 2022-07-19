@@ -111,7 +111,7 @@ def run_Cellpose(inputImagePath, z_count, t_count, diameter, model_type,
                                     channels=channels,
                                     diameter=diameter,
                                     do_3D=True,
-                                    mask_threshold=mask_threshold,
+                                    cellprob_threshold=mask_threshold,
                                     flow_threshold=flow_threshold,
                                     resample=True)
             confidence[t] = flow[2]
@@ -126,7 +126,7 @@ def run_Cellpose(inputImagePath, z_count, t_count, diameter, model_type,
                                         channels=channels,
                                         diameter=diameter,
                                         do_3D=True,
-                                        mask_threshold=mask_threshold,
+                                        cellprob_threshold=mask_threshold,
                                         flow_threshold=flow_threshold,
                                         resample=True)
         confidence = flow[2]
@@ -140,7 +140,7 @@ def run_Cellpose(inputImagePath, z_count, t_count, diameter, model_type,
                                         image_data[t],
                                         channels=channels,
                                         diameter=diameter,
-                                        mask_threshold=mask_threshold,
+                                        cellprob_threshold=mask_threshold,
                                         flow_threshold=flow_threshold,
                                         resample=True)
             confidence[t] = flow[2]
@@ -154,7 +154,7 @@ def run_Cellpose(inputImagePath, z_count, t_count, diameter, model_type,
                                         image_data,
                                         channels=channels,
                                         diameter=diameter,
-                                        mask_threshold=mask_threshold,
+                                        cellprob_threshold=mask_threshold,
                                         flow_threshold=flow_threshold,
                                         resample=True)
         confidence = flow[2]

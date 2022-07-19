@@ -1,4 +1,4 @@
-cellpose==0.8.0
+cellpose==2.0.4
 certifi==2021.10.8
 charset-normalizer==2.0.10
 colorama==0.4.4
