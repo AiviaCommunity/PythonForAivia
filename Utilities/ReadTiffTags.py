@@ -15,8 +15,6 @@ Requirements
 ------------
 tifffile (comes with Aivia installer)
 tkinter (needs the standard version of python)
-textwrap
-
 """
 
 max_char_len = 150
