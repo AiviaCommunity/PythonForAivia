@@ -17,7 +17,8 @@ def seaborn_to_aivia_coloring(desired_palette, output_dir):
 
     Requirements
     ------------
-    seaborn
+    seaborn (!Warning: it is not included in the virtual environment PythonVenvForAivia by default.
+              You can use 'python -m pip install seaborn' manually to use this script)
 
     Parameters
     ----------
