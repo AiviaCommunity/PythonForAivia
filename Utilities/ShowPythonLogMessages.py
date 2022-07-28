@@ -20,7 +20,8 @@ This can be changed in File > Options... > Logging.
 
 Requirements
 ------------
-watchdog
+watchdog (!Warning: it is not included in the virtual environment PythonVenvForAivia by default.
+          You can use 'python -m pip install watchdog' manually to use this script)
 """
 
 log_dir = os.path.join(os.getenv('LOCALAPPDATA'),'DRVision Technologies LLC/Aivia 9.0.0.34168/')
