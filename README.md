@@ -1,10 +1,7 @@
 # Python for Aivia
 
 Here you will find Python recipes and helper functions for Aivia users.
-
 The goal of this repository is to organize the work of the Aivia team and the Aivia community at large.
-
-_Note: This is currently a work in progress, but we wanted to begin sharing it with our user community so they can use what we've created and make their own contributions._
 
 ## Repository Organization
 
