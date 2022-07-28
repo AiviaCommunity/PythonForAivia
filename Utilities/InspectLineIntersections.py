@@ -36,6 +36,7 @@ scikit-image (installed with Aivia)
 matplotlib (installed with scikit-image)
 tifffile (installed with scikit-image)
 pandas
+tkinter (needs the standard version of python)
 
 """
 
