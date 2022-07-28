@@ -1,5 +1,23 @@
+# -------- Activate virtual environment -------------------------
+import os.path
 import ctypes
-import sys
+from pathlib import Path
+parentFolder = str(Path(__file__).parent.parent)
+activate_path = parentFolder + '\\env\\Scripts\\activate_this.py'
+if os.path.exists(activate_path):
+    exec(open(activate_path).read(), {'__file__': activate_path})
+    print(f'Aivia virtual environment activated\nUsing python: {activate_path}')
+else:
+    # Attempt to still run the script with main Aivia python interpreter
+    error_mess = '\n'.join(['#' * 40,
+                     f'### Error: {activate_path} was not found.',
+                     '### Please run the \'FirstTimeSetup.py\' script in Aivia first.',
+                     '### Now trying to fallback on python environment specified in Aivia options > Advanced.',
+                     '#' * 40])
+    ctypes.windll.user32.MessageBoxW(0, error_mess, 'Error', 0)
+    print(error_mess)
+# ---------------------------------------------------------------
+
 import wx
 import matplotlib.pyplot as plt
 import re
@@ -10,12 +28,11 @@ Some regex modifications are required if other values are needed, specific to a 
 
 Requirements
 ------------
-numpy (comes with Aivia installer)
-scikit-image (comes with Aivia installer)
-matplotlib (comes with Aivia installer)
-re (comes with Aivia installer?)
-pywin32
-pyside2 (needed for UI created by matplotlib)
+numpy
+scikit-image
+matplotlib
+re
+wxpython or pyside2 (needed for UI created by matplotlib)
 
 Parameters
 ----------
