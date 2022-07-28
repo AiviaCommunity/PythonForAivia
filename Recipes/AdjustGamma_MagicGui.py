@@ -1,4 +1,20 @@
+# -------- Activate virtual environment -------------------------
 import os.path
+from pathlib import Path
+parentFolder = str(Path(__file__).parent.parent)
+activate_path = parentFolder + '\\env\\Scripts\\activate_this.py'
+if os.path.exists(activate_path):
+    exec(open(activate_path).read(), {'__file__': activate_path})
+    print(f'Aivia virtual environment activated\nUsing python: {activate_path}')
+else:
+    # Attempt to still run the script with main Aivia python interpreter
+    print('\n'.join(['#' * 40,
+                     f'### Error: {activate_path} was not found.',
+                     '### Please run the \'FirstTimeSetup.py\' script in Aivia first.',
+                     '### Now trying to fallback on python environment specified in Aivia options > Advanced.',
+                     '#' * 40]))
+# ---------------------------------------------------------------
+
 from skimage.io import imread, imsave
 from skimage.exposure import adjust_gamma
 from magicgui import magicgui
@@ -9,10 +25,10 @@ See: https://scikit-image.org/docs/dev/api/skimage.exposure.html#skimage.exposur
 Adjusts gamma of the input channel pixelwise according to O = I**gamma.
 This extra version of this script is a good example on how to quickly implement a GUI popup with MagicGui.
 
-Requirements
+Requirements (managed by the virtual environment)
 ------------
-numpy (comes with Aivia installer)
-scikit-image (comes with Aivia installer)
+numpy
+scikit-image
 PySide2, QtPy
 MagicGui (Warning: the code below is for version 0.3.x and python 3.9)
 
