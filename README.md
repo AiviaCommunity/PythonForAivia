@@ -8,10 +8,11 @@ The goal of this repository is to organize the work of the Aivia team and the Ai
 In this main repository you will find a few different folders:
 
 * `DRVision/Snapshots/` is for storing files necessary to build proper documentation, and can be ignored unless you are contributing to that documentation.
-* `TestData/` contains images for testing recipes. See `TestData/README.md` for more information.
+* `PythonVenvForAivia/` contains a virtual environment auto-builder. This is useful for users who do not know how to set a virtual environment and want to use recipes in Aivia without using any command line.
 * `Recipes/` contains .py files that can be dragged into Aivia and used as recipes in Aivia's Analysis Tools panel. Each of these recipes is a single, self-contained piece of code that can be used independently, except in cases where the .py file has accompanying files of the same name (e.g. .ui files to describe PyQt interfaces for .py files).
-* `VenvRecipes/` contains VenvRecipe folders. Each of these folders include a .py recipe and data. Each of these recipes is also ready-to-use except they will create required virtual environment and execute under the environment automatically. To use these recipes, please download the whole subfolder of that recipe.
+* `TestData/` contains images for testing recipes. See `TestData/README.md` for more information.
 * `Utilities/` contains useful companion scripts for the Aivia workflow that must be used in a Python interpreter separate from Aivia.
+* `VenvRecipes/` contains VenvRecipe folders. Each of these folders include a .py recipe and data. Each of these recipes is also ready-to-use except they will create required virtual environment and execute under the environment automatically. To use these recipes, please download the whole subfolder of that recipe.
 
 ## Installation
 
