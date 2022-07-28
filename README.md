@@ -2,7 +2,7 @@
 
 Here you will find Python recipes and helper functions for Aivia users.
 
-The goal of this repository is to organize the work of the DRVision team and the Aivia community at large.
+The goal of this repository is to organize the work of the Aivia team and the Aivia community at large.
 
 _Note: This is currently a work in progress, but we wanted to begin sharing it with our user community so they can use what we've created and make their own contributions._
 
@@ -95,7 +95,10 @@ Aivia channel
   Result of the transform
 """
 ```
-For Aivia 10.x with embedded python, the guide to install non-standard packages:
+For Aivia 10.5.x or more, you can install non-standard packages from Aivia:
+* Open Aivia and go to menu Analysis > Deep Learning Processor (or Batch and Cloud Processor) > File > Add Python Module
+
+For Aivia 10.1.x with embedded python, the guide to install non-standard packages:
 
 * Open terminal
 * Change directory: cd "path/to/Aivia/Python/directory/" (For e.g. C:\Program Files\Leica Microsystems\Aivia 10.5.0\Python)
