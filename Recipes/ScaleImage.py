@@ -180,3 +180,4 @@ if __name__ == '__main__':
 # v1_11: - tkinter not installed by default so removing all code and adding parameters in Aivia UI
 # v1_13: - Fallback values if factors equal 0 / automated detection of latest Aivia version on PC
 # v1_14: - Adding pixel/voxel calibration
+# v1_15: - Update Aivia path for Aivia community
