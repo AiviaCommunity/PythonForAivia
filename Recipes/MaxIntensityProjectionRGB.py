@@ -4,6 +4,7 @@ from skimage.io import imread, imsave
 import shlex, subprocess
 import sys
 from os.path import dirname as up
+from os.path import isfile
 
 """
 Performs a maximum intensity projection through Z for a single channel. 
@@ -42,7 +43,15 @@ def getParentDir(currDir, level=1):
 
 exeDir=sys.executable
 parentDir=getParentDir(exeDir, level=2)
-aivia_path = parentDir +'\\Aivia.exe'
+if ('Aivia Community' in parentDir):
+    aivia_path = parentDir + '\\Aivia-Community.exe'
+else:
+    aivia_path = parentDir + '\\Aivia.exe'
+
+if (not isfile(aivia_path)):
+    raise FileNotFoundError(f"{aivia_path} does not exist")
+
+print(f'Aivia path: {aivia_path}')
 
 
 # [INPUT Name:inputRedPath Type:string DisplayName:'Red channel']
