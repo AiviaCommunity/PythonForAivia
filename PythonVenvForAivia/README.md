@@ -15,7 +15,7 @@ The recipes are then containing some code to:
 
 * Python 3.9 - comes with Aivia
 
-* Accept the risks that come from running Python Scripts you download from the internet. These Cellpose scripts are provided to you to use at your own risk. Note that they may download models and/or related files from GitHub directly, which could be a security risk.
+* Accept the risks that come from running Python Scripts you download from the internet. These scripts are provided to you to use at your own risk. 
 
 ## Installation
 
