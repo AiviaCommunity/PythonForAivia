@@ -6,8 +6,6 @@ from pathlib import Path
 parentFolder = str(Path(__file__).parent.parent)
 activate_path = parentFolder + '\\env\\Scripts\\activate_this.py'
 
-activate_path = r'D:\PythonCode\Python_scripts\Projects\PythonVenvForAivia\env\Scripts\activate_this.py'  # TODO: test line to remove!
-
 if os.path.exists(activate_path):
     exec(open(activate_path).read(), {'__file__': activate_path})
     print(f'Aivia virtual environment activated\nUsing python: {activate_path}')
@@ -28,8 +26,7 @@ import concurrent.futures
 import openpyxl.utils.cell
 
 # Folder to quickly run the script on all Excel files in it
-DEFAULT_FOLDER = ""   # "D:\\PythonCode\\Python_scripts\\Projects\\ExcelFileHandling\\tests"
-DEFAULT_FOLDER = r"D:\Aivia Working Directory\_Customers\BE\Algist\22-07-04 For Training\Batch\2022-08-13-01-19-57 Workflow Living and Dead"
+DEFAULT_FOLDER = ""   # example: r"D:\PythonCode\Python_scripts\Projects\ExcelFileHandling"
 
 # Default action when combining multiple spreadsheets (see difference in scenario A and B below). False = A, True = B
 do_multiple_files_as_cols = False
@@ -440,14 +437,3 @@ def Mbox(title, text, style):
 if __name__ == '__main__':
     params = {}
     run(params)
-
-# Changelog:
-# v1.00: - using wxPython for the file picker, multiple sheets stored as dictionary of DataFrames (keys = sheet names)
-# v1.01: - Adding default values before def run
-# v1.02: - Exception handling when measurement name contains dots: 'Std. Dev. Intensity'
-# v1.10: - Adding summary tab if needed with object set count.
-#        - Handles multiple summary tabs and adds counting and % values
-#        - Added virtual environment activation
-# v1.20: - Renaming script to "Process..."
-#        - Scenario D (individual process) becomes available for multiple selected files
-#        - Adding a summary table on top of individual files for scenario D
