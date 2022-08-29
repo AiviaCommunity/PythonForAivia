@@ -1,3 +1,24 @@
+# -------- Activate virtual environment -------------------------
+import os
+import ctypes
+import sys
+from pathlib import Path
+parentFolder = str(Path(__file__).parent.parent)
+activate_path = parentFolder + '\\env\\Scripts\\activate_this.py'
+if os.path.exists(activate_path):
+    exec(open(activate_path).read(), {'__file__': activate_path})
+    print(f'Aivia virtual environment activated\nUsing python: {activate_path}')
+else:
+    # Attempt to still run the script with main Aivia python interpreter
+    error_mess = f'Error: {activate_path} was not found.\nPlease run the \'FirstTimeSetup.py\' script in Aivia first.'
+    ans = ctypes.windll.user32.MessageBoxW(0, error_mess, 'Error', 1)
+    if ans == 2:
+        sys.exit(error_mess)
+    print('\n'.join(['#' * 40, error_mess,
+                     'Now trying to fallback on python environment specified in Aivia options > Advanced.',
+                     '#' * 40]))
+# ---------------------------------------------------------------
+
 import os.path
 import numpy as np
 import matplotlib.pyplot as plt
