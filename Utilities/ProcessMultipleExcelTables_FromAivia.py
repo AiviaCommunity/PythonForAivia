@@ -252,9 +252,11 @@ def run(params):
 
             # Adding percentages of objects if multiple object sets exists
             if len(total_counts) > 1:
+                # Collect tab names without summary
+                df_grouped_keys_nosum = [k for k in df_grouped.keys() if k != 'Summary']
                 for t in range(len(total_counts)):
                     val = '{:.1%}'.format(total_counts[t] / grand_total)
-                    new_row = {'Summary': '% of {}'.format([*df_grouped][t+1]), 'Frame 0': val}
+                    new_row = {'Summary': '% of {}'.format(df_grouped_keys_nosum[t]), 'Frame 0': val}
                     df_summary_to_add = df_summary_to_add.append(new_row, ignore_index=True)
 
             # Merge with potential existing summary tab
