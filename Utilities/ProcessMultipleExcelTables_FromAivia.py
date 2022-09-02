@@ -212,7 +212,9 @@ def run(params):
 
             # Calculate object counts
             df_summary_to_add = pd.DataFrame(emtpy_row)
-            total_counts = [0] * (len(df_grouped.keys()) - 1)       # -1 for summary
+            total_counts = [0] * len(df_grouped.keys())
+            if not add_summary:
+                del total_counts[0]         # -1 because summary exists already
             t = 0
             grand_total = 0
 
