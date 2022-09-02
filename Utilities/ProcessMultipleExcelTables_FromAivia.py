@@ -244,6 +244,11 @@ def run(params):
                         df_summary_to_add = df_summary_to_add.append(emtpy_row, ignore_index=True)
 
                     t += 1
+                    
+            # Add the summary tab
+            if add_summary:
+                df_summary = pd.DataFrame(emtpy_row)
+                df_grouped['Summary'] = df_summary
 
             # Adding percentages of objects if multiple object sets exists
             if len(total_counts) > 1:
@@ -251,11 +256,6 @@ def run(params):
                     val = '{:.1%}'.format(total_counts[t] / grand_total)
                     new_row = {'Summary': '% of {}'.format([*df_grouped][t+1]), 'Frame 0': val}
                     df_summary_to_add = df_summary_to_add.append(new_row, ignore_index=True)
-
-            # Add the summary tab
-            if add_summary:
-                df_summary = pd.DataFrame(emtpy_row)
-                df_grouped['Summary'] = df_summary
 
             # Merge with potential existing summary tab
             df_grouped['Summary'] = pd.concat([df_grouped['Summary'], df_summary_to_add], axis=0, ignore_index=True)
