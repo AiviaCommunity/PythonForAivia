@@ -41,27 +41,6 @@ New image:
 """
 interpolation_mode = 1  # 0: Nearest-neighbor, 1: Bi-linear , 2: Bi-quadratic, 3: Bi-cubic, 4: Bi-quartic, 5: Bi-quintic
 
-# Get path to the Aivia executable
-def getParentDir(currDir, level=1):
-
-    for i in range(level):
-        parentDir = up(currDir)
-        currDir=parentDir
-
-    return currDir
-
-exeDir = sys.executable
-parentDir = getParentDir(exeDir, level=2)
-if ('Aivia Community' in parentDir):
-    aivia_path = parentDir + '\\Aivia-Community.exe'
-else:
-    aivia_path = parentDir + '\\Aivia.exe'
-
-if (not isfile(aivia_path)):
-    raise FileNotFoundError(f"{aivia_path} does not exist")
-
-print(f'Aivia path: {aivia_path}')
-
 
 # automatic parameters
 
@@ -82,6 +61,7 @@ def run(params):
     tCount = int(params['TCount'])
     pixel_cal_tmp = params['Calibration']
     pixel_cal = pixel_cal_tmp[6:].split(', ')           # Expects calibration with 'XYZT: ' in front
+    aivia_path = params['CallingExecutable']
 
     # Getting XY and Z values                # Expecting only 'Micrometers' in this code
     XY_cal = float(pixel_cal[0].split(' ')[0])
@@ -181,3 +161,4 @@ if __name__ == '__main__':
 # v1_13: - Fallback values if factors equal 0 / automated detection of latest Aivia version on PC
 # v1_14: - Adding pixel/voxel calibration
 # v1_15: - Update Aivia path for Aivia community
+# v1_16: - Update aivia_path using new API 

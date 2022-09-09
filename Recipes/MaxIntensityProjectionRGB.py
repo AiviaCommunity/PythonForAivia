@@ -32,27 +32,6 @@ New 3-channel 2D image:
 
 """
 
-#Get path to the Aivia executable
-def getParentDir(currDir, level=1):
-
-    for i in range(level):
-        parentDir = up(currDir)
-        currDir=parentDir
-
-    return currDir
-
-exeDir=sys.executable
-parentDir=getParentDir(exeDir, level=2)
-if ('Aivia Community' in parentDir):
-    aivia_path = parentDir + '\\Aivia-Community.exe'
-else:
-    aivia_path = parentDir + '\\Aivia.exe'
-
-if (not isfile(aivia_path)):
-    raise FileNotFoundError(f"{aivia_path} does not exist")
-
-print(f'Aivia path: {aivia_path}')
-
 
 # [INPUT Name:inputRedPath Type:string DisplayName:'Red channel']
 # [INPUT Name:inputGreenPath Type:string DisplayName:'Green channel']
@@ -65,7 +44,8 @@ def run(params):
     image_location.append(params['inputBluePath'])
     result_location = params['resultPath']
     tCount = int(params['TCount'])
-    
+    aivia_path = params['CallingExecutable']
+
     for c in range(0, 3):
         if not os.path.exists(image_location[c]):
             print(f"Error: {image_location[c]} does not exist")
