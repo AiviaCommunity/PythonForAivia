@@ -1,76 +1,116 @@
+# -------- Activate virtual environment -------------------------
+import os
+import ctypes
+import sys
+from pathlib import Path
+parentFolder = str(Path(__file__).parent.parent)
+activate_path = parentFolder + '\\env\\Scripts\\activate_this.py'
+if os.path.exists(activate_path):
+    exec(open(activate_path).read(), {'__file__': activate_path})
+    print(f'Aivia virtual environment activated\nUsing python: {activate_path}')
+else:
+    # Attempt to still run the script with main Aivia python interpreter
+    error_mess = f'Error: {activate_path} was not found.\nPlease run the \'FirstTimeSetup.py\' script in Aivia first.'
+    ans = ctypes.windll.user32.MessageBoxW(0, error_mess, 'Error', 1)
+    if ans == 2:
+        sys.exit(error_mess)
+    print('\n'.join(['#' * 40, error_mess,
+                     'Now trying to fallback on python environment specified in Aivia options > Advanced.',
+                     '#' * 40]))
+# ---------------------------------------------------------------
+
 import tifffile
-from tkinter import filedialog
-import tkinter as tk
-from tkinter import ttk
+import wx
 import textwrap
-
-"""
-Simple script to read TIFF tags and display them in a tkinter window.
-Run this with the commandline and a file dialog window will pop up.
-
-Note: XML parts are broken into pieces (rows), which are themselves broken
-if still longer than specified "max_char_len" value.
-
-Requirements
-------------
-tifffile (comes with Aivia installer)
-tkinter (needs the standard version of python)
-"""
 
 max_char_len = 150
 
+
+# [INPUT Name:inputImagePath Type:string DisplayName:'Any channel']
+# [OUTPUT Name:resultPath Type:string DisplayName:'Dummy to delete']
 def run(params):
-    # Retrieve file
-    root = tk.Tk()
-    root.withdraw()
-    img_path = filedialog.askopenfilename(title='Select TIF file to read tags',
-                                          filetype=[('TIF files', '.tif .tiff')])
+    # Choose file
+    img_path = pick_file('')
 
     # Read tags
-    with tifffile.TiffFile(img_path) as tif:
+    with tifffile.TiffFile(img_path[0]) as tif:
         tif_tags = {}
         for tag in tif.pages[0].tags.values():
             name, value = tag.name, tag.value
             tif_tags[name] = value
             print(name, ': ', value)
 
-    # Display tags in table
-    master = tk.Tk()
-    master.bind('<Escape>', lambda e: master.quit())     # Press Esc to stop mainloop
-    tk.Label(master, text="Tiff Tags", font=("Arial", 14)).grid(row=0, column=0)
-    tk.Label(master, text="press Esc to close window", font=("Arial", 8)).grid(row=1, column=0)
-    cols = ('Tag name', 'Value')
-    tree = ttk.Treeview(master, columns=cols, show='headings')
-    for col in cols:
-        tree.heading(col, text=col)
-    tree.grid(row=2, column=0)
+    # Display tags in table, preparing table
+    app = wx.App()
+    frame = wx.Frame(parent=None, title='TIF tags', size=(1000, 800))
+    # table = grid.Grid(frame)
+    # table.CreateGrid(len(tif_tags) + 1, 2)
+    table = wx.ListCtrl(frame, size=(-1, 100), style=wx.LC_REPORT)
+    table.InsertColumn(0, 'Tag name', width=200)
+    table.InsertColumn(1, 'Value', width=800)
+
+    # Insert values
+    i = 0
     for tag_name, tag_val in tif_tags.items():
+        # Insert tag name
+        table.InsertItem(i, tag_name)
+
+        # Set value because some can be very long
         final_val = str(tag_val)
+
+        # Replace returns
+        final_val = final_val.replace('\n', '_')
+
         if len(final_val) > max_char_len:
             final_val_list = final_val.split('<')
             for v in range(0, len(final_val_list)):
+                i += 1
+                table.InsertItem(i, tag_name)
                 stri = final_val_list[v]
                 if len(stri) > 0:
                     if len(final_val_list) > 1:
                         stri = '<' + stri
                     if len(stri) < max_char_len:
-                        tree.insert("", "end", values=(tag_name, stri))
+                        table.SetItem(i, 1, stri)
                     else:
                         final_val_list2 = [stri[i:i + max_char_len] for i in range(0, len(stri), max_char_len)]
                         for w in range(0, len(final_val_list2)):
-                            tree.insert("", "end", values=(tag_name, final_val_list2[w]))
-
+                            i += 1
+                            table.InsertItem(i, tag_name)
+                            table.SetItem(i, 1, final_val_list2[w])
         else:
-            tree.insert("", "end", values=(tag_name, final_val))
-    tree.column(cols[1], width=1000, stretch=tk.YES)
+            table.SetItem(i, 1, final_val)
 
-    master.mainloop()
+        i += 1
+
+    frame.Show()
+    app.MainLoop()
 
 
-def wrap(string, lenght):
-    return '\n'.join(textwrap.wrap(string, lenght))
+def wrap(string, length):
+    return '\n'.join(textwrap.wrap(string, length))
+
+
+def pick_file(default_dir):
+    print('Starting wxPython app')
+    app = wx.App()
+
+    # Create open file dialog
+    openFileDialog = wx.FileDialog(None, "Select an image",
+                                   default_dir, "", "Image files (*.tif)|*.tif",
+                                   wx.FD_OPEN | wx.FD_FILE_MUST_EXIST)
+
+    openFileDialog.ShowModal()
+    filename = openFileDialog.GetPaths()
+    print("Selected image: ", filename)
+    openFileDialog.Destroy()
+    return filename
 
 
 if __name__ == '__main__':
     params = {}
     run(params)
+
+# CHANGELOG
+# - v1.00: - Using tkinter to choose file and display results
+# - v1.10: - Using wxpython to choose file and display results
