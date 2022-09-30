@@ -3,8 +3,10 @@ import os
 import ctypes
 import sys
 from pathlib import Path
+
 parentFolder = str(Path(__file__).parent.parent)
 activate_path = parentFolder + '\\env\\Scripts\\activate_this.py'
+
 if os.path.exists(activate_path):
     exec(open(activate_path).read(), {'__file__': activate_path})
     print(f'Aivia virtual environment activated\nUsing python: {activate_path}')
@@ -21,7 +23,9 @@ else:
 
 import wx
 import matplotlib.pyplot as plt
+from matplotlib.widgets import RadioButtons
 import re
+import concurrent.futures
 
 """
 Extracts Deep Learning training info (epochs with their relative loss and validation loss values)
@@ -33,7 +37,7 @@ numpy
 scikit-image
 matplotlib
 re
-wxpython or pyside2 (needed for UI created by matplotlib)
+wxpython
 
 Parameters
 ----------
@@ -49,13 +53,19 @@ A chart with two axes, that can be saved with the matplotlib buttons.
 """
 
 
-def run():
+# [INPUT Name:inputPath Type:string DisplayName:'Any channel']
+# [OUTPUT Name:resultPath Type:string DisplayName:'Dummy to delete']
+def run(params):
     print("Running")
     # Setting colors for chart
     col1 = 'royalblue'
     col2 = 'r'
 
+    # GUI to select a log file
+    print('Starting wxPython app')
+    app = wx.App()
     logfile = pick_file()
+    print('-- Selected file: {}--'.format(logfile))
 
     # Check if log file is from local Aivia or Google Cloud Platform
     is_local = True
@@ -64,54 +74,107 @@ def run():
 
     file = open(logfile, "r+")
     all_lines = file.read()
+    list_n_epoch, list_i_epoch = [], []
     if is_local:
-        (n_epoch, i_epoch) = extract_data(all_lines)
+        print('-- Extracting local DL data --')
+        indiv_data_blocks = extract_DL_runs(all_lines)
+
+        for data in indiv_data_blocks:
+            list_n_epoch_tmp, list_i_epoch_tmp = extract_data(data)
+            list_n_epoch.append(list_n_epoch_tmp)
+            list_i_epoch.append(list_i_epoch_tmp)
+
     else:
-        (n_epoch, i_epoch) = extract_data_GCP(all_lines)
+        print('-- Extracting Google Cloud DL data --')
+        # (n_epoch, i_epoch) = extract_data_GCP(all_lines)    # TODO: now n_epoch is a list of lists
 
     # If nothing found, exit
-    if n_epoch == 0:
-        Mbox('No info found', 'No Deep Learning training info found in this log.', 0)
+    if list_n_epoch is None:
+        concurrent.futures.ThreadPoolExecutor().submit(Mbox, 'No info found',
+                                                       'No Deep Learning training info found in this log.', 0)
         sys.exit("No Deep Learning training info found in this log.")
 
-    n_epoch = list(map(int, n_epoch))
+    print('-- Found {} DL training blocks --'.format(len(list_n_epoch)))
 
-    # extracting values from individual info
-    if is_local:
-        (all_v1, all_v2) = extract_epoch_val('\n'.join(i_epoch)+'\n')
-    else:
-        (all_v1, all_v2) = extract_epoch_val_GCP('\n'.join(i_epoch) + '\n')
-    all_v1 = list(map(float, all_v1))
-    all_v2 = list(map(float, all_v2))
-
-    ymax1 = max(all_v1) * 1.1
-    ymax2 = max(all_v2) * 1.1
-
-    fig = plt.figure(figsize=plt.figaspect(0.5))
+    # Init chart
+    fig = plt.figure(figsize=plt.figaspect(0.4))
     ax1 = fig.add_subplot(111)
     ax1.set_xlabel('epochs')
     ax1.set_ylabel('loss', color=col1)
     ax1.tick_params(axis='y', labelcolor=col1)
-    ax1.set_ylim(0, ymax1)
-    # ax1.yaxis.set_major_locator(ticker.MultipleLocator(0.1))
 
     # Create second axis
     ax2 = ax1.twinx()
     ax2.set_ylabel('validation_loss', color=col2)
     ax2.tick_params(axis='y', labelcolor=col2)
-    ax2.set_ylim(0, ymax2)
-    # ax2.yaxis.set_major_locator(ticker.MultipleLocator(1))
 
-    # Plot values
-    all_v1_nonsci = [float('{:.4f}'.format(v)) for v in all_v1]     # Remove scientific notation for loss value
-    ax1.plot(n_epoch, all_v1_nonsci, color=col1, linewidth=1)
-    ax2.plot(n_epoch, all_v2, color=col2, linewidth=1)
+    # Create buttons to switch to another DL run
+    # sub-plot for radio button with
+    # left, bottom, width, height values
+    plt.subplots_adjust(right=0.7)
+    rax = plt.axes([0.8, 0.1, 0.16, 0.8])
+    radio_button = RadioButtons(rax, tuple(['DL training no {}'.format(x) for x in range(1, len(list_n_epoch) + 1)]),
+                                active=len(list_n_epoch) - 1)
+
+    def get_values(run_index):
+        run_index -= 1
+        n_epoch = list(map(int, list_n_epoch[run_index]))
+        i_epoch = list_i_epoch[run_index]
+
+        # extracting values from individual info
+        if is_local:
+            (all_v1, all_v2) = extract_epoch_val('\n'.join(i_epoch) + '\n')
+        else:
+            (all_v1, all_v2) = extract_epoch_val_GCP('\n'.join(i_epoch) + '\n')
+        all_v1 = list(map(float, all_v1))
+        all_v2 = list(map(float, all_v2))
+
+        all_v1_nonsci = [float('{:.4f}'.format(v)) for v in all_v1]  # Remove scientific notation for loss value
+
+        ymax1 = max(all_v1) * 1.1
+        ymax2 = max(all_v2) * 1.1
+
+        return n_epoch, all_v1_nonsci, all_v2, ymax1, ymax2
+
+    # Define function for the radio buttons
+    def change_DL_run(label):
+        run_no = int(str(label).split('no ')[-1])
+        n_epoch, all_v1_nonsci, all_v2, ymax1, ymax2 = get_values(run_no)
+        print('Selected DL run: {}'.format(run_no))
+
+        # Clear values
+        ax1.cla()
+        ax2.cla()
+
+        # Plot values
+        ax1.plot(n_epoch, all_v1_nonsci, color=col1, linewidth=1)
+        ax2.plot(n_epoch, all_v2, color=col2, linewidth=1)
+
+        ax1.set_ylim(0, ymax1)
+        ax2.set_ylim(0, ymax2)
+
+        plt.draw()      # Update plot
+
+    radio_button.on_clicked(change_DL_run)
+
+    # Process the last DL run
+    run_index = len(list_n_epoch)
+    change_DL_run(run_index)
 
     plt.show()
 
 
-def extract_data(s):        # TODO
-    # The following regex is for the Worklog from the GCP - from restoration model (see PSNR)
+def extract_DL_runs(s):
+    # To detect and extract all DL runs in the same log
+    start_pattern = re.compile(r"(.+DeepLearning:Epoch\s+1/\d+.+\n)")
+    str_split = start_pattern.split(s)
+    blocks = [a + b for a, b in zip(str_split[1::2], str_split[2::2])]
+
+    return blocks
+
+
+def extract_data(s):  # TODO
+    # The following regex is for the log from Aivia - from restoration model (see PSNR)
     pattern = re.compile(r""".+DeepLearning:Epoch\s?(?P<epoch>\d*)\/(?P<totalEpochs>\d+)    # First line
                              \n(.*\n){0,20}                                            # followed by several info lines
                              (.*DeepLearning:.*\n){2,258}                              # lines for iterations
@@ -128,7 +191,7 @@ def extract_data(s):        # TODO
     return n_epoc, i_epoc
 
 
-def extract_epoch_val(s):       # TODO
+def extract_epoch_val(s):  # TODO
     # The following regex is for the Worklog from Aivia - from restoration model (see PSNR)
     in_pattern = re.compile(r""".*\sloss:\s(?P<vloss>\d+\.?\d*e?-?\d*)
                                 \s.*-\sval_loss:\s(?P<vdloss>\d+\.?\d*e?-?\d*)
@@ -174,15 +237,12 @@ def extract_epoch_val_GCP(s):
 
 
 def pick_file():
-    print('Starting wxPython app')
-    app = wx.App()
-    frame = wx.Frame(None, -1, 'File picker')
-
     # Create open file dialog
-    openFileDialog = wx.FileDialog(frame, "Select a log file to process", ".\\", "",
+    openFileDialog = wx.FileDialog(None, "Select a log file to process", ".\\", "",
                                    "Log files (*.log)|*.log", wx.FD_OPEN | wx.FD_FILE_MUST_EXIST)
 
-    openFileDialog.ShowModal()
+    if openFileDialog.ShowModal() == wx.ID_CANCEL:
+        sys.exit()
     fname = openFileDialog.GetPath()
     print("Selected file: ", fname)
     openFileDialog.Destroy()
@@ -192,8 +252,12 @@ def pick_file():
 def Mbox(title, text, style):
     return ctypes.windll.user32.MessageBoxW(0, text, title, style)
 
-
-run()
+if __name__ == '__main__':
+    params = {}
+    run(params)
     # image_location = params['inputImagePath']
     # result_location = params['resultPath']
     # imsave(result_location, output_data)
+
+# Changelog:
+# v1.10: - Bug fixed with wxPython app not being run in v1.00
