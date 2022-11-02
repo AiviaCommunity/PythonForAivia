@@ -28,9 +28,10 @@ import openpyxl.utils.cell
 from pathlib import Path
 from magicgui import magicgui
 import re
+from datetime import datetime
 
 # Folder to quickly run the script on all Excel files in it
-DEFAULT_FOLDER = '' # r"D:\..."
+DEFAULT_FOLDER = ''
 
 # Collect scenario
 scenario_descriptions = ['A: Select multiple xlsx tables to create a combined table.\n'
@@ -220,10 +221,18 @@ def run(params):
     temp_tab = []  # Used to store tabs from the same well
     well_ref = ''
 
+    # Evaluate time if number of file is > 10
+    if len(final_input_list[:]) > 10:
+        t1 = datetime.now()
+
     # Main LOOP -----------------------------------------------------------------------------------------------
     for file_index, input_file in enumerate(final_input_list):
         if len(final_input_list) > 1:
             indiv_path_list = [input_file]  # List of tables is trimmed down to one item to invoke scenario D
+
+        # Evaluate time if number of file is > 10
+        if len(indiv_path_list[:]) > 10:
+            t1 = datetime.now()
 
         print('Processing: ', input_file)
 
@@ -322,6 +331,10 @@ def run(params):
                     else:
                         print('WARNING: {} table was excluded because table tabs are different from first table'.format(f))
 
+                    # Evaluate time for the processing of one table
+                    if len(indiv_path_list[:]) > 10 and f_index == 0:
+                        show_estimated_time(t1, len(indiv_path_list[:]))
+
                 # Push the latest stacked column in the final table (in case of multiwell)
                 for t in tab_names:
                     if process_wells:
@@ -349,6 +362,10 @@ def run(params):
 
                                 # Merging to previous grouped data
                                 df_grouped[t] = pd.concat([df_grouped[t], df_raw[t]], axis=0)
+
+                        # Evaluate time for the processing of one table
+                        if len(indiv_path_list[:]) > 10 and f == indiv_path_list[1]:
+                            show_estimated_time(t1, len(indiv_path_list[1:]))
 
         # --- COMBINE TABS into one if no timepoints in data (scenario A-D...) ------------------------------
         if not contains_tps and (do_combine_meas_tabs or do_multiple_files_as_cols):
@@ -577,6 +594,10 @@ def run(params):
 
         # --- / FINAL SUMMARY ----------------------------------------------------------------------------------------
 
+        # Evaluate time for one table if a list of table is processed individually
+        if len(final_input_list[:]) > 10 and file_index == 0:
+            show_estimated_time(t1, len(final_input_list[:]))
+
     # Main LOOP -----------------------------------------------------------------------------------------------
 
     final_mess = '{} table(s) got saved here:\n{}'.format(len(final_input_list), output_folder)
@@ -737,6 +758,21 @@ def is_multiwell(folder_name):
     return ans
 
 
+def show_estimated_time(t1, nb_of_tables):
+    t2 = datetime.now()
+    duration = round((t2 - t1).total_seconds())
+    mess = 'Estimated time for one table: {} seconds.\n\nEstimated time for {} tables: {} minutes.\n\n' \
+           'Extra time is expected for the processing of the data.' \
+           ''.format(duration, nb_of_tables, round(duration * nb_of_tables / 60))
+
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        future = executor.submit(Mbox, 'Estimated reading time', mess, 1)
+        ans = future.result()
+
+    if ans == 2:
+        sys.exit('Process terminated by user')
+
+
 def Mbox(title, text, style):
     return ctypes.windll.user32.MessageBoxW(0, text, title, style)
 
@@ -761,3 +797,5 @@ if __name__ == '__main__':
 #        - Adding a magicGui for the selection of the scenario
 # v1.50: - Adding scenario F
 #        - Renaming main summary as 'Analysis_Summary'
+# v1.51: - Providing estimation on how long it takes to read one table if more than 10 tables are selected
+# TODO: progress bar with file in Recipes folder: '_progress_bar_file 1_from 10_'
