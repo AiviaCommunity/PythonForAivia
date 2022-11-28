@@ -12,7 +12,7 @@ mxnet==1.2.0
 natsort==8.0.2
 networkx==2.6.3
 numba==0.55.0
-numpy==1.21.5
+numpy==1.22.0
 opencv-python-headless==4.5.5.62
 packaging==21.3
 Pillow==9.0.0
