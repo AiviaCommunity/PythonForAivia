@@ -93,7 +93,7 @@ Aivia channel
   Result of the transform
 """
 ```
-For Aivia 11.0.x or more, a simple-to-install environment has been created for Aivia.
+For *Aivia 11.0.x* or more, a simple-to-install environment has been created for Aivia.
 * Click on the folder named "PythonVenvForAivia" and follow instructions
 
 For Aivia 10.5.x or more, you can install non-standard packages from Aivia:
