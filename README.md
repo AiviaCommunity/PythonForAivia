@@ -93,14 +93,16 @@ Aivia channel
   Result of the transform
 """
 ```
-For *Aivia 11.0.x* or more, a simple-to-install environment has been created for Aivia.
+
+For **Aivia 11.0.x** or more, a simple-to-install environment has been created for Aivia.
 * Click on the folder named "PythonVenvForAivia" and follow instructions
+
 
 For Aivia 10.5.x or more, you can install non-standard packages from Aivia:
 * Open Aivia and go to menu Analysis > Deep Learning Processor (or Batch and Cloud Processor) > File > Add Python Module
 
-For Aivia 10.1.x with embedded python, the guide to install non-standard packages:
 
+For Aivia 10.1.x with embedded python, the guide to install non-standard packages:
 * Open terminal
 * Change directory: cd "path/to/Aivia/Python/directory/" (For e.g. C:\Program Files\Leica Microsystems\Aivia 10.5.0\Python)
 * Run: python -m pip install <name_of_the_module>
