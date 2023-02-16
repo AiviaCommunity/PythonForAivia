@@ -53,6 +53,6 @@ tifffile==2020.9.3
 tqdm==4.62.3
 typing-extensions==3.7.4.3
 urllib3==1.26.7
-Werkzeug==2.0.2
+Werkzeug==2.2.3
 wrapt==1.12.1
 
