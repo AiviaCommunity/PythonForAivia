@@ -82,21 +82,21 @@ def run(params):
     image_center = get_image_center(max_y, max_x)       # WARNING: Y, X due to shape constraint
 
     # SHAPE DEFINITIONS ------------------------
-    def draw_disk(shape_YX_pos, shape_rad, image_XYshape):
-        return draw.disk(shape_YX_pos, shape_rad, shape=image_XYshape)
+    def draw_disk(shape_YX_pos, shape_width, image_XYshape):
+        return draw.disk(shape_YX_pos, shape_width / 2, shape=image_XYshape)
 
-    def draw_circle(shape_YX_pos, shape_rad, image_XYshape):
-        return draw.circle_perimeter(int(shape_YX_pos[0]), int(shape_YX_pos[1]), int(shape_rad), shape=image_XYshape)
+    def draw_circle(shape_YX_pos, shape_width, image_XYshape):
+        return draw.circle_perimeter(int(shape_YX_pos[0]), int(shape_YX_pos[1]), int(shape_width / 2), shape=image_XYshape)
 
-    def draw_circle_aa(shape_YX_pos, shape_rad, image_XYshape):
-        return draw.circle_perimeter_aa(int(shape_YX_pos[0]), int(shape_YX_pos[1]), int(shape_rad), shape=image_XYshape)
+    def draw_circle_aa(shape_YX_pos, shape_width, image_XYshape):
+        return draw.circle_perimeter_aa(int(shape_YX_pos[0]), int(shape_YX_pos[1]), int(shape_width / 2), shape=image_XYshape)
 
-    def draw_ellipse(shape_YX_pos, shape_rad, shape_small_rad, image_XYshape):
-        return draw.ellipse(int(shape_YX_pos[0]), int(shape_YX_pos[1]), int(shape_rad), int(shape_small_rad),
+    def draw_ellipse(shape_YX_pos, shape_width, shape_height, image_XYshape):
+        return draw.ellipse(int(shape_YX_pos[0]), int(shape_YX_pos[1]), int(shape_width / 2), int(shape_height / 2),
                             shape=image_XYshape)
 
-    def draw_ellipse_perimeter(shape_YX_pos, shape_rad, shape_small_rad, image_XYshape):
-        return draw.ellipse_perimeter(int(shape_YX_pos[0]), int(shape_YX_pos[1]), int(shape_rad), int(shape_small_rad),
+    def draw_ellipse_perimeter(shape_YX_pos, shape_width, shape_height, image_XYshape):
+        return draw.ellipse_perimeter(int(shape_YX_pos[0]), int(shape_YX_pos[1]), int(shape_width / 2), int(shape_height / 2),
                                       shape=image_XYshape)
 
     def draw_rectangle(shape_YX_pos, rect_width, rect_height, image_XYshape):
@@ -104,6 +104,12 @@ def run(params):
         rect_start = int(rect_center[0] - (rect_height / 2)), int(rect_center[1] - (rect_width / 2))
         rect_end = int(rect_center[0] + (rect_height / 2)), int(rect_center[1] + (rect_width / 2))
         return draw.rectangle(start=rect_start, end=rect_end, shape=image_XYshape)
+
+    def draw_rectangle_perimeter(shape_YX_pos, rect_width, rect_height, image_XYshape):
+        rect_center = int(shape_YX_pos[0]), int(shape_YX_pos[1])
+        rect_start = int(rect_center[0] - (rect_height / 2)), int(rect_center[1] - (rect_width / 2))
+        rect_end = int(rect_center[0] + (rect_height / 2)), int(rect_center[1] + (rect_width / 2))
+        return draw.rectangle_perimeter(start=rect_start, end=rect_end, shape=image_XYshape)
 
     def draw_line(shape_YX_pos, shape_rad, shape_small_rad, image_XYshape):
         line_start_X = int(shape_YX_pos[1])
@@ -114,7 +120,8 @@ def run(params):
 
     shapes = {'Disk': draw_disk, 'Circle': draw_circle, 'Smoothed Circle': draw_circle_aa,
               'Ellipse (plain shape)': draw_ellipse, 'Ellipse contour': draw_ellipse_perimeter,
-              'Rectangle': draw_rectangle, 'Line': draw_line}
+              'Rectangle (plain shape)': draw_rectangle, 'Rectangle contour': draw_rectangle_perimeter,
+              'Line': draw_line}
     # /SHAPE DEFINITIONS -----------------------
 
     # GUI
@@ -126,28 +133,25 @@ def run(params):
               shape_center_Y_c={'label': 'Y coordinate of shape center // \n'
                                          'Y start coordinate for Line drawing (calibrated from original image): ',
                                 'max': max_y},
-              shape_radius_c={'label': 'Radius for Circle // \n'
-                                       'Horizontal-axis Radius for Ellipse // \n'
-                                       'Width for Rectangle // \n'
-                                       'X end coordinate for Line drawing (calibrated from original image): ',
-                              'max': max_x},
-              shape_small_radius_c={'label': '[Optional] Vertical-axis Radius for Ellipse // \n'
-                                             'Height for Rectangle // \n'
-                                             'Y end coordinate for Line drawing (calibrated from original image): ',
-                                    'max': max_y},
+              shape_width_c={'label': 'Width // \n'
+                                      'X end coordinate for Line drawing (calibrated from original image): ',
+                             'max': max_x},
+              shape_height_c={'label': '[Optional] Height // \n'
+                                       'Y end coordinate for Line drawing (calibrated from original image): ',
+                              'max': max_y},
               reset_default={'widget_type': 'PushButton',
                              'label': 'Reset values to default (shape in image center)'},
               spacer={'widget_type': 'Label', 'label': '  '},
               call_button="Draw shape")
     def gui(shape_c=[*shapes][0], shape_center_X_c=image_center[1], shape_center_Y_c=image_center[0],
-            shape_radius_c=image_center[1], shape_small_radius_c=image_center[0], reset_default=False, spacer=' '):
+            shape_width_c=image_center[1], shape_height_c=image_center[0], reset_default=False, spacer=' '):
         pass
 
     def reset_gui_defaults():
         gui.shape_center_X_c.value = image_center[1] * XY_cal
         gui.shape_center_Y_c.value = image_center[0] * XY_cal
-        gui.shape_radius_c.value = image_center[1] * XY_cal
-        gui.shape_small_radius_c.value = image_center[0] * XY_cal
+        gui.shape_width_c.value = image_center[1] * XY_cal
+        gui.shape_height_c.value = image_center[0] * XY_cal
 
         gui.reset_default.value = False
 
@@ -156,15 +160,15 @@ def run(params):
     gui.show(run=True)
     selected_shape = gui.shape_c.value
     selected_position = float(gui.shape_center_Y_c.value) / XY_cal, float(gui.shape_center_X_c.value) / XY_cal    # Y, X
-    selected_radius = int(gui.shape_radius_c.value) / XY_cal
-    selected_small_radius = gui.shape_small_radius_c.value / XY_cal
+    selected_width = int(gui.shape_width_c.value) / XY_cal
+    selected_height = gui.shape_height_c.value / XY_cal
 
     # Collect shape mask indexes
     image_XY_shape = (dims[dim_shift], dims[1 + dim_shift])
     if any([t in selected_shape for t in ['Ellipse', 'Rectangle', 'Line']]):
-        draw_args = selected_position, selected_radius, selected_small_radius, image_XY_shape
+        draw_args = selected_position, selected_width, selected_height, image_XY_shape
     else:
-        draw_args = selected_position, selected_radius, image_XY_shape
+        draw_args = selected_position, selected_width, image_XY_shape
 
     shape_np_indexes = shapes[selected_shape](*draw_args)
     if len(shape_np_indexes) == 3:
