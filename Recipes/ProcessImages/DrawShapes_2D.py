@@ -4,10 +4,7 @@ import ctypes
 import sys
 from pathlib import Path
 
-parentFolder = str(Path(__file__).parent.parent)
-
-parentFolder = r'D:\PythonCode\Python_scripts\Projects\PythonEnvForAivia'      # TODO: Remove for prod
-
+parentFolder = str(Path(__file__).parent.parent.parent)
 activate_path = parentFolder + '\\env\\Scripts\\activate_this.py'
 
 if os.path.exists(activate_path):
