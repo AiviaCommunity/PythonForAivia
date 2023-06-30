@@ -1,4 +1,4 @@
-# Python Virtual Environment For Aivia
+# Python virtual Environment For Aivia
 
 ## General Information
 
@@ -19,20 +19,19 @@ The recipes are then containing some code to:
 
 ## Installation
 
-1. Download the `PythonVenvForAivia` zip.
+1. Download the `PythonEnvForAivia` zip.
 
-2. Unzip the downloaded folder `PythonVenvForAivia` in a location where there are no admin access restrictions. 
+2. Unzip the downloaded folder `PythonEnvForAivia` in a location where there are no admin access restrictions. 
 The tree structure of the folder is as follow
 
 ```bash=
-  PythonVenvForAivia
+  PythonEnvForAivia
   ├───FirstTimeSetup.py
   ├───requirements.txt
   ├───README.md
   └───Recipes
-      └───... .py
-  └───Utilities
-      └───... .py
+      └───[category subfolders]
+          └───... .py
 ```
 
 ## Execution
