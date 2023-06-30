@@ -19,7 +19,8 @@ The recipes are then containing some code to:
 
 ## Installation
 
-1. Download the `PythonEnvForAivia` zip.
+1. Download the latest `PythonEnvForAivia` zip available in the releases:
+   https://github.com/AiviaCommunity/PythonForAivia/releases
 
 2. Unzip the downloaded folder `PythonEnvForAivia` in a location where there are no admin access restrictions. 
 The tree structure of the folder is as follow
