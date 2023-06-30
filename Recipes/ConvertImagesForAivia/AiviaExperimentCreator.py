@@ -4,16 +4,21 @@ import ctypes
 import sys
 from pathlib import Path
 
-parentFolder = str(Path(__file__).parent.parent)
-activate_path = parentFolder + '\\env\\Scripts\\activate_this.py'
+def search_activation_path():
+    for i in range(5):
+        final_path = str(Path(__file__).parents[i]) + '\\env\\Scripts\\activate_this.py'
+        if os.path.exists(final_path):
+            return final_path
+    return ''
 
+activate_path = search_activation_path()
 if os.path.exists(activate_path):
     exec(open(activate_path).read(), {'__file__': activate_path})
     print(f'Aivia virtual environment activated\nUsing python: {activate_path}')
 else:
     error_mess = f'Error: {activate_path} was not found.\n\nPlease check that:\n' \
                  f'   1/ The \'FirstTimeSetup.py\' script was already run in Aivia,\n' \
-                 f'   2/ The current python recipe is in the "\\PythonVenvForAivia\\Recipes" subfolder.'
+                 f'   2/ The current python recipe is in one of the "\\PythonEnvForAivia\\" subfolders.'
     ctypes.windll.user32.MessageBoxW(0, error_mess, 'Error', 0)
     sys.exit(error_mess)
 # ---------------------------------------------------------------
@@ -272,3 +277,5 @@ if __name__ == '__main__':
 # v1.10: - Layout of wells now fitting definition in Aivia: distance between wells instead of space between wells
 # v1.20: - Using well centers as reference instead of corner. Easier to pull image gallery in the center
 # v1.30: - Add attempt to detect calibrated size of image. Fallback on a GUI if not successful
+# v1.31: - New virtual env code for auto-activation
+
