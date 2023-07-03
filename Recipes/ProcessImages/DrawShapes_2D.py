@@ -4,16 +4,21 @@ import ctypes
 import sys
 from pathlib import Path
 
-parentFolder = str(Path(__file__).parent.parent.parent)
-activate_path = parentFolder + '\\env\\Scripts\\activate_this.py'
+def search_activation_path():
+    for i in range(5):
+        final_path = str(Path(__file__).parents[i]) + '\\env\\Scripts\\activate_this.py'
+        if os.path.exists(final_path):
+            return final_path
+    return ''
 
+activate_path = search_activation_path()
 if os.path.exists(activate_path):
     exec(open(activate_path).read(), {'__file__': activate_path})
     print(f'Aivia virtual environment activated\nUsing python: {activate_path}')
 else:
     error_mess = f'Error: {activate_path} was not found.\n\nPlease check that:\n' \
                  f'   1/ The \'FirstTimeSetup.py\' script was already run in Aivia,\n' \
-                 f'   2/ The current python recipe is in the "\\PythonVenvForAivia\\Recipes" subfolder.'
+                 f'   2/ The current python recipe is in one of the "\\PythonEnvForAivia\\" subfolders.'
     ctypes.windll.user32.MessageBoxW(0, error_mess, 'Error', 0)
     sys.exit(error_mess)
 # ---------------------------------------------------------------
@@ -91,12 +96,12 @@ def run(params):
     def draw_circle_aa(shape_YX_pos, shape_width, image_XYshape):
         return draw.circle_perimeter_aa(int(shape_YX_pos[0]), int(shape_YX_pos[1]), int(shape_width / 2), shape=image_XYshape)
 
-    def draw_ellipse(shape_YX_pos, shape_width, shape_height, image_XYshape):
-        return draw.ellipse(int(shape_YX_pos[0]), int(shape_YX_pos[1]), int(shape_width / 2), int(shape_height / 2),
+    def draw_ellipse(shape_YX_pos, shape_width, shape_height, image_XYshape):       # X/Y are inverted!!
+        return draw.ellipse(int(shape_YX_pos[0]), int(shape_YX_pos[1]), int(shape_height / 2), int(shape_width / 2),
                             shape=image_XYshape)
 
     def draw_ellipse_perimeter(shape_YX_pos, shape_width, shape_height, image_XYshape):
-        return draw.ellipse_perimeter(int(shape_YX_pos[0]), int(shape_YX_pos[1]), int(shape_width / 2), int(shape_height / 2),
+        return draw.ellipse_perimeter(int(shape_YX_pos[0]), int(shape_YX_pos[1]), int(shape_height / 2), int(shape_width / 2),
                                       shape=image_XYshape)
 
     def draw_rectangle(shape_YX_pos, rect_width, rect_height, image_XYshape):
@@ -111,11 +116,11 @@ def run(params):
         rect_end = int(rect_center[0] + (rect_height / 2)), int(rect_center[1] + (rect_width / 2))
         return draw.rectangle_perimeter(start=rect_start, end=rect_end, shape=image_XYshape)
 
-    def draw_line(shape_YX_pos, shape_rad, shape_small_rad, image_XYshape):
+    def draw_line(shape_YX_pos, X_end, Y_end, image_XYshape):
         line_start_X = int(shape_YX_pos[1])
         line_start_Y = int(shape_YX_pos[0])
-        line_end_X = int(shape_rad)
-        line_end_Y = int(shape_small_rad)
+        line_end_X = int(X_end)
+        line_end_Y = int(Y_end)
         return draw.line(line_start_Y, line_start_X, line_end_Y, line_end_X)
 
     shapes = {'Disk': draw_disk, 'Circle': draw_circle, 'Smoothed Circle': draw_circle_aa,
@@ -160,7 +165,7 @@ def run(params):
     gui.show(run=True)
     selected_shape = gui.shape_c.value
     selected_position = float(gui.shape_center_Y_c.value) / XY_cal, float(gui.shape_center_X_c.value) / XY_cal    # Y, X
-    selected_width = int(gui.shape_width_c.value) / XY_cal
+    selected_width = gui.shape_width_c.value / XY_cal
     selected_height = gui.shape_height_c.value / XY_cal
 
     # Collect shape mask indexes
@@ -214,3 +219,4 @@ if __name__ == '__main__':
 
 # CHANGELOG
 # v1.00: - using Skimage.draw shapes. Adding virtual env for GUI
+# v1.01: - New virtual env code for auto-activation
