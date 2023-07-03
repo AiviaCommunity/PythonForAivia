@@ -41,6 +41,9 @@ New image:
 
 interpolation_mode = 1  # 0: Nearest-neighbor, 1: Bi-linear , 2: Bi-quadratic, 3: Bi-cubic, 4: Bi-quartic, 5: Bi-quintic
 
+IJTimeUnit = {'Minutes': 'min', 'Seconds': 's', 'Milliseconds': 'ms', 'Microseconds': 'us'}
+
+
 # [INPUT Name:inputImagePath Type:string DisplayName:'Input Channel']
 # [INPUT Name:scaleDirection Type:int DisplayName:'Down or Upscale (0 or 1)' Default:0 Min:0 Max:1]
 # [INPUT Name:scaleFactorZ Type:double DisplayName:'Z scale factor' Default:1.0 Min:0.01 Max:20.0]
@@ -63,6 +66,13 @@ def run(params):
     XY_cal = float(pixel_cal[0].split(' ')[0])
     Z_cal = float(pixel_cal[2].split(' ')[0])
     T_cal = float(pixel_cal[3].split(' ')[0])
+    
+    # Check real calibration
+    real_XYZ_calibration, real_T_calibration = False, False
+    if not 'efault' in pixel_cal[0].split(' ')[1]:      # calibration ok
+        real_XYZ_calibration = True
+    if not 'efault' in pixel_cal[3].split(' ')[1]:      # calibration ok
+        real_T_calibration = True
     
     if not os.path.exists(image_location):
         print(f"Error: {image_location} does not exist")
@@ -89,8 +99,8 @@ def run(params):
         scale_factor_z = scale_factor_z    
         
     # Calculating final pixel calibration
-    final_XY_cal = XY_cal / scale_factor_xy
-    final_Z_cal = Z_cal / scale_factor_z
+    final_XY_cal = XY_cal / scale_factor_xy if real_XYZ_calibration else 1
+    final_Z_cal = Z_cal / scale_factor_z if real_XYZ_calibration else 1
        
     # Defining axes for output metadata and scale factor variable
     final_scale = None
@@ -123,17 +133,24 @@ def run(params):
         print('img_as_ubyte')
 
     tmp_path = result_location.replace('.tif', '-scaled.tif')
-    meta_info = {'axes': axes, 'spacing': str(final_Z_cal), 'unit': 'um',
-                 'TimeIncrement': T_cal, 'TimeIncrementUnit': 's'}
+    meta_info = {'axes': axes}
+    if real_XYZ_calibration and zCount > 1:
+        meta_info.update({'spacing': str(final_Z_cal), 'unit': 'um'})
+    if real_T_calibration:
+        meta_info.update({'TimeIncrement': T_cal, 'TimeIncrementUnit': IJTimeUnit[pixel_cal[3].split(' ')[1]]})
 
     # Formatting voxel calibration values
     inverted_XY_cal = 1 / final_XY_cal
     print(final_XY_cal)
 
     print('Saving image in temp location:\n', tmp_path)
-    imwrite(tmp_path, out_data, imagej=True, photometric='minisblack', metadata=meta_info,
-            resolution=(inverted_XY_cal, inverted_XY_cal))
-
+    if real_XYZ_calibration:
+        imwrite(tmp_path, out_data, imagej=True, photometric='minisblack', metadata=meta_info,
+                resolution=(inverted_XY_cal, inverted_XY_cal))
+    else:
+        # To avoid calibration in XYZ
+        imwrite(tmp_path, out_data, imagej=True, photometric='minisblack', metadata=meta_info) 
+    
     # Dummy save
     dummy_data = np.zeros(image_data.shape, dtype=image_data.dtype)
     imwrite(result_location, dummy_data)
@@ -166,3 +183,4 @@ if __name__ == '__main__':
 # v1_14: - Adding pixel/voxel calibration
 # v1_20: - Adding time handling (but not rescale with time dimension)
 # v1_30: - Fusing with parallel version updating aivia_path using new API params value
+#        - Time increment is not recognized in Aivia at the moment
