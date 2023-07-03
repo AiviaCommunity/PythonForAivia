@@ -3,21 +3,24 @@ import os
 import ctypes
 import sys
 from pathlib import Path
-parentFolder = str(Path(__file__).parent.parent)
-activate_path = parentFolder + '\\env\\Scripts\\activate_this.py'
 
+def search_activation_path():
+    for i in range(5):
+        final_path = str(Path(__file__).parents[i]) + '\\env\\Scripts\\activate_this.py'
+        if os.path.exists(final_path):
+            return final_path
+    return ''
+
+activate_path = search_activation_path()
 if os.path.exists(activate_path):
     exec(open(activate_path).read(), {'__file__': activate_path})
     print(f'Aivia virtual environment activated\nUsing python: {activate_path}')
 else:
-    # Attempt to still run the script with main Aivia python interpreter
-    error_mess = f'Error: {activate_path} was not found.\nPlease run the \'FirstTimeSetup.py\' script in Aivia first.'
-    ans = ctypes.windll.user32.MessageBoxW(0, error_mess, 'Error', 1)
-    if ans == 2:
-        sys.exit(error_mess)
-    print('\n'.join(['#' * 40, error_mess,
-                     'Now trying to fallback on python environment specified in Aivia options > Advanced.',
-                     '#' * 40]))
+    error_mess = f'Error: {activate_path} was not found.\n\nPlease check that:\n' \
+                 f'   1/ The \'FirstTimeSetup.py\' script was already run in Aivia,\n' \
+                 f'   2/ The current python recipe is in one of the "\\PythonEnvForAivia\\" subfolders.'
+    ctypes.windll.user32.MessageBoxW(0, error_mess, 'Error', 0)
+    sys.exit(error_mess)
 # ---------------------------------------------------------------
 
 import pandas as pd
@@ -500,3 +503,4 @@ if __name__ == '__main__':
 # v1.10: - Implementing Seaborn instead, to use the matrix functionalities
 # v1.20: - Input table can be any (just need first row to be a header). Renaming script "FromExcelTable"
 #          Script offers the ability to select the sheet tab and the measurement
+# v1.21: - New virtual env code for auto-activation
