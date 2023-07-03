@@ -12,8 +12,6 @@ def search_activation_path():
     return ''
 
 activate_path = search_activation_path()
-activate_path = r'D:\PythonCode\Python_scripts\Projects\PythonEnvForAivia\env\Scripts\activate_this.py' # TODO: remove
-
 if os.path.exists(activate_path):
     exec(open(activate_path).read(), {'__file__': activate_path})
     print(f'Aivia virtual environment activated\nUsing python: {activate_path}')
