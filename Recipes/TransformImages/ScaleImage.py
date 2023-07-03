@@ -6,13 +6,12 @@ import numpy as np
 from tifffile import imread, imwrite
 from skimage import transform, img_as_uint, img_as_ubyte
 import sys
-from os.path import dirname as up
-from os.path import isfile
 
 
 """
 Scales the input channel up or down (isotropic factor). Option for interpolation is in the code.
-Works only for 2D/3D (not timelapses) and for single channels.
+Works only for 2D/3D rescaling (not timelapses) but can be applied on a per timepoint basis.
+Works for single channels.
 
 Documentation
 -------------
@@ -39,11 +38,8 @@ New image:
     Opens Aivia to display the new scaled image.
 
 """
+
 interpolation_mode = 1  # 0: Nearest-neighbor, 1: Bi-linear , 2: Bi-quadratic, 3: Bi-cubic, 4: Bi-quartic, 5: Bi-quintic
-
-
-# automatic parameters
-
 
 # [INPUT Name:inputImagePath Type:string DisplayName:'Input Channel']
 # [INPUT Name:scaleDirection Type:int DisplayName:'Down or Upscale (0 or 1)' Default:0 Min:0 Max:1]
@@ -51,7 +47,7 @@ interpolation_mode = 1  # 0: Nearest-neighbor, 1: Bi-linear , 2: Bi-quadratic, 3
 # [INPUT Name:scaleFactorXY Type:double DisplayName:'XY scale factor' Default:1.0 Min:0.01 Max:20.0]
 # [OUTPUT Name:resultPath Type:string DisplayName:'Duplicate of input']
 def run(params):
-    image_org=params['EntryPoint']
+    image_org = params['EntryPoint']
     image_location = params['inputImagePath']
     result_location = params['resultPath']
     scale_factor_xy = float(params['scaleFactorXY'])
@@ -66,6 +62,7 @@ def run(params):
     # Getting XY and Z values                # Expecting only 'Micrometers' in this code
     XY_cal = float(pixel_cal[0].split(' ')[0])
     Z_cal = float(pixel_cal[2].split(' ')[0])
+    T_cal = float(pixel_cal[3].split(' ')[0])
     
     if not os.path.exists(image_location):
         print(f"Error: {image_location} does not exist")
@@ -77,17 +74,12 @@ def run(params):
 
     image_data = imread(image_location)
     dims = image_data.shape
-    print('-- Input dimensions (expected (Z), Y, X): ', np.asarray(dims), ' --')
-
-    # Checking image is not 2D+t or 3D+t
-    if len(dims) > 3 or (len(dims) == 3 and tCount > 1):
-        print('Error: Cannot handle timelapses yet.')
-        return
+    print('-- Input dimensions (expected (T) (Z), Y, X): ', np.asarray(dims), ' --')
 
     if scale_factor_xy == 0.0:
-        scale_factor_xy = 1.0                 #TODO: manual input for batch
+        scale_factor_xy = 1.0
     if scale_factor_z == 0.0:
-        scale_factor_z = 1.0                  #TODO
+        scale_factor_z = 1.0
         
     if scale_direction == 0:        
         scale_factor_xy = 1/scale_factor_xy
@@ -102,8 +94,17 @@ def run(params):
        
     # Defining axes for output metadata and scale factor variable
     final_scale = None
-    if tCount == 1 and zCount > 1:         # 3D
-        axes = 'ZYX'       # Data is 'YXZ'
+    axes = ''
+    if tCount > 1 and zCount > 1:  # 3D + T
+        axes = 'TZYX'
+        final_scale = (1, scale_factor_z, scale_factor_xy, scale_factor_xy)
+
+    elif tCount > 1 and zCount == 1:  # 2D + T
+        axes = 'TYX'
+        final_scale = (1, scale_factor_xy, scale_factor_xy)
+
+    elif tCount == 1 and zCount > 1:         # 3D
+        axes = 'ZYX'        # should be 'YXZ'
         final_scale = (scale_factor_z, scale_factor_xy, scale_factor_xy)
 
     elif tCount == 1 and zCount == 1:      # 2D
@@ -120,38 +121,41 @@ def run(params):
     else:
         out_data = img_as_ubyte(scaled_img)
         print('img_as_ubyte')
-    
-    # Formatting voxel calibration values
-    formatted_XY_cal = '{0:.4g}'.format(final_XY_cal)
 
     tmp_path = result_location.replace('.tif', '-scaled.tif')
-    meta_info = {'axes': axes,
-                'PhysicalSizeX': formatted_XY_cal,
-                'PhysicalSizeY': formatted_XY_cal,
-                'PhysicalSizeZ': str(final_Z_cal),
-                'PhysicalSizeXUnit': '\xb5m',
-                'PhysicalSizeYUnit': '\xb5m',
-                'PhysicalSizeZUnit': '\xb5m'}       # '\xb5m' for microns?
+    meta_info = {'axes': axes, 'spacing': str(final_Z_cal), 'unit': 'um',
+                 'TimeIncrement': T_cal, 'TimeIncrementUnit': 's'}
+
+    # Formatting voxel calibration values
+    inverted_XY_cal = 1 / final_XY_cal
+    print(final_XY_cal)
 
     print('Saving image in temp location:\n', tmp_path)
-    imwrite(tmp_path, out_data, ome=True, photometric='minisblack', metadata=meta_info)
+    imwrite(tmp_path, out_data, imagej=True, photometric='minisblack', metadata=meta_info,
+            resolution=(inverted_XY_cal, inverted_XY_cal))
 
     # Dummy save
-    imwrite(result_location, image_data)
+    dummy_data = np.zeros(image_data.shape, dtype=image_data.dtype)
+    imwrite(result_location, dummy_data)
 
     # Run external program
     cmdLine = 'start \"\" \"' + aivia_path + '\" \"' + tmp_path + '\"'
-    # cmdLine = 'start \"\" \"' + IJ_path + '\" \"' + tmp_path + '\"'
 
     args = shlex.split(cmdLine)
     subprocess.run(args, shell=True)
 
 
 if __name__ == '__main__':
-    params = {'inputImagePath': 'D:\\python-tests\\3D-image.aivia.tif',
-              'resultPath': 'D:\\python-tests\\scaled.tif',
-              'TCount': 1,
-              'ZCount': 51}
+    params = {'inputImagePath': 'D:\\PythonCode\\_tests\\3D-TL-toalign.aivia.tif',
+              'resultPath': 'D:\\PythonCode\\_tests\\Output.tif',
+              'TCount': 16,
+              'ZCount': 41,
+              'Calibration': 'XYZT: 0.4 Micrometers, 0.4 Micrometers, 1.2 Micrometers, 599.9996 Seconds',
+              'scaleFactorXY': 2,
+              'scaleFactorZ': 1,
+              'scaleDirection': 0,
+              'EntryPoint': '',
+              'CallingExecutable': ''}
     run(params)
 
 # CHANGELOG
@@ -160,5 +164,5 @@ if __name__ == '__main__':
 # v1_11: - tkinter not installed by default so removing all code and adding parameters in Aivia UI
 # v1_13: - Fallback values if factors equal 0 / automated detection of latest Aivia version on PC
 # v1_14: - Adding pixel/voxel calibration
-# v1_15: - Update Aivia path for Aivia community
-# v1_16: - Update aivia_path using new API 
+# v1_20: - Adding time handling (but not rescale with time dimension)
+# v1_30: - Fusing with parallel version updating aivia_path using new API params value
