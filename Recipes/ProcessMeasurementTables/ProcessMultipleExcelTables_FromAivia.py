@@ -4,21 +4,23 @@ import ctypes
 import sys
 from pathlib import Path
 
-parentFolder = str(Path(__file__).parent.parent)
-activate_path = parentFolder + '\\env\\Scripts\\activate_this.py'
+def search_activation_path():
+    for i in range(5):
+        final_path = str(Path(__file__).parents[i]) + '\\env\\Scripts\\activate_this.py'
+        if os.path.exists(final_path):
+            return final_path
+    return ''
 
+activate_path = search_activation_path()
 if os.path.exists(activate_path):
     exec(open(activate_path).read(), {'__file__': activate_path})
     print(f'Aivia virtual environment activated\nUsing python: {activate_path}')
 else:
-    # Attempt to still run the script with main Aivia python interpreter
-    error_mess = f'Error: {activate_path} was not found.\nPlease run the \'FirstTimeSetup.py\' script in Aivia first.'
-    ans = ctypes.windll.user32.MessageBoxW(0, error_mess, 'Error', 1)
-    if ans == 2:
-        sys.exit(error_mess)
-    print('\n'.join(['#' * 40, error_mess,
-                     'Now trying to fallback on python environment specified in Aivia options > Advanced.',
-                     '#' * 40]))
+    error_mess = f'Error: {activate_path} was not found.\n\nPlease check that:\n' \
+                 f'   1/ The \'FirstTimeSetup.py\' script was already run in Aivia,\n' \
+                 f'   2/ The current python recipe is in one of the "\\PythonEnvForAivia\\" subfolders.'
+    ctypes.windll.user32.MessageBoxW(0, error_mess, 'Error', 0)
+    sys.exit(error_mess)
 # ---------------------------------------------------------------
 
 import pandas as pd
@@ -31,7 +33,7 @@ import re
 from datetime import datetime
 
 # Folder to quickly run the script on all Excel files in it
-DEFAULT_FOLDER = ''
+DEFAULT_FOLDER = r''
 
 # Collect scenario
 scenario_descriptions = ['A: Select multiple xlsx tables to create a combined table.\n'
@@ -233,6 +235,23 @@ def run(params):
     if ans == 2:
         sys.exit('Process terminated by user')
 
+    # Sort files using subfolders numbers (necessary due to the absence of zero-filling, i.e. 8, 9, 10, 11, etc.)
+    if do_scan_workflow_folders:
+        print(Path(indiv_path_list[0]).parents[1].name)
+        if re.match(r'.*\d+', str(Path(indiv_path_list[0]).parents[1].name)):
+            # Collect all job folder names
+            indiv_folders = [Path(fo).parents[1].name for fo in indiv_path_list]
+
+            # Add zeros in front of number
+            indiv_folders = [re.sub(r'\d+', str(re.search(r'\d+', z).group(0)).rjust(6, '0'), z) for z in indiv_folders]
+
+            # Sort them with number
+            sorted_folders_index = sorted(range(len(indiv_folders)), key=lambda tmp: indiv_folders[tmp])
+
+            # Redefine the list
+            tmp_list = indiv_path_list
+            indiv_path_list = [tmp_list[ind] for ind in sorted_folders_index]
+
     # Starting point for scenario D for multiple files
     if do_separated_processing:
         final_input_list = indiv_path_list  # To prepare loop to process files independently
@@ -298,7 +317,7 @@ def run(params):
                 do_combine_meas_tabs = False  # not possible as columns = measurements
 
                 # Detect multiwell batch
-                process_wells = is_multiwell(well_ref_for_tables[0])  # TODO: Remove summary tab if True?
+                process_wells = is_multiwell(well_ref_for_tables[0])
 
                 # First table in final table
                 df_grouped = df_raw_1
@@ -397,6 +416,8 @@ def run(params):
                             show_estimated_time(t1, len(indiv_path_list[1:]))
 
         # --- COMBINE TABS into one if no timepoints in data (scenario A-D...) ------------------------------
+        summary_lbl = 'Summary'     # Important for the further processing of the summary tab which name can vary
+
         if not contains_tps and (do_combine_meas_tabs or do_multiple_files_as_cols):
             # Init
             col_headers = ['Summary', *list(df_grouped[list(df_grouped.keys())[-1]].columns[1:])]
@@ -546,10 +567,10 @@ def run(params):
                         t += 1
 
             # Adding percentages of objects if multiple object sets exists
-            if do_combine_meas_tabs:  # TODO: for do_multiple_files_as_cols too??
+            if do_combine_meas_tabs:
                 if len(total_counts) > 1:
                     # Collect tab names without summary
-                    df_grouped_keys_nosum = [k for k in df_grouped.keys() if k != 'Summary']
+                    df_grouped_keys_nosum = [k for k in df_grouped.keys() if not k.endswith('Summary')]
                     for t in range(len(total_counts)):
                         val = '{:.1%}'.format(total_counts[t] / grand_total)
                         new_row = {'Summary': '% of {}'.format(df_grouped_keys_nosum[t]), 'Frame 0': val}
@@ -558,26 +579,31 @@ def run(params):
             # Add the summary tab
             if add_summary:
                 df_summary = pd.DataFrame(empty_row)
-                df_grouped['Summary'] = df_summary
+                df_grouped[summary_lbl] = df_summary
+
+            else:
+                # Get the name of the first summary tab / TODO: process object groups independently?
+                summary_lbls = [su for su in df_grouped.keys() if su.endswith('Summary')]
+                summary_lbl = summary_lbls[0]
 
             # Merge with potential existing summary tab
-            df_grouped['Summary'] = pd.concat([df_grouped['Summary'], df_summary_to_add], axis=0, ignore_index=True)
+            df_grouped[summary_lbl] = pd.concat([df_grouped[summary_lbl], df_summary_to_add], axis=0, ignore_index=True)
 
             # Removing double empty rows
-            df_grouped['Summary'] = remove_double_empty_rows(df_grouped['Summary'])
+            df_grouped[summary_lbl] = remove_double_empty_rows(df_grouped[summary_lbl])
 
         # --- WRITING EXCEL FILES -----------------------------------------------------------------------------------
         # Writing sheets to excel
         with pd.ExcelWriter(output_file, engine="openpyxl") as writer:
             # Write Summary first
-            df_grouped['Summary'].to_excel(writer, sheet_name='Summary', index=False)
+            df_grouped[summary_lbl].to_excel(writer, sheet_name='Summary', index=False)
 
             # Resizing columns
-            for c in range(0, len(df_grouped['Summary'].columns)):
+            for c in range(0, len(df_grouped[summary_lbl].columns)):
                 col_letter = openpyxl.utils.cell.get_column_letter(c + 1)
                 # Get longest text
-                len_longest_text = df_grouped['Summary'].iloc[:, c].map(str).str.len().max()
-                writer.sheets['Summary'].column_dimensions[col_letter].width = len_longest_text * 1.5
+                len_longest_text = df_grouped[summary_lbl].iloc[:, c].map(str).str.len().max()
+                writer.sheets[summary_lbl].column_dimensions[col_letter].width = len_longest_text * 1.5
 
             for sh in [d for d in df_grouped.keys() if d != 'Summary']:
                 df_grouped[sh].to_excel(writer, sheet_name=sh, index=False)
@@ -598,7 +624,7 @@ def run(params):
         if len(final_input_list) > 1 and not do_multiple_files_as_cols:
             filename = os.path.basename(indiv_path_list[0]).split('.')[0]
 
-            if do_scan_workflow_folders:
+            if multiwell_mode:          # replacing 'do_scan_workflow_folders'
                 # Checking well name compared to previous table
                 current_well = well_ref_for_tables[file_index]
                 if current_well != well_ref or file_index == len(final_input_list) - 1:
@@ -607,7 +633,7 @@ def run(params):
 
                         # Add latest summary tab to final super table
                         if file_index == len(final_input_list) - 1:
-                            temp_tab.append(df_grouped['Summary'][df_grouped['Summary'].columns[1]])
+                            temp_tab.append(df_grouped[summary_lbl][df_grouped[summary_lbl].columns[1]])
 
                         if len(temp_tab) > 1:
                             # Add empty table to create space between parameters
@@ -647,20 +673,20 @@ def run(params):
 
                 # Add first column only if temp_tab is empty
                 if not temp_tab:
-                    temp_tab.append(df_grouped['Summary'][df_grouped['Summary'].columns[0]])
+                    temp_tab.append(df_grouped[summary_lbl][df_grouped[summary_lbl].columns[0]])
 
                 # Add data to be combined
-                temp_tab.append(df_grouped['Summary'][df_grouped['Summary'].columns[1]])
+                temp_tab.append(df_grouped[summary_lbl][df_grouped[summary_lbl].columns[1]])
 
             else:
-                if df_big_summary is None:
-                    df_big_summary = df_grouped['Summary']
+                if df_big_summary.empty:
+                    df_big_summary = df_grouped[summary_lbl]
 
                     # Rename header of 2nd column
                     df_big_summary.rename(columns={df_big_summary.columns[1]: filename}, inplace=True)
 
                 else:
-                    df_big_summary[filename] = df_grouped['Summary'][df_grouped['Summary'].columns[1]]
+                    df_big_summary[filename] = df_grouped[summary_lbl][df_grouped[summary_lbl].columns[1]]
 
         # --- / FINAL SUMMARY ----------------------------------------------------------------------------------------
 
@@ -702,7 +728,7 @@ def combine_tabs(df_raw):
     df_combined = {}
     df_temp = pd.DataFrame()
     object_name = ''
-    summary_exists = False
+    summary_exists = False          # Used to combine multiple summary tabs if existing
 
     for k in df_raw.keys():
         # Don't need the summary tab if included
@@ -948,3 +974,7 @@ if __name__ == '__main__':
 #        - Redesigned detection of measurement names
 # v1.53: - The script was not recognizing folder structure from batched workflow when it was not multiwell.
 #          One subfolder level is then missing. Fixed in this version.
+# v1.54: - Fixing a bug with scenario F when summary tab is not named 'Summary' exactly.
+#          Also fixing a bug with formatting of 'Analysis_Summary' when not multiwell
+#          Fixed wrong sorting of subfolders such as 'Job 9', 'Job 10', etc.
+# v1.55: - New virtual env code for auto-activation
