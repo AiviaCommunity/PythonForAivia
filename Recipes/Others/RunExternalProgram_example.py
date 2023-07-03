@@ -1,6 +1,7 @@
 import os.path
 from skimage.io import imread, imsave
 import shlex, subprocess
+import sys
 
 """
 This is script has no real function (yet) and constitutes more like a diverted way to couple python to Aivia.
@@ -22,6 +23,19 @@ The same image in a new channel
 
 """
 
+
+# Get path to the Aivia executable
+def getParentDir(curr_dir, level=1):
+    for i in range(level):
+        parent_dir = os.path.dirname(curr_dir)
+        curr_dir = parent_dir
+    return curr_dir
+
+
+exeDir = sys.executable
+parentDir = getParentDir(exeDir, level=2)
+aivia_path = parentDir + '\\Aivia.exe'
+
 # [INPUT Name:inputImagePath Type:string DisplayName:'Input']
 # [OUTPUT Name:resultPath Type:string DisplayName:'Output']
 def run(params):
@@ -40,7 +54,10 @@ def run(params):
     imsave(resultLocation, imgData)
     
     # Run external program
-    cmdLine = 'start \"\" \"C:\\Program Files\\DRV Technologies\\Aivia 8.8.2\\Aivia.exe\" \"C:\\Users\\XXX\\Documents\\AIVIA Demo\\__Demo Datasets\\_Wiki_Cell Count-Demo.tif\"'
+    cmdLine = 'start \"\" \"' + aivia_path + '\" \"' + resultLocation + '\"'
     
     args = shlex.split(cmdLine)
     subprocess.run(args, shell=True)
+
+
+# v1.00: - Automated detection of Aivia version running
