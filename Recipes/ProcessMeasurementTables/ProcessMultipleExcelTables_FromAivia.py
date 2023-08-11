@@ -12,6 +12,7 @@ def search_activation_path():
     return ''
 
 activate_path = search_activation_path()
+
 if os.path.exists(activate_path):
     exec(open(activate_path).read(), {'__file__': activate_path})
     print(f'Aivia virtual environment activated\nUsing python: {activate_path}')
@@ -33,7 +34,7 @@ import re
 from datetime import datetime
 
 # Folder to quickly run the script on all Excel files in it
-DEFAULT_FOLDER = r''
+DEFAULT_FOLDER = ''
 
 # Collect scenario
 scenario_descriptions = ['A: Select multiple xlsx tables to create a combined table.\n'
@@ -64,16 +65,28 @@ scenario_descriptions = ['A: Select multiple xlsx tables to create a combined ta
                          'Not compatible with timelapses.'
                          ]
 
+# Relationship definitions (Warning: names should be the sheets in the spreadsheets)
+# Example: 'Set': ['Obj1', 'Obj2']
 relationships = {'Neuron Set': ['Soma Set', 'Dendrite Set', 'Dendrite Segments'],
-                 'Dendrite Set': ['Dendrite Segments']}
-relationship_ID_headers = {'Neuron Set': 'Neuron ID', 'Dendrite Set': 'Tree ID'}
+                 'Dendrite Set': ['Dendrite Segments'],
+                 'Cells': ['Cell Membranes', 'Cytoplasm', 'Nucleus', 'Vesicles - ']}
 
+# Due to discrepancy between object name and ID header, we can provide the correspondence below
+relationship_ID_headers = {'Neuron Set': 'Neuron ID', 'Dendrite Set': 'Tree ID', 'Cells': 'Cell ID'}
+
+# Measurements to extract, to avoid too many columns in the final table
 relationship_measurements = {'Soma Set': ['Volume (µm³)'],
                              'Dendrite Set': ['Mean Diameter (µm)'],
-                             'Dendrite Segments': ['Mean Diameter (µm)', 'Total Path Length (µm)', 'Branch Angle']
-                             }
+                             'Dendrite Segments': ['Mean Diameter (µm)', 'Total Path Length (µm)', 'Branch Angle'],
+                             'Cell Membranes': [],
+                             'Cytoplasm': [],
+                             'Nucleus': [],
+                             'Vesicles - ': ['Relation Count']}
 
-relationships_with_stats = ['Dendrite Set', 'Dendrite Segments']
+# Selection of secondary relationships for which statistics are calculated: 'Total', 'Average'.
+relationships_with_stats = ['Dendrite Set', 'Dendrite Segments', 'Vesicles - ']
+
+# Some statistics do not make any sense, so below are the ones to avoid
 relationship_measurements_stats_todrop = {'Branch Angle': 'Total',
                                           'Mean Diameter (µm)': 'Total'}
 
@@ -301,8 +314,8 @@ def run(params):
         if do_multiple_files_as_cols:
             output_basename = 'Analysis_All results.xlsx'
         else:
-            output_basename = '{}_grouped.xlsx'.format(os.path.basename(indiv_path_list[0]).split('.')[0])
-        output_file = os.path.join(output_folder, output_basename)
+            output_basename = '{}_grouped.xlsx'.format(''.join(os.path.basename(indiv_path_list[0]).split('.')[:-1]))
+        output_file = os.path.join(output_folder, output_basename.replace('.aivia', ''))
 
         df_grouped = {}  # init
 
@@ -317,7 +330,7 @@ def run(params):
                 do_combine_meas_tabs = False  # not possible as columns = measurements
 
                 # Detect multiwell batch
-                process_wells = is_multiwell(well_ref_for_tables[0])
+                process_wells = is_multiwell(well_ref_for_tables[0])  # TODO: Remove summary tab if True?
 
                 # First table in final table
                 df_grouped = df_raw_1
@@ -434,6 +447,12 @@ def run(params):
             if do_combine_meas_tabs:
                 df_grouped = combine_tabs(df_grouped)
 
+                # Collecting all measurements exact names
+                all_meas_names = []
+                for tmp_df in df_grouped.values():
+                    if not 'summary' in str(tmp_df.columns[0]).lower():
+                        all_meas_names.extend(tmp_df.columns[1:])
+
                 # Specific to neurons: split dendrite trees from segments
                 if 'Dendrite Set' in df_grouped.keys():
                     df_grouped_to_add = {}
@@ -457,22 +476,32 @@ def run(params):
                             else:
                                 df_grouped[n] = df_grouped_tmp[n]
 
-                # Process relationships between object sets (see definition before this code)
-                for rel_k in relationships.keys():
-                    # Check presence of primary object
+                # Process relationships between object sets (see definition before the def run)
+                for rel_k in relationships.keys():              # E.g. 'Cells'
+                    # Select all tabs where the primary object is         # E.g. 'Cells.Cell_Cytoplasm Volume ...'
                     for k in [it_k for it_k in df_grouped.keys() if rel_k in it_k]:
-                        k_suffix = k.replace(rel_k, '')
+                        k_suffix = k.replace(rel_k, '')         # Important when multiple object sets existed (' (2)')
+
+                        # Check presence of secondary object defined by relationships
                         for rel_s in relationships[rel_k]:
-                            s = rel_s + k_suffix
-                            # Check presence of secondary object
-                            if s in df_grouped.keys():
-                                # Check presence of correct ID header in measurements in order to associate objects
-                                id_header = relationship_ID_headers[rel_k]
-                                if id_header in df_grouped[s].columns:
-                                    prefix = s + '.'
-                                    selected_meas = relationship_measurements[rel_s]
-                                    df_grouped[k] = calculate_relation_stats(df_grouped[k], df_grouped[s], id_header,
-                                                                             prefix, rel_s, selected_meas)
+                            # v1.60 gives the ability to provide only the beginning of the object name ('Vesicles - ')
+                            # It also provides relationships of multiple secondary objects beginning with the same name
+
+                            for s in [it_s for it_s in df_grouped.keys() if is_same_object_set(it_s, k_suffix)]:
+
+                                if rel_s in s:       # positive match for secondary object
+                                    # Check presence of correct ID header in measurements in order to associate objects
+                                    id_header = relationship_ID_headers[rel_k]
+                                    if id_header in df_grouped[s].columns:
+                                        prefix = s + '.'
+                                        selected_meas_prefixes = relationship_measurements[rel_s]
+
+                                        # See if prefixes exists in exact names of measurements (columns)
+                                        for meas_prefix in selected_meas_prefixes:
+                                            meas = [col for col in df_grouped[s].columns if meas_prefix in col]
+                                            print('Collecting statistics ({}) from [{}] to be reported for [{}]'.format(meas, s, k))
+                                            df_grouped[k] = calculate_relation_stats(df_grouped[k], df_grouped[s],
+                                                                                     id_header, prefix, rel_s, meas)
 
                 # Collecting summary values
                 for k in df_grouped.keys():
@@ -567,7 +596,7 @@ def run(params):
                         t += 1
 
             # Adding percentages of objects if multiple object sets exists
-            if do_combine_meas_tabs:
+            if do_combine_meas_tabs:  # TODO: for do_multiple_files_as_cols too??
                 if len(total_counts) > 1:
                     # Collect tab names without summary
                     df_grouped_keys_nosum = [k for k in df_grouped.keys() if not k.endswith('Summary')]
@@ -596,7 +625,7 @@ def run(params):
         # Writing sheets to excel
         with pd.ExcelWriter(output_file, engine="openpyxl") as writer:
             # Write Summary first
-            df_grouped[summary_lbl].to_excel(writer, sheet_name='Summary', index=False)
+            df_grouped[summary_lbl].to_excel(writer, sheet_name=summary_lbl, index=False)
 
             # Resizing columns
             for c in range(0, len(df_grouped[summary_lbl].columns)):
@@ -605,14 +634,14 @@ def run(params):
                 len_longest_text = df_grouped[summary_lbl].iloc[:, c].map(str).str.len().max()
                 writer.sheets[summary_lbl].column_dimensions[col_letter].width = len_longest_text * 1.5
 
-            for sh in [d for d in df_grouped.keys() if d != 'Summary']:
+            for sh in [d for d in df_grouped.keys() if d != summary_lbl]:
                 df_grouped[sh].to_excel(writer, sheet_name=sh, index=False)
 
                 # Resizing columns
                 for c in range(0, len(df_grouped[sh].columns)):
                     col_letter = openpyxl.utils.cell.get_column_letter(c + 1)
                     len_longest_text = len(str(df_grouped[sh].columns[c]))
-                    if c == 0:  # First column with measurement name and object names
+                    if c == 0 and df_grouped[sh].shape[0] > 1:  # First column with measurement name and object names
                         if len(str(df_grouped[sh].iloc[1, 0])) > len_longest_text:
                             len_longest_text = len(str(df_grouped[sh].iloc[1, 0]))
                     if len_longest_text < 10:
@@ -806,6 +835,8 @@ def combine_tabs(df_raw):
 def calculate_relation_stats(df_i, df_ii, id_header, meas_prefix, obj_ii_type, measurements):
     global relationships_with_stats, relationship_measurements_stats_todrop
 
+    # Measurements input needs to be a list
+
     df_to_add = pd.DataFrame()
 
     if set(df_ii.columns) & set(measurements):
@@ -868,6 +899,15 @@ def split_dendrite_set_and_segments(df):
     dendrite_seg_df = df[is_segment]
 
     return dendrite_set_df, dendrite_seg_df
+
+
+# Function to distinguish 'Cells' from 'Cells (2)' and 'Cells (3)'. Used in relationship detection.
+def is_same_object_set(name, suffix):
+    if suffix == '':
+        ans = True if not name.endswith(')') else False
+    else:
+        ans = True if name.endswith(suffix) else False
+    return ans
 
 
 def get_split_name(txt: str):
@@ -978,3 +1018,6 @@ if __name__ == '__main__':
 #          Also fixing a bug with formatting of 'Analysis_Summary' when not multiwell
 #          Fixed wrong sorting of subfolders such as 'Job 9', 'Job 10', etc.
 # v1.55: - New virtual env code for auto-activation
+# v1.56: - Bug fix since Aivia 12.0 (r38705) security release for scenario F where only the summary tab is output
+# v1.60: - Add Cell Analysis support for relationship grouping. Better recognition of object sets with numbers '(1)'
+#        - Bug fixed at line 660 (if result table is empty)
