@@ -71,13 +71,13 @@ relationships = {'Neuron Set': ['Soma Set', 'Dendrite Set', 'Dendrite Segments']
                  'Dendrite Set': ['Dendrite Segments'],
                  'Cells': ['Cell Membranes', 'Cytoplasm', 'Nucleus', 'Vesicles - ']}
 
-# Due to discrepancy between object name and ID header, we can provide the correspondence below
+# Due to discrepancy between object name and ID header in related object meas, we can provide the correspondence below
 relationship_ID_headers = {'Neuron Set': 'Neuron ID', 'Dendrite Set': 'Tree ID', 'Cells': 'Cell ID'}
 
-# Measurements to extract, to avoid too many columns in the final table
-relationship_measurements = {'Soma Set': ['Volume (µm³)'],
-                             'Dendrite Set': ['Mean Diameter (µm)'],
-                             'Dendrite Segments': ['Mean Diameter (µm)', 'Total Path Length (µm)', 'Branch Angle'],
+# Measurements to extract, to avoid too many columns in the final table. Keywords are searched as prefix!
+relationship_measurements = {'Soma Set': ['Volume '],
+                             'Dendrite Set': ['Mean Diameter '],
+                             'Dendrite Segments': ['Mean Diameter ', 'Total Path Length ', 'Branch Angle'],
                              'Cell Membranes': [],
                              'Cytoplasm': [],
                              'Nucleus': [],
@@ -314,7 +314,7 @@ def run(params):
         if do_multiple_files_as_cols:
             output_basename = 'Analysis_All results.xlsx'
         else:
-            output_basename = '{}_grouped.xlsx'.format(''.join(os.path.basename(indiv_path_list[0]).split('.')[:-1]))
+            output_basename = '{}_grouped.xlsx'.format('.'.join(os.path.basename(indiv_path_list[0]).split('.')[:-1]))
         output_file = os.path.join(output_folder, output_basename.replace('.aivia', ''))
 
         df_grouped = {}  # init
@@ -450,8 +450,9 @@ def run(params):
                 # Collecting all measurements exact names
                 all_meas_names = []
                 for tmp_df in df_grouped.values():
-                    if not 'summary' in str(tmp_df.columns[0]).lower():
-                        all_meas_names.extend(tmp_df.columns[1:])
+                    if not tmp_df.empty:
+                        if not 'summary' in str(tmp_df.columns[0]).lower():
+                            all_meas_names.extend(tmp_df.columns[1:])
 
                 # Specific to neurons: split dendrite trees from segments
                 if 'Dendrite Set' in df_grouped.keys():
@@ -476,32 +477,37 @@ def run(params):
                             else:
                                 df_grouped[n] = df_grouped_tmp[n]
 
-                # Process relationships between object sets (see definition before the def run)
+                # Process RELATIONSHIPS between object sets (see definition before the def run)
                 for rel_k in relationships.keys():              # E.g. 'Cells'
-                    # Select all tabs where the primary object is         # E.g. 'Cells.Cell_Cytoplasm Volume ...'
+                    # Select all tabs where the primary object exists         # E.g. 'Cells.Cell_Cytoplasm Volume ...'
                     for k in [it_k for it_k in df_grouped.keys() if rel_k in it_k]:
                         k_suffix = k.replace(rel_k, '')         # Important when multiple object sets existed (' (2)')
 
                         # Check presence of secondary object defined by relationships
                         for rel_s in relationships[rel_k]:
                             # v1.60 gives the ability to provide only the beginning of the object name ('Vesicles - ')
+                            # v1.61 gives the ability to search relationships for cell components even if renamed
                             # It also provides relationships of multiple secondary objects beginning with the same name
 
                             for s in [it_s for it_s in df_grouped.keys() if is_same_object_set(it_s, k_suffix)]:
 
-                                if rel_s in s:       # positive match for secondary object
+                                if rel_s in s or rel_k == 'Cells':       # positive match for secondary object
                                     # Check presence of correct ID header in measurements in order to associate objects
                                     id_header = relationship_ID_headers[rel_k]
                                     if id_header in df_grouped[s].columns:
                                         prefix = s + '.'
-                                        selected_meas_prefixes = relationship_measurements[rel_s]
+
+                                        # Changing 'rel_s' ref to last item from II sets (vesicles) if I set is 'Cells'
+                                        rel_s_tmp = relationships['Cells'][-1] if rel_k == 'Cells' else rel_s
+
+                                        selected_meas_prefixes = relationship_measurements[rel_s_tmp]
 
                                         # See if prefixes exists in exact names of measurements (columns)
                                         for meas_prefix in selected_meas_prefixes:
                                             meas = [col for col in df_grouped[s].columns if meas_prefix in col]
                                             print('Collecting statistics ({}) from [{}] to be reported for [{}]'.format(meas, s, k))
                                             df_grouped[k] = calculate_relation_stats(df_grouped[k], df_grouped[s],
-                                                                                     id_header, prefix, rel_s, meas)
+                                                                                     id_header, prefix, rel_s_tmp, meas)
 
                 # Collecting summary values
                 for k in df_grouped.keys():
@@ -614,6 +620,10 @@ def run(params):
                 # Get the name of the first summary tab / TODO: process object groups independently?
                 summary_lbls = [su for su in df_grouped.keys() if su.endswith('Summary')]
                 summary_lbl = summary_lbls[0]
+
+            # Put zeros if some summary values are NaN
+            if df_grouped[summary_lbl][df_grouped[summary_lbl].columns[1]].isnull().sum() > 0:
+                df_grouped[summary_lbl][df_grouped[summary_lbl].columns[1]].fillna(0, inplace=True)
 
             # Merge with potential existing summary tab
             df_grouped[summary_lbl] = pd.concat([df_grouped[summary_lbl], df_summary_to_add], axis=0, ignore_index=True)
@@ -840,6 +850,7 @@ def calculate_relation_stats(df_i, df_ii, id_header, meas_prefix, obj_ii_type, m
     df_to_add = pd.DataFrame()
 
     if set(df_ii.columns) & set(measurements):
+        # Warning: ID of main/primary object is retrieved from its name!!!
         for obj_i_name in df_i.iloc[:, 0]:
             obj_i_id = int(obj_i_name.split(' ')[-1])            # Expecting a space before number
 
@@ -1021,3 +1032,5 @@ if __name__ == '__main__':
 # v1.56: - Bug fix since Aivia 12.0 (r38705) security release for scenario F where only the summary tab is output
 # v1.60: - Add Cell Analysis support for relationship grouping. Better recognition of object sets with numbers '(1)'
 #        - Bug fixed at line 660 (if result table is empty)
+# v1.61: - Secondary relationship sets can be named differently if the main object is "Cells"
+#        - Handles NaN in summary tabs (no results detected, Aivia 12.1)
