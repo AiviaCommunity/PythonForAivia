@@ -8,7 +8,7 @@ idna==3.3
 imageio==2.13.5
 intel-openmp==2022.0.0
 llvmlite==0.38.0
-mxnet==1.2.0
+mxnet==1.9.1
 natsort==8.0.2
 networkx==2.6.3
 numba==0.55.0
