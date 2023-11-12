@@ -1,5 +1,5 @@
 cellpose==2.0.4
-certifi==2021.10.8
+certifi==2022.12.7
 charset-normalizer==2.0.10
 colorama==0.4.4
 fastremap==1.12.2
