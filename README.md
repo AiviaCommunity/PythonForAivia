@@ -59,7 +59,7 @@ Create a docstring towards the top of your recipe file. Use this docstring to pr
 
 ### Dependencies
 
-Aivia uses the Python environment specified in File > Options > Advanced > Python executable. Each recipe may require its own set of modules so please check the specified requirements within the scripts if you want to use a recipe. A virtual environment builder is offered to users who do not want to handle the dependencies for the existing recipes. If you designed a script, please specify your requirements within the docstring paragraph. For example, consider a script with the following import statements:
+Aivia uses the Python environment specified in File > Options > Advanced > Python executable. Each recipe may require its own set of modules so please check the specified requirements within the scripts if you want to use a recipe. A virtual environment auto-builder (see PythonEnvForAivia folder) is offered to users who do not want to handle the dependencies for the existing recipes. If you designed a script, please specify your requirements within the docstring paragraph. For example, consider a script with the following import statements:
 
 ```python
 import os
@@ -93,6 +93,14 @@ Aivia channel
   Result of the transform
 """
 ```
+
+### Periodic file cleaning
+The simple bridge created between Aivia and python uses temporary files placed in the following location: 
+"C:\Users\_{windows-username}_\AppData\Local\Temp"
+Temporary ".tif" files (named "tmp*.tif") can stay in this folder if there is an interruption in the python script.
+Hence, it can be interesting to clean this folder periodically.
+
+### Version-dependent notes
 
 For **Aivia 11.0.x** or more, a simple-to-install environment has been created for Aivia.
 * Click on the folder named "PythonVenvForAivia" and follow instructions
