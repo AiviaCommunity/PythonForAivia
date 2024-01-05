@@ -96,9 +96,12 @@ Aivia channel
 
 ### Periodic file cleaning
 The simple bridge created between Aivia and python uses temporary files placed in the following location: 
-"C:\Users\_{windows-username}_\AppData\Local\Temp"
-Temporary ".tif" files (named "tmp*.tif") can stay in this folder if there is an interruption in the python script.
+
+`"C:\Users\_{windows-username}_\AppData\Local\Temp"`
+
+Temporary ".tif" files (named `tmp*.tif`) can stay in this folder if there is an interruption in the python script.
 Hence, it can be interesting to clean this folder periodically.
+
 
 ### Version-dependent notes
 
