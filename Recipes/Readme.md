@@ -10,5 +10,5 @@ Information for each recipe can be found in each file, in the header part.
 
 To dowwnload one recipe, click on its name, then click on the download button on the top-right...
 
-![](/DRVisionFiles/Snapshots/DownloadPyFile.jpg)
+![](/DRVisionFiles/Snapshots/DownloadPyFile.png)
 
