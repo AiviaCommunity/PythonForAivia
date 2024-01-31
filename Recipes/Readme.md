@@ -8,7 +8,7 @@ See quick instructions on the page: https://github.com/AiviaCommunity/PythonForA
 
 Information for each recipe can be found in each file, in the header part. 
 
-To dowwnload one recipe, click on its name, then right-click on "Raw" button on the top-right > Save Link As...
+To dowwnload one recipe, click on its name, then click on the download button on the top-right...
 
 ![](/DRVisionFiles/Snapshots/DownloadPyFile.jpg)
 
