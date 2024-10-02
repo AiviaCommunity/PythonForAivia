@@ -1,0 +1,45 @@
+[
+    {
+        "inputImagePath": "Tests/Inputs/Images/Test_8bit_YX_Cells2D_pmembraneLabel.tif", 
+        "resultPath":"Tests/Recipes/AdjustGamma/outputs/Test_AdjustGamma0.5_8bit_YX_Cells2D_pmembraneLabel.tif", 
+        "gamma":0.5, 
+        "groundTruthPath":"Tests/Recipes/AdjustGamma/ground_truth/Test_AdjustGamma0.5_8bit_YX_Cells2D_pmembraneLabel.tif"
+    },
+    {
+        "inputImagePath": "Tests/Inputs/Images/Test_8bit_YX_Cells2D_pmembraneLabel.tif", 
+        "resultPath":"Tests/Recipes/AdjustGamma/outputs/Test_AdjustGamma0.25_8bit_YX_Cells2D_pmembraneLabel.tif", 
+        "gamma":0.25, 
+        "groundTruthPath":"Tests/Recipes/AdjustGamma/ground_truth/Test_AdjustGamma0.25_8bit_YX_Cells2D_pmembraneLabel.tif"
+    },
+
+    {
+        "inputImagePath": "Tests/Inputs/Images/Test_RGB_YX_PigSkin.tif", 
+        "resultPath":"Tests/Recipes/AdjustGamma/outputs/Test_AdjustGamma_RGB_YX_PigSkin.tif", 
+        "gamma":0.25, 
+        "groundTruthPath":"Tests/Recipes/AdjustGamma/ground_truth/Test_AdjustGamma_RGB_YX_PigSkin.tif"
+    },
+
+
+    {
+        "inputImagePath": "Tests/Inputs/Images/Test_8bit_TYX_Particles.aivia.tif", 
+        "resultPath":"Tests/Recipes/AdjustGamma/outputs/Test_AdjustGamma_8bit_TYX_Particles.aivia.tif", 
+        "gamma":0.25, 
+        "groundTruthPath":"Tests/Recipes/AdjustGamma/ground_truth/Test_AdjustGamma_8bit_TYX_Particles.aivia.tif"
+    },
+
+
+    {
+        "inputImagePath": "Tests/Inputs/Images/Test_16bit_ZYX_Nuclei.aivia.tif", 
+        "resultPath":"Tests/Recipes/AdjustGamma/outputs/Test_AdjustGamma_16bit_ZYX_Nuclei.aivia.tif", 
+        "gamma":0.25, 
+        "groundTruthPath":"Tests/Recipes/AdjustGamma/ground_truth/Test_AdjustGamma_16bit_ZYX_Nuclei.aivia.tif"
+    },
+
+
+    {
+        "inputImagePath": "Tests/Inputs/Images/Test_16bit_TZYX_3DandT_Nuclei.aivia.tif", 
+        "resultPath":"Tests/Recipes/AdjustGamma/outputs/Test_AdjustGamma_16bit_TZYX_3DandT_Nuclei.aivia.tif", 
+        "gamma":0.25, 
+        "groundTruthPath":"Tests/Recipes/AdjustGamma/ground_truth/Test_AdjustGamma_16bit_TZYX_3DandT_Nuclei.aivia.tif"
+    }
+]

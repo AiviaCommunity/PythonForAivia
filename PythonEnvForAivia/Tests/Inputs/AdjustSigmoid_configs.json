@@ -1,0 +1,44 @@
+[
+    {
+        "inputImagePath": "Tests/Inputs/Images/Test_8bit_YX_Cells2D_pmembraneLabel.tif", 
+        "resultPath":"Tests/Recipes/AdjustSigmoid/outputs/Test_AdjustSigmoid_8bit_YX_Cells2D_pmembraneLabel.tif", 
+        "cutoff":0.5, 
+        "gain":10,
+        "groundTruthPath":"Tests/Recipes/AdjustSigmoid/ground_truth/Test_AdjustSigmoid_8bit_YX_Cells2D_pmembraneLabel.tif"
+    },
+
+    {
+        "inputImagePath": "Tests/Inputs/Images/Test_RGB_YX_PigSkin.tif", 
+        "resultPath":"Tests/Recipes/AdjustSigmoid/outputs/Test_AdjustSigmoid_RGB_YX_PigSkin.tif", 
+        "cutoff":0.5, 
+        "gain":0.25, 
+        "groundTruthPath":"Tests/Recipes/AdjustSigmoid/ground_truth/Test_AdjustSigmoid_RGB_YX_PigSkin.tif"
+    },
+
+    {
+        "inputImagePath": "Tests/Inputs/Images/Test_8bit_TYX_Particles.aivia.tif", 
+        "resultPath":"Tests/Recipes/AdjustSigmoid/outputs/Test_AdjustSigmoid_8bit_TYX_Particles.aivia.tif", 
+        "cutoff":0.5, 
+        "gain":10,
+        "groundTruthPath":"Tests/Recipes/AdjustSigmoid/ground_truth/Test_AdjustSigmoid_8bit_TYX_Particles.aivia.tif"
+    },
+
+
+    {
+        "inputImagePath": "Tests/Inputs/Images/Test_16bit_ZYX_Nuclei.aivia.tif", 
+        "resultPath":"Tests/Recipes/AdjustSigmoid/outputs/Test_AdjustSigmoid_16bit_ZYX_Nuclei.aivia.tif", 
+        "cutoff":0.5, 
+        "gain":10,
+        "groundTruthPath":"Tests/Recipes/AdjustSigmoid/ground_truth/Test_AdjustSigmoid_16bit_ZYX_Nuclei.aivia.tif"
+    },
+
+
+    {
+        "inputImagePath": "Tests/Inputs/Images/Test_16bit_TZYX_3DandT_Nuclei.aivia.tif", 
+        "resultPath":"Tests/Recipes/AdjustSigmoid/outputs/Test_AdjustSigmoid_16bit_TZYX_3DandT_Nuclei.aivia.tif", 
+        "cutoff":0.5, 
+        "gain":10,
+        "groundTruthPath":"Tests/Recipes/AdjustSigmoid/ground_truth/Test_AdjustSigmoid_16bit_TZYX_3DandT_Nuclei.aivia.tif"
+    }
+
+]
