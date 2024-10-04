@@ -1,0 +1,11 @@
+[
+    {
+        "inputRedPath": "Tests/InputTestImages/Test_16bit_ZYX_Cells3D_ch1.tif", 
+        "inputGreenPath": "Tests/InputTestImages/Test_16bit_ZYX_Cells3D_ch1.tif", 
+        "inputBluePath": "Tests/InputTestImages/Test_16bit_ZYX_Cells3D_ch2.tif", 
+        "resultPath":"Tests/TransformImages/GroundTruths/MaxIntensityProjectionRGB/outputs/Test_MaxIntensityProjectionRGB_16bit_ZYX_Cells3D.tif", 
+        "TCount":1, 
+        "CallingExecutable":"None",
+        "groundTruthPath":"Tests/TransformImages/GroundTruths/MaxIntensityProjectionRGB/ground_truth/Test_MaxIntensityProjectionRGB_16bit_ZYX_Cells3D.tif"
+    }
+]

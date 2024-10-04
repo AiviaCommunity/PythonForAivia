@@ -1,0 +1,67 @@
+[
+    {
+        "inputImagePath": "Tests/InputTestImages/Test_8bit_YX_Cells2D_pmembraneLabel.tif", 
+        "resultPath":"Tests/TransformImages/GroundTruths/ScaleImage_ForStarDist/outputs/Test_ScaleImage_ForStarDist_8bit_YX_Cells2D_pmembraneLabel.tif",
+        "groundTruthPath":"Tests/TransformImages/GroundTruths/ScaleImage_ForStarDist/ground_truth/Test_ScaleImage_ForStarDist_8bit_YX_Cells2D_pmembraneLabel.tif",
+        "ZCount": 1,
+        "TCount":1, 
+        "Calibration":"XYZT: 1 micrometers, 1 micrometers, 1 micrometers, 1 Default",
+        "scaleFactorXY":2,
+        "scaleFactorZ":1,
+        "scaleDirection":0,
+        "EntryPoint":"",
+        "CallingExecutable":"",
+        "skip_aivia":1,
+        "performZscaling":0,
+        "typicalObjDiam":10
+    },
+    {
+        "inputImagePath": "Tests/InputTestImages/Test_8bit_TYX_Particles.aivia.tif", 
+        "resultPath":"Tests/TransformImages/GroundTruths/ScaleImage_ForStarDist/outputs/Test_ScaleImage_ForStarDist_8bit_TYX_Particles.aivia.tif",
+        "groundTruthPath":"Tests/TransformImages/GroundTruths/ScaleImage_ForStarDist/ground_truth/Test_ScaleImage_ForStarDist_8bit_TYX_Particles.aivia.tif",
+        "ZCount": 1,
+        "TCount":20, 
+        "Calibration":"XYZT: 1 micrometers, 1 micrometers, 1 micrometers, 1 Default",
+        "scaleFactorXY":2,
+        "scaleFactorZ":1.5,
+        "scaleDirection":0,
+        "EntryPoint":"",
+        "CallingExecutable":"",
+        "skip_aivia":1,
+        "performZscaling":0,
+        "typicalObjDiam":10
+    },
+    {
+        "inputImagePath": "Tests/InputTestImages/Test_8bit_ZYX_BinaryCylinder1.tif", 
+        "resultPath":"Tests/TransformImages/GroundTruths/ScaleImage_ForStarDist/outputs/Test_ScaleImage_ForStarDist_8bit_ZYX_BinaryCylinder1.tif",
+        "groundTruthPath":"Tests/TransformImages/GroundTruths/ScaleImage_ForStarDist/ground_truth/Test_ScaleImage_ForStarDist_8bit_ZYX_BinaryCylinder1.tif",
+        "ZCount": 50,
+        "TCount":1, 
+        "Calibration":"XYZT: 1 micrometers, 1 micrometers, 1 micrometers, 1 Default",
+        "scaleFactorXY":2,
+        "scaleFactorZ":1.5,
+        "scaleDirection":0,
+        "EntryPoint":"",
+        "CallingExecutable":"",
+        "skip_aivia":1,
+        "performZscaling":0,
+        "typicalObjDiam":10
+    },
+    {
+        "inputImagePath": "Tests/InputTestImages/Test_16bit_TZYX_3DandT_Nuclei.aivia.tif", 
+        "resultPath":"Tests/TransformImages/GroundTruths/ScaleImage_ForStarDist/outputs/Test_ScaleImage_ForStarDist_16bit_TZYX_3DandT_Nuclei.aivia.tif",
+        "groundTruthPath":"Tests/TransformImages/GroundTruths/ScaleImage_ForStarDist/ground_truth/Test_ScaleImage_ForStarDist_16bit_TZYX_3DandT_Nuclei.aivia.tif",
+        "ZCount": 11,
+        "TCount":3, 
+        "Calibration":"XYZT: 1 micrometers, 1 micrometers, 1 micrometers, 1 Default",
+        "scaleFactorXY":2,
+        "scaleFactorZ":1.5,
+        "scaleDirection":0,
+        "EntryPoint":"",
+        "CallingExecutable":"",
+        "skip_aivia":1,
+        "performZscaling":0,
+        "typicalObjDiam":10
+    }
+    
+]

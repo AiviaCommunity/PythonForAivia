@@ -1,0 +1,16 @@
+[
+    {
+        "inputImagePath": "Tests/InputTestImages/Test_8bit_ZYX_y200_d5mi10s_i000_c000_mitoFluorOnly_T15.tif", 
+        "resultPath":"Tests/TransformImages/GroundTruths/MinSlices/outputs/Test_MinSlices_8bit_ZYX_y200_d5mi10s_i000_c000_mitoFluorOnly_T15.tif", 
+        "width":2, 
+        "TCount":1,
+        "groundTruthPath":"Tests/TransformImages/GroundTruths/MinSlices/ground_truth/Test_MinSlices_8bit_ZYX_y200_d5mi10s_i000_c000_mitoFluorOnly_T15.tif"
+    },
+    {
+        "inputImagePath": "Tests/InputTestImages/Test_8bit_TZYX_y200_d5mi10s_i000_c000_mitoFluorOnly.tif", 
+        "resultPath":"Tests/TransformImages/GroundTruths/MinSlices/outputs/Test_MinSlices_8bit_TZYX_y200_d5mi10s_i000_c000_mitoFluorOnly.tif", 
+        "width":2, 
+        "TCount":11,
+        "groundTruthPath":"Tests/TransformImages/GroundTruths/MinSlices/ground_truth/Test_MinSlices_8bit_TZYX_y200_d5mi10s_i000_c000_mitoFluorOnly.tif"
+    }
+]
