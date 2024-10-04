@@ -38,14 +38,11 @@ def run(params):
     image_location = params['inputImagePath']
     result_location = params['resultPath']
     tCount = int(params['TCount'])
-    aivia_path = params['CallingExecutable']
+    
     if not os.path.exists(image_location):
         print(f"Error: {image_location} does not exist")
         return
-    
-    if not os.path.exists(aivia_path):
-        print(f"Error: {aivia_path} does not exist")
-        return
+
         
     image_data = imread(image_location)
     dims = image_data.shape
@@ -77,6 +74,13 @@ def run(params):
     
     imsave(result_location, output_data)
     
+    aivia_path = params['CallingExecutable']
+    # Added for handling testing without opening aivia
+    if aivia_path == "None":
+        return
+    if not os.path.exists(aivia_path):
+        print(f"Error: {aivia_path} does not exist")
+        return
     # Run external program
     cmdLine = 'start \"\" \"'+ aivia_path +'\" \"'+ temp_location +'\"'
     

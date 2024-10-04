@@ -81,10 +81,6 @@ def run(params):
         print(f"Error: {image_location} does not exist")
         return
 
-    if not os.path.exists(aivia_path):
-        print(f"Error: {aivia_path} does not exist")
-        return
-
     raw_data = imread(image_location)
     dims = raw_data.shape
     print('-- Input dimensions (expected (Z), Y, X): ', np.asarray(dims), ' --')
@@ -117,6 +113,12 @@ def run(params):
         imwrite(tmp_path, out_data, imagej=True, photometric='minisblack', metadata=meta_info,
                 resolution=(inverted_XY_cal, inverted_XY_cal))
 
+        # Added for handling testing without opening aivia
+        if aivia_path == "None":
+            return
+        if not os.path.exists(aivia_path):
+            print(f"Error: {aivia_path} does not exist")
+            return
         # Run external program
         cmdLine = 'start \"\" \"' + aivia_path + '\" \"' + tmp_path + '\"'
 
@@ -128,7 +130,6 @@ def run(params):
 
     else:
         imwrite(result_location, out_data)
-
 
 if __name__ == '__main__':
     params = {'inputImagePath': r'D:\PythonCode\_tests\2D-image.tif',

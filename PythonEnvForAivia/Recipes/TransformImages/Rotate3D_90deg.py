@@ -98,9 +98,7 @@ def run(params):
         print(f"Error: {image_location} does not exist")
         return
 
-    if not os.path.exists(aivia_path):
-        print(f"Error: {aivia_path} does not exist")
-        return
+
 
     raw_data = imread(image_location)
     dims = raw_data.shape
@@ -171,7 +169,12 @@ def run(params):
     # Dummy save
     # dummy_data = np.zeros(image_data.shape, dtype=image_data.dtype)
     # imwrite(result_location, dummy_data)
-
+    # Added for handling testing without opening aivia
+    if params["skip_aivia"] == 1:
+        return
+    if not os.path.exists(aivia_path):
+        print(f"Error: {aivia_path} does not exist")
+        return
     # Run external program
     cmdLine = 'start \"\" \"' + aivia_path + '\" \"' + tmp_path + '\"'
 

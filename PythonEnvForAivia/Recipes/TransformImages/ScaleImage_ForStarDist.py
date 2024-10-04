@@ -169,6 +169,8 @@ def run(params):
     dummy_data = np.zeros(image_data.shape, dtype=image_data.dtype)
     imwrite(result_location, dummy_data)
 
+    if params['skip_aivia']==1:
+        return
     # Run external program
     cmdLine = 'start \"\" \"' + aivia_path + '\" \"' + tmp_path + '\"'
 
