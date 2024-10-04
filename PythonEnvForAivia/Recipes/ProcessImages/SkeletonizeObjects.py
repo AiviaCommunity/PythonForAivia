@@ -82,23 +82,23 @@ def run(params):
         for t in range(0, dims[0]):
             temp_array[t, :, :, :] = skeletonize_3d(temp_array[t, :, :, :])
             if radius != 0:
-                temp_array[t, :, :, :] = closing(temp_array[t, :, :, :], selem=structure)
+                temp_array[t, :, :, :] = closing(temp_array[t, :, :, :], footprint=structure)
     # 2D+T
     elif tCount > 1 and zCount == 1:
         for t in range(0, dims[0]):
             temp_array[t, :, :] = skeletonize(temp_array[t, :, :])
             if radius != 0:
-                temp_array[t, :, :] = closing(temp_array[t, :, :], selem=structure)
+                temp_array[t, :, :] = closing(temp_array[t, :, :], footprint=structure)
     # 3D
     elif tCount ==1 and zCount > 1:
         temp_array = skeletonize_3d(temp_array)
         if radius != 0:
-            temp_array = closing(temp_array, selem=structure)
+            temp_array = closing(temp_array, footprint=structure)
     # 2D
     else:
         temp_array = skeletonize(temp_array)
         if radius != 0:
-            temp_array = closing(temp_array, selem=structure)
+            temp_array = closing(temp_array, footprint=structure)
 
 
     temp_array = np.where(temp_array.astype(image_data.dtype)>0, image_data.max(), 0)

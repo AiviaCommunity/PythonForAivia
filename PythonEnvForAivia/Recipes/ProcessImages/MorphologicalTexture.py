@@ -65,19 +65,18 @@ def run(params):
         structure = disk(size)
     else:
         structure = ball(size)
-
     if tCount > 1 and zCount > 1:
         for t in range(0, image_data.shape[0]):
             texture_image[t,:,:,:] = closing(
-                image_data[t,:,:,:], selem=structure) - opening(image_data[t,:,:,:], selem=structure
+                image_data[t,:,:,:], footprint=structure) - opening(image_data[t,:,:,:], footprint=structure
             )
     elif tCount > 1 and zCount == 1:
         for t in range(0, image_data.shape[0]):
             texture_image[t,:,:] = closing(
-                image_data[t,:,:], selem=structure) - opening(image_data[t,:,:], selem=structure
+                image_data[t,:,:], footprint=structure) - opening(image_data[t,:,:], footprint=structure
             )
     else:
-        texture_image = closing(image_data, selem=structure) - opening(image_data, selem=structure)
+        texture_image = closing(image_data, footprint=structure) - opening(image_data, footprint=structure)
     
     if image_data.dtype == np.uint16:
         output_data = img_as_uint(texture_image)

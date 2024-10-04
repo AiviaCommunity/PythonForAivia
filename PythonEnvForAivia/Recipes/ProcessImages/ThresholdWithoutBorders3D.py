@@ -76,7 +76,7 @@ def run(params):
         for t in range(0, dims[0]):
             mask[t,:,:,:] = np.where(image_data[t,:,:,:] > threshold, 1, 0)
             if radius != 0:
-                mask[t,:,:,:] = closing(mask[t,:,:,:], selem=structure)
+                mask[t,:,:,:] = closing(mask[t,:,:,:], footprint=structure)
             mask[t,:,:,:] = label(clear_border(mask[t,:,:,:]))
         axes = 'YXZT'
     # 3D
@@ -84,7 +84,7 @@ def run(params):
         print(f"Applying to 3D case with dims: {image_data.shape}")
         mask = np.where(image_data > threshold, 1, 0)
         if radius != 0:
-            mask = closing(mask, selem=structure)
+            mask = closing(mask, footprint=structure)
         mask = label(clear_border(mask))
         axes = 'YXZ'
     

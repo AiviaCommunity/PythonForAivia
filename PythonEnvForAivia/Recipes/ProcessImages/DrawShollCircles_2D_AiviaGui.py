@@ -112,12 +112,11 @@ def run(params):
             output_data[:, rr, cc] = val * bitdepth_max
         else:
             output_data[rr, cc] = val * bitdepth_max
-
     if external_output:
         # Defining axes for output metadata and scale factor variable
         axes = 'YX' if tCount == 1 else 'TYX'
         meta_info = {'axes': axes}
-
+        print(output_data.shape)
         imsave(result_location, output_data, imagej=True, photometric='minisblack', metadata=meta_info)
     else:
         imsave(result_location, output_data)
