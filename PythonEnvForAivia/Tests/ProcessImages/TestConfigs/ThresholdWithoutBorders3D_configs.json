@@ -1,0 +1,21 @@
+[
+    {
+        "inputImagePath": "Tests/InputTestImages/Test_16bit_ZYX_Nuclei.aivia.tif", 
+        "resultObjectPath":"Tests/ProcessImages/GroundTruths/ThresholdWithoutBorders3D/outputs/Test_ThresholdWithoutBorders3D_16bit_ZYX_Nuclei.aivia.tif",
+        "TCount":1,
+        "ZCount":21,
+        "radius":10,
+        "threshold":20,
+        "groundTruthPath":"Tests/ProcessImages/GroundTruths/ThresholdWithoutBorders3D/ground_truth/Test_ThresholdWithoutBorders3D_16bit_ZYX_Nuclei.aivia.tif"
+    },
+    {
+        "inputImagePath": "Tests/InputTestImages/Test_16bit_TZYX_3DandT_Nuclei.aivia.tif", 
+        "resultObjectPath":"Tests/ProcessImages/GroundTruths/ThresholdWithoutBorders3D/outputs/Test_ThresholdWithoutBorders3D_16bit_TZYX_3DandT_Nuclei.aivia.tif", 
+        "TCount":3,
+        "ZCount":11,
+        "radius":10,
+        "threshold":20,
+        "groundTruthPath":"Tests/ProcessImages/GroundTruths/ThresholdWithoutBorders3D/ground_truth/Test_ThresholdWithoutBorders3D_16bit_TZYX_3DandT_Nuclei.aivia.tif"
+    }
+
+]
