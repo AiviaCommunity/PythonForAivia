@@ -24,7 +24,7 @@ else:
 # ---------------------------------------------------------------
 
 # import time
-from matplotlib import cm
+import matplotlib.pyplot as plt
 import numpy as np
 from skimage.io import imread, imsave
 
@@ -86,27 +86,46 @@ def run(params):
 
     output_dims = np.insert(input_dims, 0, 3)
     output_data = np.zeros(output_dims).astype(image_data.dtype)
+    print(output_data.shape)
 
-    # Get discrete values from colormap and apply
-    color_map = cm.get_cmap(selected_map, zCount)
-    if hasattr(color_map, 'colors'):
-        final_colors = color_map.colors
-    else:
-        # Some colors have a different type > extracting color ranges is different
-        final_colors = color_map(np.linspace(0, 1, zCount))
 
-    if tCount == 1 or zCount == 1:
-        print('-- processing 3D dataset --')
-        for z in range(input_dims[0]):
+    if zCount == 1 and tCount > 1:
+        color_map = plt.get_cmap(selected_map, tCount)
+        if hasattr(color_map, 'colors'):
+            final_colors = color_map.colors
+        else:
+            # Some colors have a different type > extracting color ranges is different
+            final_colors = color_map(np.linspace(0, 1, tCount))
+        print('-- processing 2D+t dataset --')
+        for i in range(input_dims[0]):
             # Collect color map for precise z-slice
-            current_col = final_colors[z, :3]
-
+            current_col = final_colors[i, :3]
             for c in range(3):
-                output_data[c, z, :, :] = image_data[z, :, :] * current_col[c]
+                output_data[c, i, :, :] = image_data[i, :, :] * current_col[c]
 
+    elif zCount >1 and tCount == 1 :
+        color_map = plt.get_cmap(selected_map, zCount)
+        if hasattr(color_map, 'colors'):
+            final_colors = color_map.colors
+        else:
+            # Some colors have a different type > extracting color ranges is different
+            final_colors = color_map(np.linspace(0, 1, zCount))
+        print('-- processing 3D dataset --')
+        for i in range(input_dims[0]):
+            # Collect color map for precise z-slice
+            current_col = final_colors[i, :3]
+            for c in range(3):
+                output_data[c, i, :, :] = image_data[i, :, :] * current_col[c]
+        pass
     # T and Z > 1
     else:
-        print('-- processing 4D dataset --')
+        color_map = plt.get_cmap(selected_map, zCount)
+        if hasattr(color_map, 'colors'):
+            final_colors = color_map.colors
+        else:
+            # Some colors have a different type > extracting color ranges is different
+            final_colors = color_map(np.linspace(0, 1, zCount))
+        print('-- processing 3D+t dataset --')
         for z in range(input_dims[1]):
             # Collect color map for precise z-slice
             current_col = final_colors[z, :3]
