@@ -1,0 +1,20 @@
+[
+    {
+        "inputImagePath": "Tests/Inputs/Images/Test_8bit_YX_Cells2D_pmembraneLabel.tif", 
+        "resultPath":"Tests/Recipes/DrawShapes_2D/outputs/Test_DrawShapes_2D_8bit_YX_Cells2D_pmembraneLabel.tif", 
+        "ZCount": 0,
+        "TCount": 1,
+        "Calibration": "XYZT: 1 micrometers, 1 micrometers, 1 micrometers, 1 Default",
+        "externalOutput": 1,
+        "groundTruthPath":"Tests/Recipes/DrawShapes_2D/ground_truth/Test_DrawShapes_2D_8bit_YX_Cells2D_pmembraneLabel.tif"
+    },
+    {
+        "inputImagePath": "Tests/Inputs/Images/Test_8bit_TYX_Particles.aivia.tif", 
+        "resultPath":"Tests/Recipes/DrawShapes_2D/outputs/Test_DrawShapes_2D_8bit_TYX_Particles.aivia.tif", 
+        "ZCount": 0,
+        "TCount": 20,
+        "Calibration": "XYZT: 1 micrometers, 1 micrometers, 1 micrometers, 1 Default",
+        "externalOutput": 1,
+        "groundTruthPath":"Tests/Recipes/DrawShapes_2D/ground_truth/Test_DrawShapes_2D_8bit_TYX_Particles.aivia.tif"
+    }
+]

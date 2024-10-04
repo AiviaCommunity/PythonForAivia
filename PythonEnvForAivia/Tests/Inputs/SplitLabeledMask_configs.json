@@ -1,0 +1,14 @@
+[
+    {
+        "inputImagePath": "Tests/Inputs/Images/Test_8bit_YX_y200_d5mi10s_i000_c000_mitoSegOnly_T15_labeled.tif", 
+        "resultPath":"Tests/Recipes/SplitLabeledMask/outputs/Test_SplitLabeledMask_8bit_YX_y200_d5mi10s_i000_c000_mitoSegOnly_T15_labeled.tif",
+        "TCount":1,
+        "groundTruthPath":"Tests/Recipes/SplitLabeledMask/ground_truth/Test_SplitLabeledMask_8bit_YX_y200_d5mi10s_i000_c000_mitoSegOnly_T15_labeled.tif"
+    },
+    {
+        "inputImagePath": "Tests/Inputs/Images/Test_8bit_ZYX_y200_d5mi10s_i000_c000_mitoSegOnly_T15_labeled.tif", 
+        "resultPath":"Tests/Recipes/SplitLabeledMask/outputs/Test_SplitLabeledMask_8bit_ZYX_y200_d5mi10s_i000_c000_mitoSegOnly_T15_labeled.tif", 
+        "TCount":1,
+        "groundTruthPath":"Tests/Recipes/SplitLabeledMask/ground_truth/Test_SplitLabeledMask_8bit_ZYX_y200_d5mi10s_i000_c000_mitoSegOnly_T15_labeled.tif"
+    }
+]

@@ -5,14 +5,9 @@ from Recipes.ProcessImages import DrawArrayOfShapes_2D
 from Tests.utils.comparison import isIdentical
 
 # NOTE: When running test, a GUI will pop up for each test.  
-# Press `Reset values to default (96 multiwell template)` and then
-# set `Number of shapes in the same row` to `2` and
-# set `Number of shapes in the same column` to `2`.
-# This is to prevent the array drawer from drawing outside of the image 
-# and causing an error
+# Press `Reset values to default (96 multiwell template)` and proceed
 
 def run_test(config):
-    # Dummy test logic for now
     ground_truth_path = config.pop('groundTruthPath')
     DrawArrayOfShapes_2D.run(params=config)
     assert isIdentical(ground_truth_path, config.get("resultPath"))
@@ -33,7 +28,7 @@ with open(config_json_path) as f:
 
 # Dynamically create test methods for each configuration
 for i, config in enumerate(configurations):
-    test_name = f"test_AdjustGamma_MagicGui_{i:02d}"  # Must start with "test_"
+    test_name = f"test_DrawArrayOfShapes_2D_{i:02d}"  # Must start with "test_"
     test_method = generate_test_method(config)
     setattr(Test_DrawArrayOfShapes_2D, test_name, test_method)
 

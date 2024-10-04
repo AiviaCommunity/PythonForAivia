@@ -6,7 +6,6 @@ from Tests.utils.comparison import isIdentical
 
 
 def run_test(config):
-    # Dummy test logic for now
     ground_truth_path = config.pop('groundTruthPath')
     AdjustGamma.run(params=config)
     assert isIdentical(ground_truth_path, config.get("resultPath"))

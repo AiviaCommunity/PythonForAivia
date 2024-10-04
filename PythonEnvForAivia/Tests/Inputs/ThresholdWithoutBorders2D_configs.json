@@ -1,0 +1,21 @@
+[
+    {
+        "inputImagePath": "Tests/Inputs/Images/Test_8bit_YX_Cells2D_pmembraneLabel.tif", 
+        "resultObjectPath":"Tests/Recipes/ThresholdWithoutBorders2D/outputs/Test_ThresholdWithoutBorders2D_8bit_YX_Cells2D_pmembraneLabel.tif",
+        "TCount":1,
+        "ZCount":1,
+        "radius":10,
+        "threshold":20,
+        "groundTruthPath":"Tests/Recipes/ThresholdWithoutBorders2D/ground_truth/Test_ThresholdWithoutBorders2D_8bit_YX_Cells2D_pmembraneLabel.tif"
+    },
+    {
+        "inputImagePath": "Tests/Inputs/Images/Test_8bit_TYX_Particles.aivia.tif", 
+        "resultObjectPath":"Tests/Recipes/ThresholdWithoutBorders2D/outputs/Test_ThresholdWithoutBorders2D_8bit_TYX_Particles.aivia.tif", 
+        "TCount":20,
+        "ZCount":1,
+        "radius":10,
+        "threshold":20,
+        "groundTruthPath":"Tests/Recipes/ThresholdWithoutBorders2D/ground_truth/Test_ThresholdWithoutBorders2D_8bit_TYX_Particles.aivia.tif"
+    }
+
+]
