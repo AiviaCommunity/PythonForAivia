@@ -1,0 +1,7 @@
+[
+    {
+        "inputDirectory": "Tests/InputTestImages/dicom_stack", 
+        "resultPath":"Tests/ConvertImagesForAivia/GroundTruths/AiviaExperimentCreator/outputs/", 
+        "groundTruthPath":"Tests/ConvertImagesForAivia/GroundTruths/AiviaExperimentCreator/ground_truth/"
+       }
+]
