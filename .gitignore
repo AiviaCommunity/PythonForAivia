@@ -1,6 +1,8 @@
 /Recipes/__pycache__
 /Utilities/__pycache__
 **/outputs/*.tif
+**/outputs/*.tiff
+**/outputs/*.aiviaexperiment
 
 
 # These are some examples of commonly ignored file patterns.
