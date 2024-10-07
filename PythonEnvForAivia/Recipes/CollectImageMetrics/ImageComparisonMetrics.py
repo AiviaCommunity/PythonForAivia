@@ -47,7 +47,12 @@ def run(params):
     GTimageLocation = params['inputGTImagePath']
     resultLocation = params['resultPath']
     resultLocationAdj = params['resultPathAdj']
-    
+    channel_axis=params.get('channel_axis')
+    if channel_axis == "None":
+        channel_axis = None
+    else:
+        channel_axis = int(channel_axis)
+
     # Checking existence of temporary files (individual channels)
     if not os.path.exists(RTimageLocation):
         print(f'Error: {RTimageLocation} does not exist')
@@ -77,7 +82,7 @@ def run(params):
     print(f'___ MSE = {valMSE} ___')    # Value appears in the log if Verbosity option is set to 'Everything'
        
     # SSIM measurement
-    outFullSSIM = structural_similarity(RTData, matched_GTData, full=True)
+    outFullSSIM = structural_similarity(RTData, matched_GTData, full=True, channel_axis=channel_axis)
     
     # Extracting mean value (first item)
     outMeanSSIM = outFullSSIM[0]
