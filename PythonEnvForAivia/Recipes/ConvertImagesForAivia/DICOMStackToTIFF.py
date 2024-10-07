@@ -1,12 +1,13 @@
 import os
 import sys
 import numpy as np
+print(os.path.dirname(sys.executable))
 from pydicom import dcmread
 from skimage.io import imsave
 from skimage.util import img_as_uint, img_as_ubyte
 
 
-def dicom_to_tiff(dicom_directory, bit_depth='16', output_name='Converted'):
+def dicom_to_tiff(dicom_directory, bit_depth='16', output_path=None):
     """
     Converts a stack of DICOM files to a single 3D TIFF for easy loading into Aivia.
     
@@ -27,8 +28,9 @@ def dicom_to_tiff(dicom_directory, bit_depth='16', output_name='Converted'):
     bit_depth : string
         Desired bit depth of the output file. Must be '16' or '8'.
     
-    output_name : string
-        What to name the output file. Note that you should not specify the TIFF extension.
+    output_path : string
+        Path to the output file, including what to name the output file.
+
     
     Returns
     -------
@@ -41,8 +43,11 @@ def dicom_to_tiff(dicom_directory, bit_depth='16', output_name='Converted'):
     example_dcm = dcmread(os.path.join(dicom_directory, file_list[0]))
     nx, ny = example_dcm.pixel_array.shape
     nz = len(file_list)
-    rx, ry = example_dcm.PixelSpacing
-    rz = example_dcm.SliceThickness
+    try:
+        rx, ry = example_dcm.PixelSpacing
+        rz = example_dcm.SliceThickness
+    except AttributeError:
+        rx,ry,rz = (1,1,1)
 
     print('Dataset properties:')
     print(f"XYZ dimensions: {nx}, {ny}, {nz}")
@@ -66,7 +71,7 @@ def dicom_to_tiff(dicom_directory, bit_depth='16', output_name='Converted'):
 
     print('\nSaving 3D TIFF...')
     # Need to swap some axes so that third dimension is loaded into Aivia as Z
-    imsave(os.path.join(dicom_directory, f"{output_name}.tiff"), np.swapaxes(array_data, 0, 2))
-    print(f"3D TIFF saved to {output_name}.tiff")
-    
-    return os.path.join(dicom_directory, f"{output_name}.tiff")
+    imsave(output_path, np.swapaxes(array_data, 0, 2))
+    print(f"3D TIFF saved to {output_path}")
+
+    return output_path;
