@@ -71,10 +71,10 @@ Aiviaexperiment file with automated format picked from the number of image group
 def run(params):
     global DEFAULT_FOLDER, LAYOUTS, PREFIX, WELL_PREFIX, TAGS, WELL_TAGS, SUFFIX
 
-    sp = os.path.sep
 
     # Choose files (or rely on an hard coded default folder)
-    input_folder = DEFAULT_FOLDER
+    input_folder = params.get('inputDirectory')
+    output_folder = params.get('resultPath')
     ans = 6         # init for OK answer
     group_list = []
     n_groups = 0
@@ -142,7 +142,7 @@ def run(params):
 
     # Main LOOP -----------------------------------------------------------------------------------------------
     # Init output file
-    output_file = open(input_folder + sp + 'Experiment_{}.aiviaexperiment'.format(datetime.date.today()), 'w+')
+    output_file = open(output_folder + "/"+ 'Experiment_{}.aiviaexperiment'.format(datetime.date.today()), 'w+')
     output_file.write(str(PREFIX))
 
     # Define well XY indexes
