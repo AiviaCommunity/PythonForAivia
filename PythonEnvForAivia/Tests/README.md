@@ -67,37 +67,37 @@ An "X" indicates that the given recipe is compatible with that image format.
 
 Parent Directory | Recipe Name | 2D | 2D +T | 3D | 3D+T | RGB
 -|-|-|-|-|-|-
-[ProcessImages](../Recipes/ProcessImages)| [`AdjustGamma.py`](../Recipes/ProcessImages/AdjustGamma.py)|	<mark>X</mark>	|	<mark>X</mark>	|	<mark>X</mark>	|	<mark>X</mark>	|	<mark>X</mark>	
-[ProcessImages](../Recipes/ProcessImages)| [`AdjustGamma_MagicGui.py`](../Recipes/ProcessImages/AdjustGamma_MagicGui.py)|	<mark>X</mark>	|	<mark>X</mark>	|	<mark>X</mark>	|	<mark>X</mark>	|	<mark>X</mark>	
-[ProcessImages](../Recipes/ProcessImages)| [`AdjustSigmoid.py`](../Recipes/ProcessImages/AdjustSigmoid.py)|	<mark>X</mark>	|	<mark>X</mark>	|	<mark>X</mark>	|	<mark>X</mark>	|	<mark>X</mark>	
-[ProcessImages](../Recipes/ProcessImages)| [`DrawArrayOfShapes_2D.py`](../Recipes/ProcessImages/DrawArrayOfShapes_2D.py)|	<mark>X</mark>	|	<mark>X</mark>	|		|		|		
-[ProcessImages](../Recipes/ProcessImages)| [`DrawShapes_2D.py`](../Recipes/ProcessImages/DrawShapes_2D.py)|	<mark>X</mark>	|	<mark>X</mark>	|		|		|		
-[ProcessImages](../Recipes/ProcessImages)| [`DrawShollCircles_2D_AiviaGui.py`](../Recipes/ProcessImages/DrawShollCircles_2D_AiviaGui.py)|	<mark>X</mark>	|	<mark>X</mark>	|		|		|		
-[ProcessImages](../Recipes/ProcessImages)| [`MeijeringNeuriteness.py`](../Recipes/ProcessImages/MeijeringNeuriteness.py)|	<mark>X</mark>	|		|	<mark>X</mark>	|		|		<mark>X</mark>
-[ProcessImages](../Recipes/ProcessImages)| [`MorphologicalTexture.py`](../Recipes/ProcessImages/MorphologicalTexture.py)|	<mark>X</mark>	|	<mark>X</mark>	|	<mark>X</mark>	|	<mark>X</mark>	|		
-[ProcessImages](../Recipes/ProcessImages)| [`ShapeIndex.py`](../Recipes/ProcessImages/ShapeIndex.py)|	<mark>X</mark>	|	<mark>X</mark>	|	<mark>X</mark>	|	<mark>X</mark>	|		
-[ProcessImages](../Recipes/ProcessImages)| [`Skeletonize.py`](../Recipes/ProcessImages/Skeletonize.py)|	<mark>X</mark>	|	<mark>X</mark>	|	<mark>X</mark>	|	<mark>X</mark>	|		
-[ProcessImages](../Recipes/ProcessImages)| [`SkeletonizeObjects.py`](../Recipes/ProcessImages/SkeletonizeObjects.py)|		|	<mark>X</mark>	|		|	<mark>X</mark>	|		
-[ProcessImages](../Recipes/ProcessImages)| [`SplitLabeledMask.py`](../Recipes/ProcessImages/SplitLabeledMask.py)|	<mark>X</mark>	|		|	<mark>X</mark>	|		|		
-[ProcessImages](../Recipes/ProcessImages)| [`SuperpixelPainter.py`](../Recipes/ProcessImages/SuperpixelPainter.py)|	<mark>X</mark>	|		|		|		|		
-[ProcessImages](../Recipes/ProcessImages)| [`ThresholdWithoutBorders2D.py`](../Recipes/ProcessImages/ThresholdWithoutBorders2D.py)|	<mark>X</mark>	|	<mark>X</mark>	|		|		|		
-[ProcessImages](../Recipes/ProcessImages)| [`ThresholdWithoutBorders3D.py`](../Recipes/ProcessImages/ThresholdWithoutBorders3D.py)|		|		|	<mark>X</mark>	|	<mark>X</mark>	|		
-[TransformImages](../Recipes/TransformImages)| [`MaxIntensityProjection.py`](../Recipes/TransformImages/MaxIntensityProjection.py)|		|		|	<mark>X</mark>	|		|	
-[TransformImages](../Recipes/TransformImages)| [`MaxIntensityProjectionRGB.py`](../Recipes/TransformImages/MaxIntensityProjectionRGB.py)|		|		|	<mark>X</mark>	|		|	
-[TransformImages](../Recipes/TransformImages)| [`MaxMask.py`](../Recipes/TransformImages/MaxMask.py)|	<mark>X</mark>	|	<mark>X</mark>	|	<mark>X</mark>	|	<mark>X</mark>	|	
-[TransformImages](../Recipes/TransformImages)| [`MaxSlices.py`](../Recipes/TransformImages/MaxSlices.py)|		|		|	<mark>X</mark>	|	<mark>X</mark>	|	
-[TransformImages](../Recipes/TransformImages)| [`MinSlices.py`](../Recipes/TransformImages/MinSlices.py)|		|		|	<mark>X</mark>	|	<mark>X</mark>	|	
-[TransformImages](../Recipes/TransformImages)| [`RGBtoLuminance.py`](../Recipes/TransformImages/RGBtoLuminance.py)|		|		|		|		|	<mark>X</mark>
-[TransformImages](../Recipes/TransformImages)| [`Rotate2D.py`](../Recipes/TransformImages/Rotate2D.py)|	<mark>X</mark>	|		|		|		|	
-[TransformImages](../Recipes/TransformImages)| [`Rotate3D_90deg.py`](../Recipes/TransformImages/Rotate3D_90deg.py)|		|		|	<mark>X</mark>	|		|	
-[TransformImages](../Recipes/TransformImages)| [`ScaleImage.py`](../Recipes/TransformImages/ScaleImage.py)|	<mark>X</mark>	|	<mark>X</mark>	|	<mark>X</mark>	|	<mark>X</mark>	|	
-[TransformImages](../Recipes/TransformImages)| [`ScaleImage_ForStarDist.py`](../Recipes/TransformImages/ScaleImage_ForStarDist.py)|	<mark>X</mark>	|	<mark>X</mark>	|	<mark>X</mark>	|	<mark>X</mark>	|	
-[TransformImages](../Recipes/TransformImages)| [`StackReg_ImageAlignment.py`](../Recipes/TransformImages/StackReg_ImageAlignment.py)|		|	<mark>X</mark>	|		|		|	
-[TransformImages](../Recipes/TransformImages)| [`ZColorCoding.py`](../Recipes/TransformImages/ZColorCoding.py)|		|	<mark>X</mark>	|	<mark>X</mark>	|	<mark>X</mark>	|	
-[ConvertImagesForAivia](../Recipes/ConvertImagesForAivia)| [`AiviaExperimentCreator.py`](../Recipes/ConvertImagesForAivia/AiviaExperimentCreator.py)|	<mark>X</mark>	|	X	|	X	|	X	|	X
-[ConvertImagesForAivia](../Recipes/ConvertImagesForAivia)| [`DICOMStackToTIFF.py`](../Recipes/ConvertImagesForAivia/DICOMStackToTIFF.py)|		|		|	<mark>X</mark>	|		|	
+[ProcessImages](../Recipes/ProcessImages)| [`AdjustGamma.py`](../Recipes/ProcessImages/AdjustGamma.py)|	==X==	|	==X==	|	==X==	|	==X==	|	==X==	
+[ProcessImages](../Recipes/ProcessImages)| [`AdjustGamma_MagicGui.py`](../Recipes/ProcessImages/AdjustGamma_MagicGui.py)|	==X==	|	==X==	|	==X==	|	==X==	|	==X==	
+[ProcessImages](../Recipes/ProcessImages)| [`AdjustSigmoid.py`](../Recipes/ProcessImages/AdjustSigmoid.py)|	==X==	|	==X==	|	==X==	|	==X==	|	==X==	
+[ProcessImages](../Recipes/ProcessImages)| [`DrawArrayOfShapes_2D.py`](../Recipes/ProcessImages/DrawArrayOfShapes_2D.py)|	==X==	|	==X==	|		|		|		
+[ProcessImages](../Recipes/ProcessImages)| [`DrawShapes_2D.py`](../Recipes/ProcessImages/DrawShapes_2D.py)|	==X==	|	==X==	|		|		|		
+[ProcessImages](../Recipes/ProcessImages)| [`DrawShollCircles_2D_AiviaGui.py`](../Recipes/ProcessImages/DrawShollCircles_2D_AiviaGui.py)|	==X==	|	==X==	|		|		|		
+[ProcessImages](../Recipes/ProcessImages)| [`MeijeringNeuriteness.py`](../Recipes/ProcessImages/MeijeringNeuriteness.py)|	==X==	|		|	==X==	|		|		==X==
+[ProcessImages](../Recipes/ProcessImages)| [`MorphologicalTexture.py`](../Recipes/ProcessImages/MorphologicalTexture.py)|	==X==	|	==X==	|	==X==	|	==X==	|		
+[ProcessImages](../Recipes/ProcessImages)| [`ShapeIndex.py`](../Recipes/ProcessImages/ShapeIndex.py)|	==X==	|	==X==	|	==X==	|	==X==	|		
+[ProcessImages](../Recipes/ProcessImages)| [`Skeletonize.py`](../Recipes/ProcessImages/Skeletonize.py)|	==X==	|	==X==	|	==X==	|	==X==	|		
+[ProcessImages](../Recipes/ProcessImages)| [`SkeletonizeObjects.py`](../Recipes/ProcessImages/SkeletonizeObjects.py)|		|	==X==	|		|	==X==	|		
+[ProcessImages](../Recipes/ProcessImages)| [`SplitLabeledMask.py`](../Recipes/ProcessImages/SplitLabeledMask.py)|	==X==	|		|	==X==	|		|		
+[ProcessImages](../Recipes/ProcessImages)| [`SuperpixelPainter.py`](../Recipes/ProcessImages/SuperpixelPainter.py)|	==X==	|		|		|		|		
+[ProcessImages](../Recipes/ProcessImages)| [`ThresholdWithoutBorders2D.py`](../Recipes/ProcessImages/ThresholdWithoutBorders2D.py)|	==X==	|	==X==	|		|		|		
+[ProcessImages](../Recipes/ProcessImages)| [`ThresholdWithoutBorders3D.py`](../Recipes/ProcessImages/ThresholdWithoutBorders3D.py)|		|		|	==X==	|	==X==	|		
+[TransformImages](../Recipes/TransformImages)| [`MaxIntensityProjection.py`](../Recipes/TransformImages/MaxIntensityProjection.py)|		|		|	==X==	|		|	
+[TransformImages](../Recipes/TransformImages)| [`MaxIntensityProjectionRGB.py`](../Recipes/TransformImages/MaxIntensityProjectionRGB.py)|		|		|	==X==	|		|	
+[TransformImages](../Recipes/TransformImages)| [`MaxMask.py`](../Recipes/TransformImages/MaxMask.py)|	==X==	|	==X==	|	==X==	|	==X==	|	
+[TransformImages](../Recipes/TransformImages)| [`MaxSlices.py`](../Recipes/TransformImages/MaxSlices.py)|		|		|	==X==	|	==X==	|	
+[TransformImages](../Recipes/TransformImages)| [`MinSlices.py`](../Recipes/TransformImages/MinSlices.py)|		|		|	==X==	|	==X==	|	
+[TransformImages](../Recipes/TransformImages)| [`RGBtoLuminance.py`](../Recipes/TransformImages/RGBtoLuminance.py)|		|		|		|		|	==X==
+[TransformImages](../Recipes/TransformImages)| [`Rotate2D.py`](../Recipes/TransformImages/Rotate2D.py)|	==X==	|		|		|		|	
+[TransformImages](../Recipes/TransformImages)| [`Rotate3D_90deg.py`](../Recipes/TransformImages/Rotate3D_90deg.py)|		|		|	==X==	|		|	
+[TransformImages](../Recipes/TransformImages)| [`ScaleImage.py`](../Recipes/TransformImages/ScaleImage.py)|	==X==	|	==X==	|	==X==	|	==X==	|	
+[TransformImages](../Recipes/TransformImages)| [`ScaleImage_ForStarDist.py`](../Recipes/TransformImages/ScaleImage_ForStarDist.py)|	==X==	|	==X==	|	==X==	|	==X==	|	
+[TransformImages](../Recipes/TransformImages)| [`StackReg_ImageAlignment.py`](../Recipes/TransformImages/StackReg_ImageAlignment.py)|		|	==X==	|		|		|	
+[TransformImages](../Recipes/TransformImages)| [`ZColorCoding.py`](../Recipes/TransformImages/ZColorCoding.py)|		|	==X==	|	==X==	|	==X==	|	
+[ConvertImagesForAivia](../Recipes/ConvertImagesForAivia)| [`AiviaExperimentCreator.py`](../Recipes/ConvertImagesForAivia/AiviaExperimentCreator.py)|	==X==	|	X	|	X	|	X	|	X
+[ConvertImagesForAivia](../Recipes/ConvertImagesForAivia)| [`DICOMStackToTIFF.py`](../Recipes/ConvertImagesForAivia/DICOMStackToTIFF.py)|		|		|	==X==	|		|	
 [ConvertImagesForAivia](../Recipes/ConvertImagesForAivia)| [`MultiWellPlateConverter_OperaPhenix.py`](../Recipes/ConvertImagesForAivia/MultiWellPlateConverter_OperaPhenix.py)|		|		|		|		|	
-[CollectImageMetrics](../Recipes/CollectImageMetrics)| [`CalculateIntersectionOverUnion.py`](../Recipes/CollectImageMetrics/CalculateIntersectionOverUnion.py)	|	<mark>X</mark>	|	<mark>X</mark>	|	<mark>X</mark>	|	<mark>X</mark>	|	
-[CollectImageMetrics](../Recipes/CollectImageMetrics)| [`ImageComparisonMetrics.py`](../Recipes/CollectImageMetrics/ImageComparisonMetrics.py)	|	<mark>X</mark>	|	<mark>X</mark>	|	<mark>X</mark>	|	<mark>X</mark>	|	<mark>X</mark>
+[CollectImageMetrics](../Recipes/CollectImageMetrics)| [`CalculateIntersectionOverUnion.py`](../Recipes/CollectImageMetrics/CalculateIntersectionOverUnion.py)	|	==X==	|	==X==	|	==X==	|	==X==	|	
+[CollectImageMetrics](../Recipes/CollectImageMetrics)| [`ImageComparisonMetrics.py`](../Recipes/CollectImageMetrics/ImageComparisonMetrics.py)	|	==X==	|	==X==	|	==X==	|	==X==	|	==X==
 [CollectImageMetrics](../Recipes/CollectImageMetrics)| [`ReadTiffTags.py`](../Recipes/CollectImageMetrics/ReadTiffTags.py)	|	X	|	X	|	X	|	X	|	X
 
