@@ -5,11 +5,11 @@ The goal of this repository is to organize the work of the Aivia team and the Ai
 
 # Table of Contents
 
-* [Recipe Directory](#recipe-directory)
-* [Repository Organization](#repository-organization)
-* [Installation](#installation)
-* [Templates](#templates)
-* [Style Guidelines](#style-guidelines)
+* [Recipe Directory](#recipe-directory-)
+* [Repository Organization](#repository-organization-)
+* [Installation](#installation-)
+* [Templates](#templates-)
+* [Style Guidelines](#style-guidelines-)
     * [Naming](#naming)
     * [Documentation](#documentation)
     * [Dependencies](#dependencies)
