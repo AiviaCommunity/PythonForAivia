@@ -62,16 +62,16 @@ Parent Directory | Recipe Name | 2D | 2D +T | 3D | 3D+T | RGB
 
 In this main repository you will find a few different folders:
 
-* [`PythonVenvForAivia/`](PythonVenvForAivia/) contains a virtual environment auto-builder. This is useful for users who do not know how to set a virtual environment and want to use recipes in Aivia without using any command line.
-    * [`Recipes/`](PythonVenvForAivia/Recipes/) contains .py files that can be dragged into Aivia and used as recipes in Aivia's Analysis Tools panel. Each of these recipes is a single, self-contained piece of code that can be used independently, except in cases where the .py file has accompanying files of the same name (e.g. .ui files to describe PyQt interfaces for .py files).
-    * [`Tests/`](PythonVenvForAivia/Tests/) contains testing scripts for recipes and test images for testing recipes. See [`README.md`](PythonEnvForAivia/Tests/README.md) for more information on its subdirectory structure.
+* [`PythonEnvForAivia/`](PythonEnvForAivia/) contains a virtual environment auto-builder. This is useful for users who do not know how to set a virtual environment and want to use recipes in Aivia without using any command line.
+    * [`Recipes/`](PythonEnvForAivia/Recipes/) contains .py files that can be dragged into Aivia and used as recipes in Aivia's Analysis Tools panel. Each of these recipes is a single, self-contained piece of code that can be used independently, except in cases where the .py file has accompanying files of the same name (e.g. .ui files to describe PyQt interfaces for .py files).
+    * [`Tests/`](PythonEnvForAivia/Tests/) contains testing scripts for recipes and test images for testing recipes. See [`README.md`](PythonEnvForAivia/Tests/README.md) for more information on its subdirectory structure.
 
 * [`VenvRecipes/`](VenvRecipes/) contains VenvRecipe folders. Each of these folders include a .py recipe and data. Each of these recipes is also ready-to-use except they will create required virtual environment and execute under the environment automatically. To use these recipes, please download the whole subfolder of that recipe.
 * [`Screenshots/`](Screenshots/) is for storing files necessary to build proper documentation, and can be ignored unless you are contributing to that documentation.
 
 ## Installation [^](#table-of-contents)
 
-Download and drag any file from the [`PythonVenvForAivia/Recipes/`](PythonVenvForAivia/Recipes/) directory into Aivia. Your recipe will show up in the Recipe Console of Aivia's Analysis Tools panel.
+Download and drag any file from the [`PythonEnvForAivia/Recipes/`](PythonEnvForAivia/Recipes/) directory into Aivia. Your recipe will show up in the Recipe Console of Aivia's Analysis Tools panel.
 
 For debugging purposes we recommend that you navigate to File > Options > Logging in Aivia, then set the "Verbosity" to "Everything":
 
@@ -93,7 +93,7 @@ Each recipe is intended for use on its own, without requiring the user to downlo
 
 The name of your recipe is how it will show in the Aivia recipe console:
 
-![Recipe name in the Aivia console.](DRVisionFiles/Snapshots/PythonFilenameInAivia.png "Recipe Naming Example")
+![Recipe name in the Aivia console.](Screenshots/PythonFilenameInAivia.png "Recipe Naming Example")
 
 
 We recommend (and may enforce) the following guidelines for file naming: 
