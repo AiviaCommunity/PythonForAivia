@@ -1,6 +1,5 @@
-# Folder for DRVision team
-
-...to create nice help pages in Github
+# Screenshots for Documentation
+Directory contains images to be used by Readme documents
 
 
 ### Nice tips
