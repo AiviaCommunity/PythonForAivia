@@ -32,7 +32,6 @@ def run(params):
         if not os.path.exists(env_dir/'Scripts/python312.zip'):
             copyfile(Path(sys.executable).parent / 'python312.zip', env_dir/'Scripts/python312.zip')
 
-
         # install requirements
         pip_path = env_dir / 'Scripts' / 'pip.exe'
         requirement_dir = pathlib.Path(os.path.dirname(os.path.realpath(__file__)))
