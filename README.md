@@ -71,11 +71,15 @@ In this main repository you will find a few different folders:
 
 ## Installation [^](#table-of-contents)
 
-Download and drag any file from the [`PythonEnvForAivia/Recipes/`](PythonEnvForAivia/Recipes/) directory into Aivia. Your recipe will show up in the Recipe Console of Aivia's Analysis Tools panel.
+Download and drag any file from the [`PythonEnvForAivia/Recipes/`](PythonEnvForAivia/Recipes/) directory into Aivia. Your recipe will show up in the Recipe Console of Aivia's Analysis Tools panel. If you cannot find the `Recipies` panel, it can be accessed under the `Detection` chevron:
 
-For debugging purposes we recommend that you navigate to File > Options > Logging in Aivia, then set the "Verbosity" to "Everything":
+![detection](Screenshots/chevron.png "nav_chevron")
 
-![Turn on the most verbose logging.](Screenshots/LogEverything.png "Set Verbosity of Everything")
+For debugging purposes we recommend that you navigate to `File` > `Options` > `General` > `Logging`, then set the "Verbosity" to "Everything":
+
+![Menu_options](Screenshots/menu_options.png "menu_nagication")
+
+![Turn on the most verbose logging.](Screenshots/logging_menu.png "Set Verbosity of Everything")
 
 From this panel you can also click the "Open" button to see the log file. Python errors are printed here with full tracebacks to help you diagnose issues with code.
 

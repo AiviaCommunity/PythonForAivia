@@ -40,7 +40,14 @@ To run specific tests (for example, [`AdjustGamma.py`](../Recipes/ProcessImages/
 python -m unittest Tests.ProcessImages.test_AdjustGamma
 ```
 
+Running tests will result in each recipe's respective output to be saved to a folder called `GroundTruth/RECIPE_NAME/outputs/`, which is then cross referenced against `GroundTruth/RECIPE_NAME/ground_truth/`
+
 # Test Directory Structure
+
+## List of helper directories
+- [InputTestImages](../Tests/InputTestImages/): All input images for tests are stored here
+- [utils](../Tests/utils/): Common functions shared across all tests are stored here.
+
 
 Tests mimic the folder structure of [`Recipes`](../Recipes/). Each family (directory) of recipes has the following structure (an example for `AdjustGamma.py` is provided below:
 ```
