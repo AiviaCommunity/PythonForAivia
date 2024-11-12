@@ -12,6 +12,7 @@ def search_activation_path():
     return ''
 
 activate_path = search_activation_path()
+
 if os.path.exists(activate_path):
     exec(open(activate_path).read(), {'__file__': activate_path})
     print(f'Aivia virtual environment activated\nUsing python: {activate_path}')
@@ -61,7 +62,7 @@ def run(params):
     print("Running")
     # Setting colors for chart
     col1 = 'royalblue'
-    col2 = 'r'
+    col2 = 'r'          # red
 
     # GUI to select a log file
     print('Starting wxPython app')
@@ -74,7 +75,7 @@ def run(params):
     if logfile.endswith('Worklog.log'):
         is_local = False
 
-    file = open(logfile, "r+")
+    file = open(logfile, "r")
     all_lines = file.read()
     list_n_epoch, list_i_epoch = [], []
     if is_local:
@@ -99,23 +100,19 @@ def run(params):
     print('-- Found {} DL training blocks --'.format(len(list_n_epoch)))
 
     # Init chart
-    fig = plt.figure(figsize=plt.figaspect(0.4))
-    ax1 = fig.add_subplot(111)
-    ax1.set_xlabel('epochs')
-    ax1.set_ylabel('loss', color=col1)
-    ax1.tick_params(axis='y', labelcolor=col1)
+    # fig = plt.figure(figsize=plt.figaspect(0.4))
+    # ax1 = fig.add_subplot(111)
+    fig, ax1 = plt.subplots(figsize=plt.figaspect(0.4))
 
     # Create second axis
-    ax2 = ax1.twinx()
-    ax2.set_ylabel('validation_loss', color=col2)
-    ax2.tick_params(axis='y', labelcolor=col2)
+    ax2 = ax1.twinx()       # instantiate a second axes that shares the same x-axis
 
     # Create buttons to switch to another DL run
     # sub-plot for radio button with
     # left, bottom, width, height values
     plt.subplots_adjust(right=0.7)
     rax = plt.axes([0.8, 0.1, 0.16, 0.8])
-    radio_button = RadioButtons(rax, tuple(['DL training no {}'.format(x) for x in range(1, len(list_n_epoch) + 1)]),
+    radio_button = RadioButtons(rax, tuple(['DL training [{}]'.format(x) for x in range(1, len(list_n_epoch) + 1)]),
                                 active=len(list_n_epoch) - 1)
 
     def get_values(run_index):
@@ -145,8 +142,16 @@ def run(params):
         print('Selected DL run: {}'.format(run_no))
 
         # Clear values
-        ax1.cla()
-        ax2.cla()
+        ax1.clear()
+        ax2.clear()
+
+        # Create the axes titles
+        ax1.set_xlabel('epochs')
+        ax1.set_ylabel('loss', color=col1)
+        ax1.tick_params(axis='y', labelcolor=col1)
+
+        ax2.set_ylabel('validation_loss', color=col2)
+        ax2.tick_params(axis='y', labelcolor=col2)
 
         # Plot values
         ax1.plot(n_epoch, all_v1_nonsci, color=col1, linewidth=1)
@@ -264,3 +269,4 @@ if __name__ == '__main__':
 # Changelog:
 # v1.10: - Bug fixed with wxPython app not being run in v1.00
 # v1.20: - New virtual env code for auto-activation
+# v1.21: - Correcting the mistake of opening the log file as 'r+'. Also fixing some display missing (axis title)
