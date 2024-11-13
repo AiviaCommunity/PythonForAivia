@@ -41,6 +41,8 @@ The tree structure of the folder is as follow
 2. Load any 2D image in Aivia
 3. Click on "Start" button and wait for "Process Completed" message at the bottom of the recipe console
     1. Please make sure that you have the Internet connection and wait if bandwidth is slow.
+    2. At the end of this step, a new folder called `env` should be created in the `PythonEnvForAivia` folder.  This will be the folder that contains a virtual environment identical to Aivia's embedded python that all future Recipes will run off of.
+
 
 ## Returns
 

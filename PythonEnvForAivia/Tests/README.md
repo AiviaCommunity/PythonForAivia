@@ -23,7 +23,8 @@ Note that not all scripts need to pass these tests to be added. In some cases, y
 
 # Running Tests
 
-To execute unittests on Windows, open Terminal and navigate into the [`PythonEnvForAivia`](./) folder. Make sure you have already set up the python environment using [`FirstTimeSetup.py`](../FirstTimeSetup.py).
+To execute unittests on Windows, open Terminal and navigate into the [`PythonEnvForAivia`](./) folder. Make sure you have already set up the python environment using [`FirstTimeSetup.py`](../FirstTimeSetup.py). See [`PythonEnvForAivia/README.md#installation`](../README.md#installation) for more details.
+
 
 To run all tests, run the command:
 ```python
