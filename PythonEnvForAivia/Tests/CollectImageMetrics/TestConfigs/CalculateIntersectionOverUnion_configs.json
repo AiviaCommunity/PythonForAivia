@@ -18,9 +18,9 @@
         "groundTruthPath":"Tests/CollectImageMetrics/GroundTruths/CalculateIntersectionOverUnion/ground_truth/Test_8bit_ZYX_BinaryCylinder_IOU.tiff"
     },
     {
-        "inputRTImagePath": "Tests/InputTestImages/Test_8bit_TZYX_y200_d5mi10s_i000_c000_mitoSegOnly.tif", 
-        "inputGTImagePath":"Tests/InputTestImages/Test_8bit_TZYX_y200_d5mi10s_i000_c000_mitoSegOnly.tif",
-        "resultPath":"Tests/CollectImageMetrics/GroundTruths/CalculateIntersectionOverUnion/outputs/Test_8bit_TZYX_y200_d5mi10s_i000_c000_mitoSegOnly_IOU.tiff",
-        "groundTruthPath":"Tests/CollectImageMetrics/GroundTruths/CalculateIntersectionOverUnion/ground_truth/Test_8bit_TZYX_y200_d5mi10s_i000_c000_mitoSegOnly_IOU.tiff"
+        "inputRTImagePath": "Tests/InputTestImages/Test_8bit_TZYX_y200_mitoSegOnly.tif", 
+        "inputGTImagePath":"Tests/InputTestImages/Test_8bit_TZYX_y200_mitoSegOnly.tif",
+        "resultPath":"Tests/CollectImageMetrics/GroundTruths/CalculateIntersectionOverUnion/outputs/Test_8bit_TZYX_y200_mitoSegOnly_IOU.tiff",
+        "groundTruthPath":"Tests/CollectImageMetrics/GroundTruths/CalculateIntersectionOverUnion/ground_truth/Test_8bit_TZYX_y200_mitoSegOnly_IOU.tiff"
     }
 ]

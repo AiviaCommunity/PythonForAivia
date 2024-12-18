@@ -21,11 +21,11 @@
         "groundTruthPath":"Tests/TransformImages/GroundTruths/MaxIntensityProjection/ground_truth/Test_MaxIntensityProjection_16bit_ZYX_3DObjAnalysisDemo_Crop.aivia.tif"
     },
     {
-        "inputImagePath": "Tests/InputTestImages/Test_8bit_ZYX_y200_d5mi10s_i000_c000_mitoSegOnly_T15_labeled.tif", 
-        "resultPath":"Tests/TransformImages/GroundTruths/MaxIntensityProjection/outputs/Test_MaxIntensityProjection_8bit_ZYX_y200_d5mi10s_i000_c000_mitoSegOnly_T15_labeled.tif", 
+        "inputImagePath": "Tests/InputTestImages/Test_8bit_ZYX_y200_mitoSegOnly_T15_labeled.tif", 
+        "resultPath":"Tests/TransformImages/GroundTruths/MaxIntensityProjection/outputs/Test_MaxIntensityProjection_8bit_ZYX_y200_mitoSegOnly_T15_labeled.tif", 
         "TCount":1, 
         "CallingExecutable":"None",
-        "groundTruthPath":"Tests/TransformImages/GroundTruths/MaxIntensityProjection/ground_truth/Test_MaxIntensityProjection_8bit_ZYX_y200_d5mi10s_i000_c000_mitoSegOnly_T15_labeled.tif"
+        "groundTruthPath":"Tests/TransformImages/GroundTruths/MaxIntensityProjection/ground_truth/Test_MaxIntensityProjection_8bit_ZYX_y200_mitoSegOnly_T15_labeled.tif"
     },
     {
         "inputImagePath": "Tests/InputTestImages/Test_16bit_ZYX_Nuclei.aivia.tif", 

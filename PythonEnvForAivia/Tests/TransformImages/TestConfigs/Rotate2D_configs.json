@@ -30,9 +30,9 @@
         "resize":0
     },
     {
-        "inputImagePath": "Tests/InputTestImages/Test_8bit_YX_y200_d5mi10s_i000_c000_mitoFluorOnly_T15_MaxIP.tif", 
-        "resultPath":"Tests/TransformImages/GroundTruths/Rotate2D/outputs/Test_Rotate2D_8bit_YX_y200_d5mi10s_i000_c000_mitoFluorOnly_T15_MaxIP.tif",
-        "groundTruthPath":"Tests/TransformImages/GroundTruths/Rotate2D/ground_truth/Test_Rotate2D_8bit_YX_y200_d5mi10s_i000_c000_mitoFluorOnly_T15_MaxIP.tif",
+        "inputImagePath": "Tests/InputTestImages/Test_8bit_YX_y200_mitoFluorOnly_T15_MaxIP.tif", 
+        "resultPath":"Tests/TransformImages/GroundTruths/Rotate2D/outputs/Test_Rotate2D_8bit_YX_y200_mitoFluorOnly_T15_MaxIP.tif",
+        "groundTruthPath":"Tests/TransformImages/GroundTruths/Rotate2D/ground_truth/Test_Rotate2D_8bit_YX_y200_mitoFluorOnly_T15_MaxIP.tif",
         "ZCount": 1,
         "TCount":1, 
         "Calibration":"XYZT: 0.46 micrometers, 0.46 micrometers, 0.46 micrometers, 1 Default",
