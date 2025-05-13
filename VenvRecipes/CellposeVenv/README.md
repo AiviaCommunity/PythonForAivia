@@ -16,17 +16,14 @@ Important note: If you use this plugin, please cite the original research paper:
 ## Requirements
 
 * Virtual Environment for Cellpose - the required virtual environment will be created automatically when you run CellposeForAivia.py for the first time. All required python packages will be installed in this virtual environment. You can check the `requirements.txt` to see what packages will be installed.
-
-* Python 3.9 - comes with Aivia
-
+* Python 3.12 - comes with Aivia
 * Accept the risks that come from running Python Scripts you download from the internet. These Cellpose scripts are provided to you to use at your own risk. Note that they may download models and/or related files from GitHub directly, which could be a security risk.
+
 
 ## Installation
 
 0. Make sure Git is installed on your machine, the Cellpose scripts may need to download from the official Cellpose GitHub.
-
 1. Download the whole `CellposeVenv` folder. Since GitHub does not support subfolder download, we zipped the folder here for you: [CellposeVenv.zip](../ZippedVenvFolders/CellposeVenv.zip).
-
 2. Unzip the the downloaded folder `CellposeVenv`. The tree structure of the folder is as follow
 
 ```bash=

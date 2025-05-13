@@ -1,0 +1,25 @@
+[
+    {
+        "inputImagePath": "Tests/InputTestImages/Test_16bit_ZYX_Nuclei.aivia.tif", 
+        "resultImagePath":"Tests/ProcessImages/GroundTruths/SkeletonizeObjects/outputs/Test_SkeletonizeObjects_16bit_ZYX_Nuclei.aivia.tif", 
+        "resultObjectPath":"Tests/ProcessImages/GroundTruths/SkeletonizeObjects/outputs/Test_SkeletonizeObjects_16bit_ZYX_Nuclei_objs.aivia.tif", 
+        "groundTruthPath":"Tests/ProcessImages/GroundTruths/SkeletonizeObjects/ground_truth/Test_SkeletonizeObjects_16bit_ZYX_Nuclei.aivia.tif",
+        "groundTruthObjectsPath":"Tests/ProcessImages/GroundTruths/SkeletonizeObjects/ground_truth/Test_SkeletonizeObjects_16bit_ZYX_Nuclei_objs.aivia.tif",
+        "TCount":1,
+        "ZCount":21,
+        "radius":10,
+        "threshold":20
+    },
+    {
+        "inputImagePath": "Tests/InputTestImages/Test_16bit_TZYX_3DandT_Nuclei.aivia.tif", 
+        "resultImagePath":"Tests/ProcessImages/GroundTruths/SkeletonizeObjects/outputs/Test_SkeletonizeObjects_16bit_TZYX_3DandT_Nuclei.aivia.tif", 
+        "resultObjectPath":"Tests/ProcessImages/GroundTruths/SkeletonizeObjects/outputs/Test_SkeletonizeObjects_16bit_TZYX_3DandT_Nuclei_objs.aivia.tif", 
+        "groundTruthPath":"Tests/ProcessImages/GroundTruths/SkeletonizeObjects/ground_truth/Test_SkeletonizeObjects_16bit_TZYX_3DandT_Nuclei.aivia.tif",
+        "groundTruthObjectsPath":"Tests/ProcessImages/GroundTruths/SkeletonizeObjects/ground_truth/Test_SkeletonizeObjects_16bit_TZYX_3DandT_Nuclei_objs.aivia.tif",
+        "TCount":3,
+        "ZCount":11,
+        "radius":10,
+        "threshold":20
+    }
+
+]

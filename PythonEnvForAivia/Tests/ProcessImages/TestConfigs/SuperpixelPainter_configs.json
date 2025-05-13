@@ -1,0 +1,13 @@
+[
+    {
+        "inputImagePath": "Tests/InputTestImages/Test_8bit_YX_Cells2D_pmembraneLabel.tif", 
+        "resultImagePath":"Tests/ProcessImages/GroundTruths/SkeletonizeObjects/outputs/Test_SkeletonizeObjects_8bit_YX_Cells2D_pmembraneLabel.tif",
+        "resultMaskPath":"Tests/ProcessImages/GroundTruths/SkeletonizeObjects/outputs/Test_SkeletonizeObjects_8bit_YX_Cells2D_pmembraneLabel_mask.tif",
+        "resultObjectPath":"Tests/ProcessImages/GroundTruths/SkeletonizeObjects/outputs/Test_SkeletonizeObjects_8bit_YX_Cells2D_pmembraneLabel_obj.tif",
+        "groundTruthPath":"Tests/ProcessImages/GroundTruths/SkeletonizeObjects/ground_truth/Test_SkeletonizeObjects_8bit_YX_Cells2D_pmembraneLabel.tif",
+        "groundTruthMaskPath":"Tests/ProcessImages/GroundTruths/SkeletonizeObjects/ground_truth/Test_SkeletonizeObjects_8bit_YX_Cells2D_pmembraneLabel_mask.tif",
+        "groundTruthObjectPath":"Tests/ProcessImages/GroundTruths/SkeletonizeObjects/ground_truth/Test_SkeletonizeObjects_8bit_YX_Cells2D_pmembraneLabel_obj.tif",
+        "TCount":1,
+        "ZCount":1
+    }
+]

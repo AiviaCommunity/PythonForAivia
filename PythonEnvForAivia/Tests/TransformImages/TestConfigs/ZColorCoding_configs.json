@@ -1,0 +1,34 @@
+[
+
+    {
+        "inputImagePath": "Tests/InputTestImages/Test_8bit_TYX_Particles.aivia.tif", 
+        "colorMapChoice":5,
+        "resultPathRed":"Tests/TransformImages/GroundTruths/ZColorCoding/outputs/Test_ZColorCoding_8bit_TYX_Particles_red.tif",
+        "resultPathGreen":"Tests/TransformImages/GroundTruths/ZColorCoding/outputs/Test_ZColorCoding_8bit_TYX_Particles_green.tif",
+        "resultPathBlue":"Tests/TransformImages/GroundTruths/ZColorCoding/outputs/Test_ZColorCoding_8bit_TYX_Particles_blue.tif",
+        "groundTruthPath":"Tests/TransformImages/GroundTruths/ZColorCoding/ground_truth/Test_ZColorCoding_8bit_TYX_Particles.tif",
+        "ZCount": 1,
+        "TCount":20
+    },
+    {
+        "inputImagePath": "Tests/InputTestImages/Test_8bit_ZYX_BinaryCylinder1.tif", 
+        "colorMapChoice":5,
+        "resultPathRed":"Tests/TransformImages/GroundTruths/ZColorCoding/outputs/Test_ZColorCoding_8bit_ZYX_BinaryCylinder1_red.tif",
+        "resultPathGreen":"Tests/TransformImages/GroundTruths/ZColorCoding/outputs/Test_ZColorCoding_8bit_ZYX_BinaryCylinder1_green.tif",
+        "resultPathBlue":"Tests/TransformImages/GroundTruths/ZColorCoding/outputs/Test_ZColorCoding_8bit_ZYX_BinaryCylinder1_blue.tif",
+        "groundTruthPath":"Tests/TransformImages/GroundTruths/ZColorCoding/ground_truth/Test_ZColorCoding_8bit_ZYX_BinaryCylinder1.tif",
+        "ZCount": 50,
+        "TCount":1
+    },
+    {
+        "inputImagePath": "Tests/InputTestImages/Test_16bit_TZYX_3DandT_Nuclei.aivia.tif", 
+        "colorMapChoice":5,
+        "resultPathRed":"Tests/TransformImages/GroundTruths/ZColorCoding/outputs/Test_ZColorCoding_16bit_TZYX_3DandT_Nuclei_red.tif",
+        "resultPathGreen":"Tests/TransformImages/GroundTruths/ZColorCoding/outputs/Test_ZColorCoding_16bit_TZYX_3DandT_Nuclei_green.tif",
+        "resultPathBlue":"Tests/TransformImages/GroundTruths/ZColorCoding/outputs/Test_ZColorCoding_16bit_TZYX_3DandT_Nuclei_blue.tif",
+        "groundTruthPath":"Tests/TransformImages/GroundTruths/ZColorCoding/ground_truth/Test_ZColorCoding_16bit_TZYX_3DandT_Nuclei.tif",
+        "ZCount": 11,
+        "TCount":3
+    }
+    
+]

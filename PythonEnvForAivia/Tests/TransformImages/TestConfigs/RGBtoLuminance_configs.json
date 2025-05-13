@@ -1,0 +1,10 @@
+[
+    {
+        "red_c": "Tests/InputTestImages/Test_RGB_YX_PigSkin_red.tif", 
+        "blue_c": "Tests/InputTestImages/Test_RGB_YX_PigSkin_blue.tif", 
+        "green_c": "Tests/InputTestImages/Test_RGB_YX_PigSkin_green.tif", 
+        "gray_c":"Tests/TransformImages/GroundTruths/RGBtoLuminance/outputs/Test_RGBtoLuminance_RGB_YX_PigSkin.tif", 
+        "histogram":0, 
+        "groundTruthPath":"Tests/TransformImages/GroundTruths/RGBtoLuminance/ground_truth/Test_RGBtoLuminance_RGB_YX_PigSkin.tif"
+    }
+]

@@ -1,0 +1,22 @@
+[
+    {
+        "inputImagePath": "Tests/InputTestImages/Test_8bit_ZYX_BinaryCylinder1.tif", 
+        "resultPath":"Tests/TransformImages/GroundTruths/Rotate3D_90deg/outputs/Test_Rotate3D_90deg_8bit_ZYX_BinaryCylinder1.tif",
+        "groundTruthPath":"Tests/TransformImages/GroundTruths/Rotate3D_90deg/ground_truth/Test_Rotate3D_90deg_8bit_ZYX_BinaryCylinder1-rotated.tif",
+        "ZCount": 50,
+        "TCount":1, 
+        "Calibration":"XYZT: 0.46 micrometers, 0.46 micrometers, 0.46 micrometers, 1 Default",
+        "rotAngle":15,
+        "skip_aivia":1
+    },
+    {
+        "inputImagePath": "Tests/InputTestImages/Test_8bit_ZYX_y200_mitoFluorOnly_T15.tif", 
+        "resultPath":"Tests/TransformImages/GroundTruths/Rotate3D_90deg/outputs/Test_Rotate3D_90deg_8bit_ZYX_y200_mitoFluorOnly_T15.tif",
+        "groundTruthPath":"Tests/TransformImages/GroundTruths/Rotate3D_90deg/ground_truth/Test_Rotate3D_90deg_8bit_ZYX_y200_mitoFluorOnly_T15-rotated.tif",
+        "ZCount": 11,
+        "TCount":1, 
+        "Calibration":"XYZT: 0.46 micrometers, 0.46 micrometers, 0.46 micrometers, 1 Default",
+        "rotAngle":15,
+        "skip_aivia":1
+    } 
+]

@@ -1,0 +1,42 @@
+[
+    {
+        "inputImagePath": "Tests/InputTestImages/Test_8bit_YX_Cells2D_pmembraneLabel.tif", 
+        "resultPath":"Tests/TransformImages/GroundTruths/Rotate2D/outputs/Test_Rotate2D_8bit_YX_Cells2D_pmembraneLabel.tif",
+        "groundTruthPath":"Tests/TransformImages/GroundTruths/Rotate2D/ground_truth/Test_Rotate2D_8bit_YX_Cells2D_pmembraneLabel.tif",
+        "ZCount": 1,
+        "TCount":1, 
+        "Calibration":"XYZT: 0.46 micrometers, 0.46 micrometers, 0.46 micrometers, 1 Default",
+        "rotAngle":15,
+        "resize":0
+    },
+    {
+        "inputImagePath": "Tests/InputTestImages/Test_8bit_YX_BinaryCylinder2_MaxIP.tif", 
+        "resultPath":"Tests/TransformImages/GroundTruths/Rotate2D/outputs/Test_Rotate2D_8bit_YX_BinaryCylinder2_MaxIP.tif",
+        "groundTruthPath":"Tests/TransformImages/GroundTruths/Rotate2D/ground_truth/Test_Rotate2D_8bit_YX_BinaryCylinder2_MaxIP.tif",
+        "ZCount": 1,
+        "TCount":1, 
+        "Calibration":"XYZT: 0.46 micrometers, 0.46 micrometers, 0.46 micrometers, 1 Default",
+        "rotAngle":20,
+        "resize":0
+    },
+    {
+        "inputImagePath": "Tests/InputTestImages/Test_RGB_YX_PigSkin_blue.tif", 
+        "resultPath":"Tests/TransformImages/GroundTruths/Rotate2D/outputs/Test_Rotate2D_Test_RGB_YX_PigSkin_blue.tif",
+        "groundTruthPath":"Tests/TransformImages/GroundTruths/Rotate2D/ground_truth/Test_Rotate2D_Test_RGB_YX_PigSkin_blue.tif",
+        "ZCount": 1,
+        "TCount":1, 
+        "Calibration":"XYZT: 0.46 micrometers, 0.46 micrometers, 0.46 micrometers, 1 Default",
+        "rotAngle":35,
+        "resize":0
+    },
+    {
+        "inputImagePath": "Tests/InputTestImages/Test_8bit_YX_y200_mitoFluorOnly_T15_MaxIP.tif", 
+        "resultPath":"Tests/TransformImages/GroundTruths/Rotate2D/outputs/Test_Rotate2D_8bit_YX_y200_mitoFluorOnly_T15_MaxIP.tif",
+        "groundTruthPath":"Tests/TransformImages/GroundTruths/Rotate2D/ground_truth/Test_Rotate2D_8bit_YX_y200_mitoFluorOnly_T15_MaxIP.tif",
+        "ZCount": 1,
+        "TCount":1, 
+        "Calibration":"XYZT: 0.46 micrometers, 0.46 micrometers, 0.46 micrometers, 1 Default",
+        "rotAngle":180,
+        "resize":0
+    }
+]

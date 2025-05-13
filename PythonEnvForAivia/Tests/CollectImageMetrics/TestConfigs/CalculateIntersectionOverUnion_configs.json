@@ -1,0 +1,26 @@
+[
+    {
+        "inputRTImagePath": "Tests/InputTestImages/Test_RGB_YX_PigSkin_blue.tif", 
+        "inputGTImagePath":"Tests/InputTestImages/Test_RGB_YX_PigSkin_green.tif",
+        "resultPath":"Tests/CollectImageMetrics/GroundTruths/CalculateIntersectionOverUnion/outputs/Test_RGB_YX_PigSkin_IOU.tiff",
+        "groundTruthPath":"Tests/CollectImageMetrics/GroundTruths/CalculateIntersectionOverUnion/ground_truth/Test_RGB_YX_PigSkin_IOU.tiff"
+    },
+    {
+        "inputRTImagePath": "Tests/InputTestImages/Test_8bit_YX_BinaryCylinder1_MaxIP.tif", 
+        "inputGTImagePath":"Tests/InputTestImages/Test_8bit_YX_BinaryCylinder2_MaxIP.tif",
+        "resultPath":"Tests/CollectImageMetrics/GroundTruths/CalculateIntersectionOverUnion/outputs/Test_8bit_YX_BinaryCylinder_IOU.tiff",
+        "groundTruthPath":"Tests/CollectImageMetrics/GroundTruths/CalculateIntersectionOverUnion/ground_truth/Test_8bit_YX_BinaryCylinder_IOU.tiff"
+    },
+    {
+        "inputRTImagePath": "Tests/InputTestImages/Test_8bit_ZYX_BinaryCylinder1.tif", 
+        "inputGTImagePath":"Tests/InputTestImages/Test_8bit_ZYX_BinaryCylinder2.tif",
+        "resultPath":"Tests/CollectImageMetrics/GroundTruths/CalculateIntersectionOverUnion/outputs/Test_8bit_ZYX_BinaryCylinder_IOU.tiff",
+        "groundTruthPath":"Tests/CollectImageMetrics/GroundTruths/CalculateIntersectionOverUnion/ground_truth/Test_8bit_ZYX_BinaryCylinder_IOU.tiff"
+    },
+    {
+        "inputRTImagePath": "Tests/InputTestImages/Test_8bit_TZYX_y200_mitoSegOnly.tif", 
+        "inputGTImagePath":"Tests/InputTestImages/Test_8bit_TZYX_y200_mitoSegOnly.tif",
+        "resultPath":"Tests/CollectImageMetrics/GroundTruths/CalculateIntersectionOverUnion/outputs/Test_8bit_TZYX_y200_mitoSegOnly_IOU.tiff",
+        "groundTruthPath":"Tests/CollectImageMetrics/GroundTruths/CalculateIntersectionOverUnion/ground_truth/Test_8bit_TZYX_y200_mitoSegOnly_IOU.tiff"
+    }
+]

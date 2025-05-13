@@ -1,0 +1,48 @@
+[
+    {
+        "inputRTImagePath": "Tests/InputTestImages/Test_RGB_YX_PigSkin_blue.tif", 
+        "inputGTImagePath":"Tests/InputTestImages/Test_RGB_YX_PigSkin_green.tif", 
+        "channel_axis":"None",
+        "resultPath":"Tests/CollectImageMetrics/GroundTruths/ImageComparisonMetrics/outputs/Test_RGB_YX_PigSkin_bluegreen_SSIM.tiff",
+        "resultPathAdj":"Tests/CollectImageMetrics/GroundTruths/ImageComparisonMetrics/outputs/Test_RGB_YX_PigSkin_bluegreen_histmatch.tiff",
+        "groundTruthPath":"Tests/CollectImageMetrics/GroundTruths/ImageComparisonMetrics/ground_truth/Test_RGB_YX_PigSkin_bluegreen_SSIM.tiff",
+        "groundTruthPathAdj":"Tests/CollectImageMetrics/GroundTruths/ImageComparisonMetrics/ground_truth/Test_RGB_YX_PigSkin_bluegreen_histmatch.tiff"
+    },
+    {
+        "inputRTImagePath": "Tests/InputTestImages/Test_8bit_TYX_y200_mitoFluorOnly_MaxIP.tif", 
+        "inputGTImagePath":"Tests/InputTestImages/Test_8bit_TYX_y200_mitoSegOnly_MaxIP.tif", 
+        "channel_axis":"None",
+        "resultPath":"Tests/CollectImageMetrics/GroundTruths/ImageComparisonMetrics/outputs/Test_8bit_TYX_y200_mito_SSIM.tiff",
+        "resultPathAdj":"Tests/CollectImageMetrics/GroundTruths/ImageComparisonMetrics/outputs/Test_8bit_TYX_y200_mito_histmatch.tiff",
+        "groundTruthPath":"Tests/CollectImageMetrics/GroundTruths/ImageComparisonMetrics/ground_truth/Test_8bit_TYX_y200_mito_SSIM.tiff",
+        "groundTruthPathAdj":"Tests/CollectImageMetrics/GroundTruths/ImageComparisonMetrics/ground_truth/Test_8bit_TYX_y200_mito_histmatch.tiff"
+    },
+    {
+        "inputRTImagePath": "Tests/InputTestImages/Test_8bit_ZYX_y200_mitoFluorOnly_T15.tif", 
+        "inputGTImagePath":"Tests/InputTestImages/Test_8bit_ZYX_y200_mitoSegOnly_T15.tif", 
+        "channel_axis":"None",
+        "resultPath":"Tests/CollectImageMetrics/GroundTruths/ImageComparisonMetrics/outputs/Test_8bit_ZYX_y200_mito_SSIM.tiff",
+        "resultPathAdj":"Tests/CollectImageMetrics/GroundTruths/ImageComparisonMetrics/outputs/Test_8bit_ZYX_y200_mito_histmatch.tiff",
+        "groundTruthPath":"Tests/CollectImageMetrics/GroundTruths/ImageComparisonMetrics/ground_truth/Test_8bit_ZYX_y200_mito_SSIM.tiff",
+        "groundTruthPathAdj":"Tests/CollectImageMetrics/GroundTruths/ImageComparisonMetrics/ground_truth/Test_8bit_ZYX_y200_mito_histmatch.tiff"
+    },
+    {
+        "inputRTImagePath": "Tests/InputTestImages/Test_8bit_TZYX_y200_mitoSegOnly.tif", 
+        "inputGTImagePath":"Tests/InputTestImages/Test_8bit_TZYX_y200_mitoFluorOnly.tif", 
+        "channel_axis":"None",
+        "resultPath":"Tests/CollectImageMetrics/GroundTruths/ImageComparisonMetrics/outputs/Test_8bit_TZYX_y200_mito_SSIM.tiff",
+        "resultPathAdj":"Tests/CollectImageMetrics/GroundTruths/ImageComparisonMetrics/outputs/Test_8bit_TZYX_y200_mito_histmatch.tiff",
+        "groundTruthPath":"Tests/CollectImageMetrics/GroundTruths/ImageComparisonMetrics/ground_truth/Test_8bit_TZYX_y200_mito_SSIM.tiff",
+        "groundTruthPathAdj":"Tests/CollectImageMetrics/GroundTruths/ImageComparisonMetrics/ground_truth/Test_8bit_TZYX_y200_mito_histmatch.tiff"
+    },
+    {
+        "inputRTImagePath": "Tests/InputTestImages/Test_RGB_YX_PigSkin.tif", 
+        "inputGTImagePath":"Tests/InputTestImages/Test_RGB_YX_PigSkin.tif", 
+        "channel_axis":-1,
+        "resultPath":"Tests/CollectImageMetrics/GroundTruths/ImageComparisonMetrics/outputs/Test_RGB_YX_PigSkin_SSIM.tiff",
+        "resultPathAdj":"Tests/CollectImageMetrics/GroundTruths/ImageComparisonMetrics/outputs/Test_RGB_YX_PigSkin_histmatch.tiff",
+        "groundTruthPath":"Tests/CollectImageMetrics/GroundTruths/ImageComparisonMetrics/ground_truth/Test_RGB_YX_PigSkin_SSIM.tiff",
+        "groundTruthPathAdj":"Tests/CollectImageMetrics/GroundTruths/ImageComparisonMetrics/ground_truth/Test_RGB_YX_PigSkin_histmatch.tiff"
+    }
+
+]

@@ -1,0 +1,37 @@
+[
+    {
+        "inputImagePath": "Tests/InputTestImages/Test_8bit_ZYX_BinaryCylinder1.tif", 
+        "resultPath":"Tests/TransformImages/GroundTruths/MaxIntensityProjection/outputs/Test_MaxIntensityProjection_8bit_ZYX_BinaryCylinder1.tif", 
+        "TCount":1, 
+        "CallingExecutable":"None",
+        "groundTruthPath":"Tests/TransformImages/GroundTruths/MaxIntensityProjection/ground_truth/Test_MaxIntensityProjection_8bit_ZYX_BinaryCylinder1.tif"
+    },
+    {
+        "inputImagePath": "Tests/InputTestImages/Test_8bit_ZYX_BinaryCylinder2.tif", 
+        "resultPath":"Tests/TransformImages/GroundTruths/MaxIntensityProjection/outputs/Test_MaxIntensityProjection_8bit_ZYX_BinaryCylinder2.tif", 
+        "TCount":1, 
+        "CallingExecutable":"None",
+        "groundTruthPath":"Tests/TransformImages/GroundTruths/MaxIntensityProjection/ground_truth/Test_MaxIntensityProjection_8bit_ZYX_BinaryCylinder2.tif"
+    },
+    {
+        "inputImagePath": "Tests/InputTestImages/Test_16bit_ZYX_3DObjAnalysisDemo_Crop.aivia.tif", 
+        "resultPath":"Tests/TransformImages/GroundTruths/MaxIntensityProjection/outputs/Test_MaxIntensityProjection_16bit_ZYX_3DObjAnalysisDemo_Crop.aivia.tif", 
+        "TCount":1, 
+        "CallingExecutable":"None",
+        "groundTruthPath":"Tests/TransformImages/GroundTruths/MaxIntensityProjection/ground_truth/Test_MaxIntensityProjection_16bit_ZYX_3DObjAnalysisDemo_Crop.aivia.tif"
+    },
+    {
+        "inputImagePath": "Tests/InputTestImages/Test_8bit_ZYX_y200_mitoSegOnly_T15_labeled.tif", 
+        "resultPath":"Tests/TransformImages/GroundTruths/MaxIntensityProjection/outputs/Test_MaxIntensityProjection_8bit_ZYX_y200_mitoSegOnly_T15_labeled.tif", 
+        "TCount":1, 
+        "CallingExecutable":"None",
+        "groundTruthPath":"Tests/TransformImages/GroundTruths/MaxIntensityProjection/ground_truth/Test_MaxIntensityProjection_8bit_ZYX_y200_mitoSegOnly_T15_labeled.tif"
+    },
+    {
+        "inputImagePath": "Tests/InputTestImages/Test_16bit_ZYX_Nuclei.aivia.tif", 
+        "resultPath":"Tests/TransformImages/GroundTruths/MaxIntensityProjection/outputs/Test_MaxIntensityProjection_16bit_ZYX_Nuclei.aivia.tif", 
+        "TCount":1, 
+        "CallingExecutable":"None",
+        "groundTruthPath":"Tests/TransformImages/GroundTruths/MaxIntensityProjection/ground_truth/Test_MaxIntensityProjection_16bit_ZYX_Nuclei.aivia.tif"
+    }
+]

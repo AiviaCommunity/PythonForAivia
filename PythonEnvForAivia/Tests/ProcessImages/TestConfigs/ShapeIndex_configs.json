@@ -1,0 +1,35 @@
+[
+    {
+        "inputImagePath": "Tests/InputTestImages/Test_8bit_YX_Cells2D_pmembraneLabel.tif", 
+        "resultPath":"Tests/ProcessImages/GroundTruths/ShapeIndex/outputs/Test_ShapeIndex0.5_8bit_YX_Cells2D_pmembraneLabel.tif",
+        "TCount":1,
+        "ZCount":1,
+        "sigma":0.5,
+        "groundTruthPath":"Tests/ProcessImages/GroundTruths/ShapeIndex/ground_truth/Test_ShapeIndex0.5_8bit_YX_Cells2D_pmembraneLabel.tif"
+    },
+    {
+        "inputImagePath": "Tests/InputTestImages/Test_16bit_ZYX_Nuclei.aivia.tif", 
+        "resultPath":"Tests/ProcessImages/GroundTruths/ShapeIndex/outputs/Test_ShapeIndex_16bit_ZYX_Nuclei.aivia.tif", 
+        "TCount":1,
+        "ZCount":21,
+        "sigma":0.5,
+        "groundTruthPath":"Tests/ProcessImages/GroundTruths/ShapeIndex/ground_truth/Test_ShapeIndex_16bit_ZYX_Nuclei.aivia.tif"
+    },
+    {
+        "inputImagePath": "Tests/InputTestImages/Test_8bit_TYX_Particles.aivia.tif", 
+        "resultPath":"Tests/ProcessImages/GroundTruths/ShapeIndex/outputs/Test_ShapeIndex_8bit_TYX_Particles.aivia.tif", 
+        "sigma":0.5,
+        "TCount":20,
+        "ZCount":1,
+        "groundTruthPath":"Tests/ProcessImages/GroundTruths/ShapeIndex/ground_truth/Test_ShapeIndex_8bit_TYX_Particles.aivia.tif"
+    },
+    {
+        "inputImagePath": "Tests/InputTestImages/Test_16bit_TZYX_3DandT_Nuclei.aivia.tif", 
+        "resultPath":"Tests/ProcessImages/GroundTruths/ShapeIndex/outputs/Test_ShapeIndex_16bit_TZYX_3DandT_Nuclei.aivia.tif", 
+        "sigma":0.5,
+        "TCount":3,
+        "ZCount":11,
+        "groundTruthPath":"Tests/ProcessImages/GroundTruths/ShapeIndex/ground_truth/Test_ShapeIndex_16bit_TZYX_3DandT_Nuclei.aivia.tif"
+    }
+
+]

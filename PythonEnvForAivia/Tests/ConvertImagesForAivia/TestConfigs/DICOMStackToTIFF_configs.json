@@ -1,0 +1,7 @@
+[
+    {
+        "dicom_directory": "Tests/InputTestImages/dicom_stack", 
+        "resultPath":"Tests/ConvertImagesForAivia/GroundTruths/DICOMStackToTIFF/outputs/Converted.tiff", 
+        "groundTruthPath":"Tests/ConvertImagesForAivia/GroundTruths/DICOMStackToTIFF/ground_truth/Converted.tiff"
+       }
+]
