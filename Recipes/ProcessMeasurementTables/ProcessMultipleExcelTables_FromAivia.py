@@ -4,21 +4,24 @@ import ctypes
 import sys
 from pathlib import Path
 
-parentFolder = str(Path(__file__).parent.parent)
-activate_path = parentFolder + '\\env\\Scripts\\activate_this.py'
+def search_activation_path():
+    for i in range(5):
+        final_path = str(Path(__file__).parents[i]) + '\\env\\Scripts\\activate_this.py'
+        if os.path.exists(final_path):
+            return final_path
+    return ''
+
+activate_path = search_activation_path()
 
 if os.path.exists(activate_path):
     exec(open(activate_path).read(), {'__file__': activate_path})
     print(f'Aivia virtual environment activated\nUsing python: {activate_path}')
 else:
-    # Attempt to still run the script with main Aivia python interpreter
-    error_mess = f'Error: {activate_path} was not found.\nPlease run the \'FirstTimeSetup.py\' script in Aivia first.'
-    ans = ctypes.windll.user32.MessageBoxW(0, error_mess, 'Error', 1)
-    if ans == 2:
-        sys.exit(error_mess)
-    print('\n'.join(['#' * 40, error_mess,
-                     'Now trying to fallback on python environment specified in Aivia options > Advanced.',
-                     '#' * 40]))
+    error_mess = f'Error: {activate_path} was not found.\n\nPlease check that:\n' \
+                 f'   1/ The \'FirstTimeSetup.py\' script was already run in Aivia,\n' \
+                 f'   2/ The current python recipe is in one of the "\\PythonEnvForAivia\\" subfolders.'
+    ctypes.windll.user32.MessageBoxW(0, error_mess, 'Error', 0)
+    sys.exit(error_mess)
 # ---------------------------------------------------------------
 
 import pandas as pd
@@ -62,16 +65,28 @@ scenario_descriptions = ['A: Select multiple xlsx tables to create a combined ta
                          'Not compatible with timelapses.'
                          ]
 
+# Relationship definitions (Warning: names should be the sheets in the spreadsheets)
+# Example: 'Set': ['Obj1', 'Obj2']
 relationships = {'Neuron Set': ['Soma Set', 'Dendrite Set', 'Dendrite Segments'],
-                 'Dendrite Set': ['Dendrite Segments']}
-relationship_ID_headers = {'Neuron Set': 'Neuron ID', 'Dendrite Set': 'Tree ID'}
+                 'Dendrite Set': ['Dendrite Segments'],
+                 'Cells': ['Cell Membranes', 'Cytoplasm', 'Nucleus', 'Vesicles - ']}
 
-relationship_measurements = {'Soma Set': ['Volume (µm³)'],
-                             'Dendrite Set': ['Mean Diameter (µm)'],
-                             'Dendrite Segments': ['Mean Diameter (µm)', 'Total Path Length (µm)', 'Branch Angle']
-                             }
+# Due to discrepancy between object name and ID header in related object meas, we can provide the correspondence below
+relationship_ID_headers = {'Neuron Set': 'Neuron ID', 'Dendrite Set': 'Tree ID', 'Cells': 'Cell ID'}
 
-relationships_with_stats = ['Dendrite Set', 'Dendrite Segments']
+# Measurements to extract, to avoid too many columns in the final table. Keywords are searched as prefix!
+relationship_measurements = {'Soma Set': ['Volume '],
+                             'Dendrite Set': ['Mean Diameter '],
+                             'Dendrite Segments': ['Mean Diameter ', 'Total Path Length ', 'Branch Angle'],
+                             'Cell Membranes': [],
+                             'Cytoplasm': [],
+                             'Nucleus': [],
+                             'Vesicles - ': ['Relation Count']}
+
+# Selection of secondary relationships for which statistics are calculated: 'Total', 'Average'.
+relationships_with_stats = ['Dendrite Set', 'Dendrite Segments', 'Vesicles - ']
+
+# Some statistics do not make any sense, so below are the ones to avoid
 relationship_measurements_stats_todrop = {'Branch Angle': 'Total',
                                           'Mean Diameter (µm)': 'Total'}
 
@@ -233,6 +248,23 @@ def run(params):
     if ans == 2:
         sys.exit('Process terminated by user')
 
+    # Sort files using subfolders numbers (necessary due to the absence of zero-filling, i.e. 8, 9, 10, 11, etc.)
+    if do_scan_workflow_folders:
+        print(Path(indiv_path_list[0]).parents[1].name)
+        if re.match(r'.*\d+', str(Path(indiv_path_list[0]).parents[1].name)):
+            # Collect all job folder names
+            indiv_folders = [Path(fo).parents[1].name for fo in indiv_path_list]
+
+            # Add zeros in front of number
+            indiv_folders = [re.sub(r'\d+', str(re.search(r'\d+', z).group(0)).rjust(6, '0'), z) for z in indiv_folders]
+
+            # Sort them with number
+            sorted_folders_index = sorted(range(len(indiv_folders)), key=lambda tmp: indiv_folders[tmp])
+
+            # Redefine the list
+            tmp_list = indiv_path_list
+            indiv_path_list = [tmp_list[ind] for ind in sorted_folders_index]
+
     # Starting point for scenario D for multiple files
     if do_separated_processing:
         final_input_list = indiv_path_list  # To prepare loop to process files independently
@@ -282,8 +314,8 @@ def run(params):
         if do_multiple_files_as_cols:
             output_basename = 'Analysis_All results.xlsx'
         else:
-            output_basename = '{}_grouped.xlsx'.format(os.path.basename(indiv_path_list[0]).split('.')[0])
-        output_file = os.path.join(output_folder, output_basename)
+            output_basename = '{}_grouped.xlsx'.format('.'.join(os.path.basename(indiv_path_list[0]).split('.')[:-1]))
+        output_file = os.path.join(output_folder, output_basename.replace('.aivia', ''))
 
         df_grouped = {}  # init
 
@@ -397,6 +429,8 @@ def run(params):
                             show_estimated_time(t1, len(indiv_path_list[1:]))
 
         # --- COMBINE TABS into one if no timepoints in data (scenario A-D...) ------------------------------
+        summary_lbl = 'Summary'     # Important for the further processing of the summary tab which name can vary
+
         if not contains_tps and (do_combine_meas_tabs or do_multiple_files_as_cols):
             # Init
             col_headers = ['Summary', *list(df_grouped[list(df_grouped.keys())[-1]].columns[1:])]
@@ -412,6 +446,13 @@ def run(params):
             # Scenario A or D ----------------------
             if do_combine_meas_tabs:
                 df_grouped = combine_tabs(df_grouped)
+
+                # Collecting all measurements exact names
+                all_meas_names = []
+                for tmp_df in df_grouped.values():
+                    if not tmp_df.empty:
+                        if not 'summary' in str(tmp_df.columns[0]).lower():
+                            all_meas_names.extend(tmp_df.columns[1:])
 
                 # Specific to neurons: split dendrite trees from segments
                 if 'Dendrite Set' in df_grouped.keys():
@@ -436,22 +477,37 @@ def run(params):
                             else:
                                 df_grouped[n] = df_grouped_tmp[n]
 
-                # Process relationships between object sets (see definition before this code)
-                for rel_k in relationships.keys():
-                    # Check presence of primary object
+                # Process RELATIONSHIPS between object sets (see definition before the def run)
+                for rel_k in relationships.keys():              # E.g. 'Cells'
+                    # Select all tabs where the primary object exists         # E.g. 'Cells.Cell_Cytoplasm Volume ...'
                     for k in [it_k for it_k in df_grouped.keys() if rel_k in it_k]:
-                        k_suffix = k.replace(rel_k, '')
+                        k_suffix = k.replace(rel_k, '')         # Important when multiple object sets existed (' (2)')
+
+                        # Check presence of secondary object defined by relationships
                         for rel_s in relationships[rel_k]:
-                            s = rel_s + k_suffix
-                            # Check presence of secondary object
-                            if s in df_grouped.keys():
-                                # Check presence of correct ID header in measurements in order to associate objects
-                                id_header = relationship_ID_headers[rel_k]
-                                if id_header in df_grouped[s].columns:
-                                    prefix = s + '.'
-                                    selected_meas = relationship_measurements[rel_s]
-                                    df_grouped[k] = calculate_relation_stats(df_grouped[k], df_grouped[s], id_header,
-                                                                             prefix, rel_s, selected_meas)
+                            # v1.60 gives the ability to provide only the beginning of the object name ('Vesicles - ')
+                            # v1.61 gives the ability to search relationships for cell components even if renamed
+                            # It also provides relationships of multiple secondary objects beginning with the same name
+
+                            for s in [it_s for it_s in df_grouped.keys() if is_same_object_set(it_s, k_suffix)]:
+
+                                if rel_s in s or rel_k == 'Cells':       # positive match for secondary object
+                                    # Check presence of correct ID header in measurements in order to associate objects
+                                    id_header = relationship_ID_headers[rel_k]
+                                    if id_header in df_grouped[s].columns:
+                                        prefix = s + '.'
+
+                                        # Changing 'rel_s' ref to last item from II sets (vesicles) if I set is 'Cells'
+                                        rel_s_tmp = relationships['Cells'][-1] if rel_k == 'Cells' else rel_s
+
+                                        selected_meas_prefixes = relationship_measurements[rel_s_tmp]
+
+                                        # See if prefixes exists in exact names of measurements (columns)
+                                        for meas_prefix in selected_meas_prefixes:
+                                            meas = [col for col in df_grouped[s].columns if meas_prefix in col]
+                                            print('Collecting statistics ({}) from [{}] to be reported for [{}]'.format(meas, s, k))
+                                            df_grouped[k] = calculate_relation_stats(df_grouped[k], df_grouped[s],
+                                                                                     id_header, prefix, rel_s_tmp, meas)
 
                 # Collecting summary values
                 for k in df_grouped.keys():
@@ -549,7 +605,7 @@ def run(params):
             if do_combine_meas_tabs:  # TODO: for do_multiple_files_as_cols too??
                 if len(total_counts) > 1:
                     # Collect tab names without summary
-                    df_grouped_keys_nosum = [k for k in df_grouped.keys() if k != 'Summary']
+                    df_grouped_keys_nosum = [k for k in df_grouped.keys() if not k.endswith('Summary')]
                     for t in range(len(total_counts)):
                         val = '{:.1%}'.format(total_counts[t] / grand_total)
                         new_row = {'Summary': '% of {}'.format(df_grouped_keys_nosum[t]), 'Frame 0': val}
@@ -558,35 +614,44 @@ def run(params):
             # Add the summary tab
             if add_summary:
                 df_summary = pd.DataFrame(empty_row)
-                df_grouped['Summary'] = df_summary
+                df_grouped[summary_lbl] = df_summary
+
+            else:
+                # Get the name of the first summary tab / TODO: process object groups independently?
+                summary_lbls = [su for su in df_grouped.keys() if su.endswith('Summary')]
+                summary_lbl = summary_lbls[0]
+
+            # Put zeros if some summary values are NaN
+            if df_grouped[summary_lbl][df_grouped[summary_lbl].columns[1]].isnull().sum() > 0:
+                df_grouped[summary_lbl][df_grouped[summary_lbl].columns[1]].fillna(0, inplace=True)
 
             # Merge with potential existing summary tab
-            df_grouped['Summary'] = pd.concat([df_grouped['Summary'], df_summary_to_add], axis=0, ignore_index=True)
+            df_grouped[summary_lbl] = pd.concat([df_grouped[summary_lbl], df_summary_to_add], axis=0, ignore_index=True)
 
             # Removing double empty rows
-            df_grouped['Summary'] = remove_double_empty_rows(df_grouped['Summary'])
+            df_grouped[summary_lbl] = remove_double_empty_rows(df_grouped[summary_lbl])
 
         # --- WRITING EXCEL FILES -----------------------------------------------------------------------------------
         # Writing sheets to excel
         with pd.ExcelWriter(output_file, engine="openpyxl") as writer:
             # Write Summary first
-            df_grouped['Summary'].to_excel(writer, sheet_name='Summary', index=False)
+            df_grouped[summary_lbl].to_excel(writer, sheet_name=summary_lbl, index=False)
 
             # Resizing columns
-            for c in range(0, len(df_grouped['Summary'].columns)):
+            for c in range(0, len(df_grouped[summary_lbl].columns)):
                 col_letter = openpyxl.utils.cell.get_column_letter(c + 1)
                 # Get longest text
-                len_longest_text = df_grouped['Summary'].iloc[:, c].map(str).str.len().max()
-                writer.sheets['Summary'].column_dimensions[col_letter].width = len_longest_text * 1.5
+                len_longest_text = df_grouped[summary_lbl].iloc[:, c].map(str).str.len().max()
+                writer.sheets[summary_lbl].column_dimensions[col_letter].width = len_longest_text * 1.5
 
-            for sh in [d for d in df_grouped.keys() if d != 'Summary']:
+            for sh in [d for d in df_grouped.keys() if d != summary_lbl]:
                 df_grouped[sh].to_excel(writer, sheet_name=sh, index=False)
 
                 # Resizing columns
                 for c in range(0, len(df_grouped[sh].columns)):
                     col_letter = openpyxl.utils.cell.get_column_letter(c + 1)
                     len_longest_text = len(str(df_grouped[sh].columns[c]))
-                    if c == 0:  # First column with measurement name and object names
+                    if c == 0 and df_grouped[sh].shape[0] > 1:  # First column with measurement name and object names
                         if len(str(df_grouped[sh].iloc[1, 0])) > len_longest_text:
                             len_longest_text = len(str(df_grouped[sh].iloc[1, 0]))
                     if len_longest_text < 10:
@@ -598,7 +663,7 @@ def run(params):
         if len(final_input_list) > 1 and not do_multiple_files_as_cols:
             filename = os.path.basename(indiv_path_list[0]).split('.')[0]
 
-            if do_scan_workflow_folders:
+            if multiwell_mode:          # replacing 'do_scan_workflow_folders'
                 # Checking well name compared to previous table
                 current_well = well_ref_for_tables[file_index]
                 if current_well != well_ref or file_index == len(final_input_list) - 1:
@@ -607,7 +672,7 @@ def run(params):
 
                         # Add latest summary tab to final super table
                         if file_index == len(final_input_list) - 1:
-                            temp_tab.append(df_grouped['Summary'][df_grouped['Summary'].columns[1]])
+                            temp_tab.append(df_grouped[summary_lbl][df_grouped[summary_lbl].columns[1]])
 
                         if len(temp_tab) > 1:
                             # Add empty table to create space between parameters
@@ -647,20 +712,20 @@ def run(params):
 
                 # Add first column only if temp_tab is empty
                 if not temp_tab:
-                    temp_tab.append(df_grouped['Summary'][df_grouped['Summary'].columns[0]])
+                    temp_tab.append(df_grouped[summary_lbl][df_grouped[summary_lbl].columns[0]])
 
                 # Add data to be combined
-                temp_tab.append(df_grouped['Summary'][df_grouped['Summary'].columns[1]])
+                temp_tab.append(df_grouped[summary_lbl][df_grouped[summary_lbl].columns[1]])
 
             else:
-                if df_big_summary is None:
-                    df_big_summary = df_grouped['Summary']
+                if df_big_summary.empty:
+                    df_big_summary = df_grouped[summary_lbl]
 
                     # Rename header of 2nd column
                     df_big_summary.rename(columns={df_big_summary.columns[1]: filename}, inplace=True)
 
                 else:
-                    df_big_summary[filename] = df_grouped['Summary'][df_grouped['Summary'].columns[1]]
+                    df_big_summary[filename] = df_grouped[summary_lbl][df_grouped[summary_lbl].columns[1]]
 
         # --- / FINAL SUMMARY ----------------------------------------------------------------------------------------
 
@@ -702,7 +767,7 @@ def combine_tabs(df_raw):
     df_combined = {}
     df_temp = pd.DataFrame()
     object_name = ''
-    summary_exists = False
+    summary_exists = False          # Used to combine multiple summary tabs if existing
 
     for k in df_raw.keys():
         # Don't need the summary tab if included
@@ -780,9 +845,12 @@ def combine_tabs(df_raw):
 def calculate_relation_stats(df_i, df_ii, id_header, meas_prefix, obj_ii_type, measurements):
     global relationships_with_stats, relationship_measurements_stats_todrop
 
+    # Measurements input needs to be a list
+
     df_to_add = pd.DataFrame()
 
     if set(df_ii.columns) & set(measurements):
+        # Warning: ID of main/primary object is retrieved from its name!!!
         for obj_i_name in df_i.iloc[:, 0]:
             obj_i_id = int(obj_i_name.split(' ')[-1])            # Expecting a space before number
 
@@ -842,6 +910,15 @@ def split_dendrite_set_and_segments(df):
     dendrite_seg_df = df[is_segment]
 
     return dendrite_set_df, dendrite_seg_df
+
+
+# Function to distinguish 'Cells' from 'Cells (2)' and 'Cells (3)'. Used in relationship detection.
+def is_same_object_set(name, suffix):
+    if suffix == '':
+        ans = True if not name.endswith(')') else False
+    else:
+        ans = True if name.endswith(suffix) else False
+    return ans
 
 
 def get_split_name(txt: str):
@@ -948,3 +1025,12 @@ if __name__ == '__main__':
 #        - Redesigned detection of measurement names
 # v1.53: - The script was not recognizing folder structure from batched workflow when it was not multiwell.
 #          One subfolder level is then missing. Fixed in this version.
+# v1.54: - Fixing a bug with scenario F when summary tab is not named 'Summary' exactly.
+#          Also fixing a bug with formatting of 'Analysis_Summary' when not multiwell
+#          Fixed wrong sorting of subfolders such as 'Job 9', 'Job 10', etc.
+# v1.55: - New virtual env code for auto-activation
+# v1.56: - Bug fix since Aivia 12.0 (r38705) security release for scenario F where only the summary tab is output
+# v1.60: - Add Cell Analysis support for relationship grouping. Better recognition of object sets with numbers '(1)'
+#        - Bug fixed at line 660 (if result table is empty)
+# v1.61: - Secondary relationship sets can be named differently if the main object is "Cells"
+#        - Handles NaN in summary tabs (no results detected, Aivia 12.1)
