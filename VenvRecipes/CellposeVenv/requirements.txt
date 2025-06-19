@@ -28,4 +28,4 @@ requests==2.32.2
 scikit-image==0.23.2
 torch @ https://download.pytorch.org/whl/cu118/torch-2.3.1%2Bcu118-cp312-cp312-win_amd64.whl
 typing_extensions==4.12.1
-urllib3==2.2.3
+urllib3==2.5.0
