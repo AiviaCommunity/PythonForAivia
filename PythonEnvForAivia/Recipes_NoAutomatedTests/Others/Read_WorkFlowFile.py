@@ -28,72 +28,116 @@ import wx
 import textwrap
 import re
 
+
+test_file = ''
+sep = ' | '     # separator for recipe parameters
 max_char_len = 150
+
+
+# Table with WxPython
+class WxTable:
+    def __init__(self, t_title, t_width, t_height):
+        self.app = wx.App()
+        self.frame = wx.Frame(parent=None, title=t_title, size=(t_width, t_height))
+
+        self.table = wx.ListCtrl(self.frame, size=(-1, 100), style=wx.LC_REPORT)
+        self.table.InsertColumn(0, 'Info', width=200)
+        self.table.InsertColumn(1, 'Value', width=1600)
+
+        self.row = 0        # Table row number
+
+    def add_line(self, title, text):
+        self.table.InsertItem(self.row, str(title))
+        self.table.SetItem(self.row, 1, str(text))
+        self.row += 1
+
+    def add_line_with_sep(self, title):
+        self.table.InsertItem(self.row, '----- ' + str(title) + ' -----')
+        self.table.SetItem(self.row, 1, '---------------------------------')
+        self.row += 1
+
+    def add_block_with_header(self, action_name, block_dict, block_tags):
+        self.add_line('Action', action_name)
+        for t in block_tags:
+            self.add_line(t, block_dict[t])
 
 
 # [INPUT Name:inputImagePath Type:string DisplayName:'Any channel']
 # [OUTPUT Name:resultPath Type:string DisplayName:'Dummy to delete']
 def run(params):
     # Choose file
-    file_path = pick_file('')
+    file_path = test_file if test_file else pick_file('')
 
     # Read the file
     raw_text = open(file_path, 'r+').read()
+    cleaned_text = replace_all(raw_text, {'null': '""', 'true': 'True', 'false': 'False'})
 
-    # Split description from processing steps
-    main_parts = raw_text.split('"Entities":[')
+    # Attempt to create dict from file string
+    try:
+        wkfl_dict = eval(cleaned_text)
 
-    # Split processing steps
-    block_end_pattern = re.compile(r'},{\"[^(RecipeName|Name)]')
-    step_blocks = re.split(block_end_pattern, main_parts[1])
+    except BaseException as e:
+        sys.exit(f'Error trying to convert workflow file as dict:\n{e}')
 
-    # Prepare displayed table
-    app = wx.App()
-    frame = wx.Frame(parent=None, title='TIF tags', size=(1000, 1000))
-
-    table = wx.ListCtrl(frame, size=(-1, 100), style=wx.LC_REPORT)
-    table.InsertColumn(0, 'Info', width=200)
-    table.InsertColumn(1, 'Value', width=1600)
+    # Init wx table
+    wx_table = WxTable('Aivia workflow file reader', 1000, 1000)
 
     # Write first part
-    r = 0
-    table.InsertItem(r, 'Description')
-    table.SetItem(r, 1, main_parts[0].replace(',', ',\n'))
-    r += 1
+    main_tags = ['Name', 'Description', 'CreationUser', 'CreationDateUTC']
+    for t in main_tags:
+        wx_table.add_line(t, wkfl_dict[t])
 
-    # Split values in each block
-    for i in range(len(step_blocks)):
+    # Process sub-parts in 'Entities' = workflow steps
+    steps_dicts = wkfl_dict['Entities']
+
+    # Define tags to retrieve
+    calib_tags = ['XYCalibration', 'ZCalibration', 'TCalibration']
+    pxclass_tags = ['PixelClassifierName', 'InputChannels', 'BackupPath']   # InputChannels needs to be created
+    recipe_tags = ['RecipeName', 'InputChannels', 'RecipeSettings', 'BackupPath']
+    #               RecipeName, InputChannels, RecipeSettings need to be created
+
+    for i in range(len(steps_dicts)):
         # Writing a line to separate blocks
-        table.InsertItem(r, '----- Step ' + str(i) + ' ---')
-        table.SetItem(r, 1, '---------------------------------')
-        r += 1
+        wx_table.add_line_with_sep('Step ' + str(i))
 
-        lines = step_blocks[i].split(',')
+        step_dict = steps_dicts[i]
 
-        for l in lines:
-            split_line = l.split(':')
+        # Specific processing if first step is calibration of the image
+        if 'DoCalibration' in step_dict.keys():
+            wx_table.add_block_with_header('Image calibration', step_dict, calib_tags)
 
-            # Repair some broken text
-            filtered_tag = split_line[0].replace('ackupPath"',
-                                                 '"BackupPath"').replace('ixelClassifierID"',
-                                                                         '"PixelClassifierID"')
+        else:
+            # Pixel Classifier step
+            if 'PixelClassifierID' in step_dict.keys():
+                # Creating / Processing some tags
+                step_dict['InputChannels'] = ', '.join([f'Channel {ind}' for ind in step_dict['InputIndices']])
 
-            # Insert tag name
-            table.InsertItem(r, filtered_tag)
+                wx_table.add_block_with_header('Pixel Classifier', step_dict, pxclass_tags)
 
-            # Set value because some can be very long
-            final_val = str(split_line[1:])
+            elif 'RecipeApplyState' in step_dict.keys():
+                # Creating / Processing some tags
+                recipe_settings = step_dict['RecipeApplyState']['RecipeSettings']
+                step_dict['RecipeName'] = recipe_settings['RecipeName']
+                step_dict['InputChannels'] = ', '.join([f'Channel {ind}' for ind in step_dict['InputIndices']])
 
-            # Removing some characters from value
-            filtered_value = re.sub('[}\[\]\"\']', '', final_val)
+                # Gathering recipe parameters (ParameterSetStates = parameters group, Parameters = actual parameters)
+                step_dict['RecipeSettings'] = ''
+                for p_group in recipe_settings['ParameterSetStates']:
+                    recipe_params = p_group['Parameters']
+                    step_dict['RecipeSettings'] += p_group['ParameterSetName'] + sep
+                    step_dict['RecipeSettings'] += sep.join([f"{str(p['Name'])} = {str(p['Value'])}" for p in recipe_params])
+                    step_dict['RecipeSettings'] += sep
 
-            # Insert value
-            table.SetItem(r, 1, filtered_value)
+                wx_table.add_block_with_header('Recipe', step_dict, recipe_tags)
 
-            r += 1
+    wx_table.frame.Show()
+    wx_table.app.MainLoop()
 
-    frame.Show()
-    app.MainLoop()
+
+def replace_all(text, dic):
+    for i, j in dic.items():
+        text = text.replace(i, j)
+    return text
 
 
 def wrap(string, length):
@@ -123,3 +167,4 @@ if __name__ == '__main__':
 # CHANGELOG
 # v1.00: - First version
 # v1.01: - New virtual env code for auto-activation
+# v1.02: - Now using conversion of workflow to a dictionary. Tested on one workflow only. Text replacements are needed.
