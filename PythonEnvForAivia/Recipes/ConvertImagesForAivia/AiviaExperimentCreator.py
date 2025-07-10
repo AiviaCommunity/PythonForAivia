@@ -12,6 +12,7 @@ def search_activation_path():
     return ''
 
 activate_path = search_activation_path()
+
 if os.path.exists(activate_path):
     exec(open(activate_path).read(), {'__file__': activate_path})
     print(f'Aivia virtual environment activated\nUsing python: {activate_path}')
@@ -22,6 +23,7 @@ else:
     ctypes.windll.user32.MessageBoxW(0, error_mess, 'Error', 0)
     sys.exit(error_mess)
 # ---------------------------------------------------------------
+
 
 import wx
 from tifffile import TiffFile
@@ -39,6 +41,16 @@ DEFAULT_FOLDER = ''     # r''
 # WARNING: start_x is the center of the well, not the corner. A factor of 1000 is applied from the doc to these layouts.
 LAYOUTS = {'1': [[1, 1, 28590, 12750, 0, 0, 45050, 20450], 'LabTek 1 Chamber', 'c2b5b936-1513-4e68-80d2-5a9af773864d'],
            '2': [[2, 1, 16600, 12750, 24000, 0, 22400, 21500], 'LabTek 2 Chamber', 'f2a482b5-9578-4f46-ae0a-6769e1f7252c'],
+           '4': [[4, 1, 18000, 42840, 30500, 0, 28000, 64000], 'CELLSTAR FourWell',
+                  '2ad1a525-4912-45cf-8dbd-890a542a7222'],
+           '6': [[3, 2, 24000, 22000, 40000, 40000, 36000, 36000], '6 Wellplate Nucleon Surface',  # Nunclon model
+                 'b3c04cb7-a10d-471a-b2cb-429d0e139244'],
+           '8': [[4, 2, 11300, 7150, 11580, 11580, 10500, 10500], 'LabTek 8 Chamber',
+                 'eca369bd-ea6a-406b-94f6-599f27ec4ac0'],
+           '12': [[4, 3, 24880, 16740, 26000, 26000, 22200, 22200], '12 Wellplate Type CELLSTAR',
+                  '53f48c3f-e582-4505-bfe6-ac978a0fe88b'],
+           '24': [[6, 4, 15130, 13490, 19500, 19500, 15660, 15660], '24 Wellplate Type CELLSTAR',
+                  'a06df3e5-a9f2-49c3-b74f-61fa6c3079ee'],
            '': []}
 
 # Output file fixed parts
@@ -71,10 +83,14 @@ Aiviaexperiment file with automated format picked from the number of image group
 def run(params):
     global DEFAULT_FOLDER, LAYOUTS, PREFIX, WELL_PREFIX, TAGS, WELL_TAGS, SUFFIX
 
-
     # Choose files (or rely on an hard coded default folder)
+    # For unittest
     input_folder = params.get('inputDirectory')
     output_folder = params.get('resultPath')
+        
+    if not input_folder:    # when run from Aivia
+        input_folder = DEFAULT_FOLDER
+    
     ans = 6         # init for OK answer
     group_list = []
     n_groups = 0
@@ -106,6 +122,19 @@ def run(params):
     if ans == 2:
         sys.exit('Process terminated by user')
 
+    if not output_folder:    # when run from Aivia
+        output_folder = input_folder
+
+    # Standardizing n groups to existing layouts
+    if 2 < n_groups < 4:
+        n_groups = 4
+    if 4 < n_groups < 8:        # Skipping the 6 well plate
+        n_groups = 8
+    if 8 < n_groups < 12:
+        n_groups = 12
+    if 12 < n_groups < 24:
+        n_groups = 24
+
     # Default image size = 3000 * 3000 px with a resolution of 0.33 µm / px >> 1000 * 1000 µm
     image_size_x = image_size_y = 1000       # value in MICRONS!
 
@@ -118,9 +147,17 @@ def run(params):
             # now getting XZ pixel resolution from image description
             try:
                 tmp_img_desc = tmp_tif_tags[270].value
-                tmp_pix_size = float(re.search(r' PixelSizeX="(?P<pxsize>.+)"\sPixelSizeY', tmp_img_desc).group('pxsize'))
+                tmp_pix_size = float(re.search(r' PhysicalSizeX="(?P<pxsize>.+)"\n\s+PhysicalSizeY',
+                                               tmp_img_desc).group('pxsize'))
             except Exception as e:
-                print('Could not read image pixel resolution. Set to 1.\nError code: ', e)
+                print('Could not read image pixel resolution in Aivia 14.1 format. Trying <14.1\nError code: ', e)
+
+            if not tmp_pix_size:
+                try:
+                    tmp_pix_size = float(re.search(r' PixelSizeX="(?P<pxsize>.+)"\sPixelSizeY',
+                                                   tmp_img_desc).group('pxsize'))
+                except Exception as e:
+                    print('Could not read image pixel resolution. Set to 1.\nError code: ', e)
                 tmp_px_size = 1
 
             image_size_x = tmp_pix_size * tmp_width
@@ -142,14 +179,14 @@ def run(params):
 
     # Main LOOP -----------------------------------------------------------------------------------------------
     # Init output file
-    output_file = open(output_folder + "/"+ 'Experiment_{}.aiviaexperiment'.format(datetime.date.today()), 'w+')
+    output_file = open(os.path.join(output_folder, 'Experiment_{}.aiviaexperiment'.format(datetime.date.today())), 'w+')
     output_file.write(str(PREFIX))
 
     # Define well XY indexes
     n_well_y = int(plate_box_info[1])
     n_well_x = int(plate_box_info[0])
     well_indexes_tmp = np.mgrid[1:n_well_y+1, 1:n_well_x+1]
-    well_indexes = well_indexes_tmp.reshape((2, n_well_x * n_well_y))
+    well_indexes = well_indexes_tmp.reshape(2, (n_well_x * n_well_y))
     w = 0
 
     for single_list in group_list:
@@ -157,8 +194,8 @@ def run(params):
         output_file.write(str(WELL_PREFIX))
 
         # Well name
-        well_lett = chr(well_indexes[w][0] + 64)
-        well_numb = str(well_indexes[w][1])
+        well_lett = chr(well_indexes[0][w] + 64)
+        well_numb = str(well_indexes[1][w])
         well_name = well_lett + well_numb
 
         # Calculate how many images go in x and in y axis
@@ -225,6 +262,10 @@ def run(params):
         future = executor.submit(Mbox, 'Process completed', mess, 0)
     print(mess)  # for log
 
+    # If run from Aivia, not unittest
+    if not params.get('inputDirectory'):
+        os.startfile(output_folder)
+
 
 def well_coord(args):
     # Returns [y, x] well center coordinates as a list
@@ -278,4 +319,5 @@ if __name__ == '__main__':
 # v1.20: - Using well centers as reference instead of corner. Easier to pull image gallery in the center
 # v1.30: - Add attempt to detect calibrated size of image. Fallback on a GUI if not successful
 # v1.31: - New virtual env code for auto-activation
-
+# v1.32: - Support for pixel size metadata from Aivia 14.1. Added several new layouts
+#        - Added handling of unittest I/O
