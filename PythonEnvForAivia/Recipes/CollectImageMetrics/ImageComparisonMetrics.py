@@ -13,7 +13,7 @@ All real SSIM values (ranging from 0 to 1) can be retrieved from the map doing t
 
 Side note: MSE and mean SSIM (and NRMSE, PSNR) values are output in the log
 To be able to see the printed info in the log file, set:
-File > Options > Logging > Verbosity = everything
+File > Options > Logging > Verbosity = Everything
 
 Sources: 
 https://scikit-image.org/docs/dev/api/skimage.metrics.html?highlight=structural#skimage.metrics.structural_similarity
@@ -39,7 +39,7 @@ Second output: reference image transformed with histogram matching
 """
 
 # [INPUT Name:inputGTImagePath Type:string DisplayName:'Input Ground Truth Image']
-# [INPUT Name:inputRTImagePath Type:string DisplayName:'Input Restored Image']
+# [INPUT Name:inputRTImagePath Type:string DisplayName:'Input Image To Compare']
 # [OUTPUT Name:resultPathAdj Type:string DisplayName:'GT Hist match image']
 # [OUTPUT Name:resultPath Type:string DisplayName:'SSIM image']
 def run(params):
@@ -48,7 +48,7 @@ def run(params):
     resultLocation = params['resultPath']
     resultLocationAdj = params['resultPathAdj']
     channel_axis=params.get('channel_axis')
-    if channel_axis == "None":
+    if not channel_axis or channel_axis == "None":
         channel_axis = None
     else:
         channel_axis = int(channel_axis)
