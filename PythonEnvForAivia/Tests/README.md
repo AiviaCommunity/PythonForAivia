@@ -31,6 +31,11 @@ To run all tests, run the command:
 python -m unittest discover .
 ```
 
+To run all tests and output info and errors to a file, run the command:
+```python
+python -m unittest discover -v . > unittest_results.txt 2>&1
+```
+
 To run tests on the folders of recipes (for example, all recipes under [`ProcessImages`](../Recipes/ProcessImages/)), run the command:
 ```python
 python -m unittest discover Tests\ProcessImages
