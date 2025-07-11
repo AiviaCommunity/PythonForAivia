@@ -101,3 +101,5 @@ def run(params):
         
     imsave(resultLocation, outputData)  
     imsave(resultLocationAdj, matched_GTData)
+    
+    return valMSE, outMeanSSIM
