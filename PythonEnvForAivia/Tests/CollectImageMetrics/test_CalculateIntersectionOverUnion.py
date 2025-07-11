@@ -7,8 +7,10 @@ from Tests.utils.comparison import isIdentical
 
 def run_test(config):
     ground_truth_path = config.pop('groundTruthPath')
-    CalculateIntersectionOverUnion.run(config)
+    ground_truth_value = config.pop('groundTruthValue')
+    result_value = CalculateIntersectionOverUnion.run(config)
     assert isIdentical(ground_truth_path, config.get("resultPath"))
+    assert (result_value == ground_truth_value), f'Expected {groundTruthValue} but result was {result_value}'
     return True
 
 class Test_CalculateIntersectionOverUnion(unittest.TestCase):

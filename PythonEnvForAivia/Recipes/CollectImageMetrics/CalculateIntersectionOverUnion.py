@@ -67,3 +67,5 @@ def run(params):
     outputData = rescale_intensity(overlap, out_range='uint8').astype(RTData.dtype)
     
     imsave(resultLocation, outputData)
+    
+    return str(IoU)
