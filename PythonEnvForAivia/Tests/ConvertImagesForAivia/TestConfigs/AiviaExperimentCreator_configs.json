@@ -2,6 +2,7 @@
     {
         "inputDirectory": "Tests/InputTestImages/dicom_stack", 
         "resultPath":"Tests/ConvertImagesForAivia/GroundTruths/AiviaExperimentCreator/outputs/", 
-        "groundTruthPath":"Tests/ConvertImagesForAivia/GroundTruths/AiviaExperimentCreator/ground_truth/"
+        "groundTruthPath":"Tests/ConvertImagesForAivia/GroundTruths/AiviaExperimentCreator/ground_truth/",
+		"testGuidance":"Select this test image 'Tests/InputTestImages/Test_8bit_YX_BinaryCylinder1_MaxIP.tif'\nThen press Open.\nWhen the prompt asks you if you want to select more images, click YES and select the image 'Tests/InputTestImages/Test_8bit_YX_BinaryCylinder2_MaxIP.tif'\nThen Press Open\nWhen the prompt asks you if you want to select more images, hit NO."
        }
 ]

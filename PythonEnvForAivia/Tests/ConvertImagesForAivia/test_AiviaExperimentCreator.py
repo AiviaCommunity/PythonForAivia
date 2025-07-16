@@ -3,7 +3,7 @@ import json
 import os
 from Recipes.ConvertImagesForAivia import AiviaExperimentCreator
 from Tests.utils.comparison import isJsonIdentical
-
+import ctypes
 
 import os
 import glob
@@ -21,11 +21,13 @@ def find_experiment_file(directory):
     return files[0] if files else None
 
 def run_test(config):
+    test_guidance = config.pop('testGuidance')
     ground_truth_path = config.pop('groundTruthPath')
     ground_truth_filepath = find_experiment_file(ground_truth_path)
     result_filepath = find_experiment_file(config.get("resultPath"))
     print(ground_truth_filepath)
     print(result_filepath)
+    ctypes.windll.user32.MessageBoxW(0, test_guidance, 'Test guidance', 0)
     AiviaExperimentCreator.run(config)
 
     assert isJsonIdentical(ground_truth_filepath, result_filepath)
