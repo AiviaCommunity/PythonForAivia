@@ -27,8 +27,7 @@ The recipes are then containing some code to:
 
 ## Installation
 
-1. Download the `AydinVenv` zip:
-   https://github.com/AiviaCommunity/PythonForAivia/VenvRecipes/ZippedVenvFolders/
+1. Download the [`AydinVenv.zip`](https://github.com/AiviaCommunity/PythonForAivia/blob/master/VenvRecipes/ZippedVenvFolders/AydinVenv.zip) file:
 
 2. Unzip the downloaded folder `AydinVenv` in a location where there are no admin access restrictions. 
 The tree structure of the folder is as follow
