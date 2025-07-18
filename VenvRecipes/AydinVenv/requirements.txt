@@ -1,0 +1,5 @@
+numpy==1.26.4
+numexpr==2.8.4
+pydantic==1.10.10
+aydin==0.1.15
+dask[dataframe]==2024.6.2
