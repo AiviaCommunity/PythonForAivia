@@ -17,6 +17,10 @@ Each of these recipes will create the required virtual environment for itself at
 
 ## VenvRecipes List
 
+Denoising:
+1. [AydinVenv (AI and non-AI denoising)](./AydinVenv)
+
+
 Segmentation:
 
 1. [CellposeVenv](./CellposeVenv)
