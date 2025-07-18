@@ -5,10 +5,8 @@ from pathlib import Path
 from shutil import copyfile
 import sys
 import ctypes
-from PIL import Image, ImageDraw, ImageFont
 from skimage.io import imread, imsave
 import numpy as np
-import textwrap
 
 """
 This Aivia python recipe will create the required virtual environment for all recipes available
