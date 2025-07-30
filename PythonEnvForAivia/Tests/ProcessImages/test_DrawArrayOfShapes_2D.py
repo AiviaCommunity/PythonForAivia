@@ -9,6 +9,8 @@ from Tests.utils.comparison import isIdentical
 
 def run_test(config):
     ground_truth_path = config.pop('groundTruthPath')
+    test_guidance = 'Reset values to default (96 multiwell template) and proceed'
+    ctypes.windll.user32.MessageBoxW(0, test_guidance, 'Test guidance', 0)
     DrawArrayOfShapes_2D.run(params=config)
     assert isIdentical(ground_truth_path, config.get("resultPath"))
     return True

@@ -15,6 +15,11 @@ import glob
 # When the prompt asks you if you want to select more images, select the following image and hit OK
 # PythonEnvForAivia\Tests\InputTestImages\Test_8bit_YX_BinaryCylinder2_MaxIP.tif
 # When the prompt asks you if you want to select more images, hit NO and proceed with continuing the recipe.
+#
+# The automated test will report an error because Ground Truth contains absolute path to files from a different PC.
+# To check that test is passed, open GT and output files in a text editor that can easily compare them 
+# (e.g. Notepad++ with the Compare plugin).
+
 
 def find_experiment_file(directory):
     files = glob.glob(os.path.join(directory, "*.aiviaexperiment"))
