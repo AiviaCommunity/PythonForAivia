@@ -123,37 +123,37 @@ def run(params):
         axes = 'TZYX'
         for t in range(0, dims[0]):
             temp_array[t, :, :, :] = skeletonize_3d(temp_array[t, :, :, :])
-            if open_skeleton > 0:
-                temp_array[t, :, :, :] = opening(temp_array[t, :, :, :], selem=structure)
-            elif close_radius:
-                temp_array[t, :, :, :] = closing(temp_array[t, :, :, :], selem=structure)
+            if open_skeleton:
+                temp_array[t, :, :, :] = opening(temp_array[t, :, :, :], footprint=structure)
+            elif close_radius > 0:
+                temp_array[t, :, :, :] = closing(temp_array[t, :, :, :], footprint=structure)
 
     # 2D+T
     elif tCount > 1 and zCount == 1:
         axes = 'TYX'
         for t in range(0, dims[0]):
             temp_array[t, :, :] = skeletonize(temp_array[t, :, :])
-            if open_skeleton > 0:
-                temp_array[t, :, :] = opening(temp_array[t, :, :], selem=structure)
-            elif close_radius:
-                temp_array[t, :, :] = closing(temp_array[t, :, :], selem=structure)
+            if open_skeleton:
+                temp_array[t, :, :] = opening(temp_array[t, :, :], footprint=structure)
+            elif close_radius > 0:
+                temp_array[t, :, :] = closing(temp_array[t, :, :], footprint=structure)
 
     # 3D
     elif tCount == 1 and zCount > 1:
         axes = 'ZYX'
-        temp_array = skeletonize_3d(temp_array)
-        if open_skeleton > 0:
-            temp_array = opening(temp_array, selem=structure)
-        elif close_radius:
-            temp_array = closing(temp_array, selem=structure)
+        temp_array = skeletonize_3d(temp_array).astype(np.uint8)
+        if open_skeleton:
+            temp_array = opening(temp_array, footprint=structure)
+        elif close_radius > 0:
+            temp_array = closing(temp_array, footprint=structure)
 
     # 2D
     else:
         temp_array = skeletonize(temp_array)
-        if open_skeleton > 0:
-            temp_array = opening(temp_array, selem=structure)
-        elif close_radius:
-            temp_array = closing(temp_array, selem=structure)
+        if open_skeleton:
+            temp_array = opening(temp_array, footprint=structure)
+        elif close_radius > 0:
+            temp_array = closing(temp_array, footprint=structure)
 
     t2_sk = datetime.now()
     print(f'Skeleton detected in {round((t2_sk - t1_sk).total_seconds())} seconds')
@@ -215,16 +215,16 @@ def run(params):
         smallest = disk(node_dilation_size - 2)
         len_to_add_1 = int((len(largest) - len(inter)) / 2)
         len_to_add_2 = int((len(largest) - len(smallest)) / 2)
-        struct_element_nodes = [np.pad(smallest, len_to_add_2),
+        struct_element_nodes = np.stack([np.pad(smallest, len_to_add_2),
                                 np.pad(inter, len_to_add_1),
                                 largest,
                                 np.pad(inter, len_to_add_1),
-                                np.pad(smallest, len_to_add_2)]
+                                np.pad(smallest, len_to_add_2)])
 
         largest = disk(skeleton_dilation_size)
         smallest = disk(1)
         len_to_add = int((len(largest) - len(smallest)) / 2)
-        struct_element_sk = [np.pad(smallest, len_to_add), largest, np.pad(smallest, len_to_add)]
+        struct_element_sk = np.stack([np.pad(smallest, len_to_add), largest, np.pad(smallest, len_to_add)])
     else:
         struct_element_nodes = disk(node_dilation_size)
         struct_element_sk = disk(skeleton_dilation_size)
@@ -268,8 +268,8 @@ if __name__ == '__main__':
         'resultPath2': r'testResult_nodes.tif',
         'resultPath3': r'testResult_branches.tif',
         'threshold': 16,
-        'closeRadius': 0,
-        'filterRadius': 0,
+        'closeRadius': 1,
+        'filterRadius': 1,
         'filterType': 1,
         'TCount': 1,
         'ZCount': 3,
@@ -279,3 +279,4 @@ if __name__ == '__main__':
 
 # CHANGELOG:
 #   v1.00: - Version using cropped 3*3 kernels on each pixel/voxel of the skeleton to detect nodes
+#   v1.10: - Replacing 'selem' by 'footprint' for morphomathematical functions and fixed 3D footprint format for dilation
