@@ -35,30 +35,20 @@ from datetime import datetime
 import numpy as np
 from skimage.io import imread, imsave
 
-debug_mode = False       # TODO: False for PROD
+debug_mode = False
 
 """
-Convert multiple Excel spreadsheets (in the same input folder) exported from Aivia into a single Excel file.
-Options:
-    A - Multiple files selected, spreadsheets do not contain timepoints, data is combined in the same column (stacked data)
-    B - Multiple files selected, spreadsheets do not contain timepoints, data is combined in multiple columns 
-        (1 column = data from 1 spreadsheet)
-    C - Multiple files selected, spreadsheets do CONTAIN timepoints, data is combined in the same column
-        (1 column = 1 timepoint)
-    D - List of files processed as single files, spreadsheets do not contain timepoints, 
-        measurement tabs are combined as multiple columns (1 column = 1 measurement, 1 tab = 1 object subset)
-    E - Same as D but only one file is selected. Expecting Aivia 11.0 subfolder hierarchy from a multiwell Workflow
-        batch processing 
-    ... see other info above in scenario descriptions
+Convert multiple Excel spreadsheets (in the same input folder or in a batch series of subfolders) 
+exported from Aivia into a single Excel file or multiple processed tables.
 
 WARNING: This currently works only under the following conditions:
     - The file were exported from Aivia as Excel files (not CSV)
-    - There is no time dimension
+    - There is no time dimension, at the moment
     - The default row/column ordering was not changed at export.
     - Filenames do not contain '.' characters
 
-The converted file will be saved with the same name as the original but with
-"..._grouped" appended to the end.
+The converted file(s) will be saved with the same name as the original but with some suffix depending on processing 
+choices. The output folder opens automatically at the end of the script.
 
 Requirements
 ------------
@@ -81,7 +71,6 @@ DataFrame
 """
 
 # Folder to quickly run the script on all Excel files in it
-# DEFAULT_FOLDER = r'D:\PythonCode\_tests\ExcelTables\Batch_1file_XYZ_3DOA-M_2sets_norelation\Job 1\Measurements'
 DEFAULT_FOLDER = r''
 
 # Choice lists for the interactive form
@@ -94,8 +83,7 @@ choice_list2 = ['Combine all Excel tables in one big table',
 choice_list3 = ['Data do not contain timepoints',
                 'Data contains timepoints']
 
-choice_list4 = ['Only calculate statistics (subgroup counting, %, average for some measurements)',
-                'Group raw data (1 column = result from 1 image)',
+choice_list4 = ['Group raw data (1 column = result from 1 image)',
                 'Group raw data (1 column = 1 measurement, stack values from different images)']
 
 # Relationship definitions (Warning: names should be the sheets in the spreadsheets)
@@ -151,6 +139,7 @@ final_name_prefix = 'Analysis Summary'
 def get_scenario(ch1=choice_list1[0], ch2=choice_list2[0], ch3=choice_list3[0], ch4=choice_list4[0],
                  spacer='', text=''):
     """
+    :param spacer:
     :param ch1:
         For batch result, select one xlsx table, an automatic search is performed to process other tables in the same batch.
     :param ch2:
@@ -193,22 +182,29 @@ def run(params):
     do_combine_meas_tabs = False  # Combining measurement tabs into one (for the same object subset)
     do_separated_processing = False  # If tables are processed separately
     do_scan_workflow_folders = False    # relative to batch analysis in Aivia 11.0+
-    do_extract_stats_only = False       # From summary tabs and/or calculated stats
 
-    if choice_2 == choice_list2[1] and choice_4 == choice_list4[2]:
+    if choice_2 == choice_list2[1] and choice_4 == choice_list4[1]:
         do_separated_processing = True
 
-    if choice_2 == choice_list2[0] and choice_4 == choice_list4[1]:
+    if choice_2 == choice_list2[0] and choice_4 == choice_list4[0]:
         do_multiple_files_as_cols = True        # data are not stacked, except if there are multiple images per well
 
-    if choice_4 == choice_list4[2]:
+    if choice_4 == choice_list4[1]:
         do_combine_meas_tabs = True
 
     if choice_1 == choice_list1[0]:
         do_scan_workflow_folders = True
 
-    if choice_4 == choice_list4[0]:
-        do_extract_stats_only = True
+    # Impossible combinations
+    exiting_combinations = [['', choice_list2[1], '', choice_list4[0]],
+                            ['', '', choice_list3[1], choice_list4[0]],
+                            ['', '', choice_list3[1], choice_list4[1]]]
+    if is_combination_ok([choice_1, choice_2, choice_3, choice_4], exiting_combinations):
+        error_msg = 'The combination of choices you selected is not available with this script at the moment, ' \
+                    'please start the script again and select other choices.\n\n' \
+                    'Note: processing of tables with timepoints is not yet implemented.\n' \
+                    'Please report your need to your Aivia contact.'
+        stop_with_error_popup(error_msg)
 
     add_summary = False  # Used to know if the tab is missing from the beginning
     contains_tps = False  # If tables contain timepoints (form also asks the same, but this will check if true or not)
@@ -378,17 +374,12 @@ def run(params):
         real_tab_names_ref = [clean_tab_name(df_raw_1[tmp_t].columns[0], ) for tmp_t in df_raw_1.keys()]
         real_tab_names_ref_tmp = change_duplicate_tab_names(real_tab_names_ref)
 
-        # First table in final table, except if stats only are expected
+        # First table in final table
         real_tab_names_ref = real_tab_names_ref_tmp.copy()
         for i_t, tab in enumerate(df_raw_1.keys()):
-            if do_extract_stats_only:
-                if 'Summary' in tab:
-                    df_grouped[real_tab_names_ref_tmp[i_t]] = df_raw_1[tab]
-                else:
-                    real_tab_names_ref.remove(real_tab_names_ref_tmp[i_t])
-            else:
-                df_grouped[real_tab_names_ref[i_t]] = df_raw_1[tab]
+            df_grouped[real_tab_names_ref[i_t]] = df_raw_1[tab]
 
+        # Looking at other tables in same group to be combined -----------------------------------
         if len(indiv_path_list) > 1:
 
             if do_multiple_files_as_cols and not contains_tps:
@@ -485,7 +476,7 @@ def run(params):
                         print('-- Processing {} ({}/{}).'.format(os.path.basename(f), indiv_i + 2, len(indiv_path_list)))
                         df_raw = pd.read_excel(f, sheet_name=None, engine='openpyxl')
 
-                        # Removing tabs if containing 2 columns of results
+                        # Removing tabs if containing 2 columns of results / not compatible with timepoints
                         for tmp_t in tabs_to_remove:
                             if tmp_t in df_raw.keys():
                                 df_raw.pop(tmp_t)
@@ -496,12 +487,15 @@ def run(params):
                             # Start looping over the different sheets
                             prefix_name = clean_excel_name(os.path.basename(f))
                             for i_t, t in enumerate(tab_names):
-                                r_t = real_tab_names_ref[i_t]
-                                # Adding prefix (file name) to first column in the raw table
-                                df_raw[t].iloc[:, 0] = [prefix_name + "_" + r for r in df_raw[t].iloc[:, 0]]
+                                r_t = real_tab_names_ref_tmp[i_t]
 
-                                # Merging to previous grouped data
-                                df_grouped[r_t] = pd.concat([df_grouped[r_t], df_raw[t]], axis=0, ignore_index=True)
+                                # Processing only the tabs which were selected
+                                if r_t in real_tab_names_ref:
+                                    # Adding prefix (file name) to first column in the raw table
+                                    df_raw[t].iloc[:, 0] = [prefix_name + "_" + r for r in df_raw[t].iloc[:, 0]]
+
+                                    # Merging to previous grouped data
+                                    df_grouped[r_t] = pd.concat([df_grouped[r_t], df_raw[t]], axis=0, ignore_index=True)
 
                         # Evaluate time for the processing of one table
                         if len(indiv_path_list[:]) > 10 and f == indiv_path_list[1]:
@@ -646,7 +640,7 @@ def run(params):
                         total_counts.append(df_grouped[k].shape[0])
                         grand_total += total_counts[t]
                         new_row = dict(zip(list(empty_row.keys()), ['Total number_{}'.format(k), total_counts[t]]))
-                        df_summary_to_add = df_summary_to_add.append(new_row, ignore_index=True)
+                        df_summary_to_add = pd.concat([df_summary_to_add, pd.DataFrame([new_row])], ignore_index=True)
 
                         # Report class group counts if existing. Valid for a single classifier     TODO: expand to multiple classifiers
                         if any([cg_name in ' '.join(df_grouped[k].columns) for cg_name in class_group_ref]):
@@ -666,28 +660,28 @@ def run(params):
                                     group_count[g - 1] = class_data[class_col_names[0]][class_data[class_col_names[0]] == g].count()
                                     new_row = dict(zip(list(empty_row.keys()),
                                                        ['Total number_{}_Class {}'.format(k, class_names[g-1]), group_count[g - 1]]))
-                                    df_summary_to_add = df_summary_to_add.append(new_row, ignore_index=True)
+                                    df_summary_to_add = pd.concat([df_summary_to_add, pd.DataFrame([new_row])], ignore_index=True)
                                 # % of class
                                 for g in range(1, no_groups + 1):
                                     percent = '{:.1%}'.format(group_count[g - 1] / total_counts[t])
                                     new_row = dict(zip(list(empty_row.keys()),
                                                        ['{}_% of Class {}'.format(k, class_names[g-1]), percent]))
-                                    df_summary_to_add = df_summary_to_add.append(new_row, ignore_index=True)
+                                    df_summary_to_add = pd.concat([df_summary_to_add, pd.DataFrame([new_row])], ignore_index=True)
                                 # Confidence mean
                                 for g in range(1, no_groups + 1):
                                     mean_conf = '{:.2}'.format(class_data.loc[class_data[class_col_names[0]] == g, class_col_names[1]].mean())
                                     new_row = dict(zip(list(empty_row.keys()),
                                                        ['{}_Confidence Average for Class {}'.format(k, class_names[g-1]), mean_conf]))
-                                    df_summary_to_add = df_summary_to_add.append(new_row, ignore_index=True)
+                                    df_summary_to_add = pd.concat([df_summary_to_add, pd.DataFrame([new_row])], ignore_index=True)
                                 # Confidence std
                                 for g in range(1, no_groups + 1):
                                     std_conf = '{:.2}'.format(class_data.loc[class_data[class_col_names[0]] == g, class_col_names[1]].std())
                                     new_row = dict(zip(list(empty_row.keys()),
                                                        ['{}_Confidence StDev for Class {}'.format(k, class_names[g-1]), std_conf]))
-                                    df_summary_to_add = df_summary_to_add.append(new_row, ignore_index=True)
+                                    df_summary_to_add = pd.concat([df_summary_to_add, pd.DataFrame([new_row])], ignore_index=True)
 
                             # Add an empty row after each object set if classes exists
-                            df_summary_to_add = df_summary_to_add.append(empty_row, ignore_index=True)
+                            df_summary_to_add = pd.concat([df_summary_to_add, pd.DataFrame([empty_row])], ignore_index=True)
 
                         t += 1
 
@@ -705,7 +699,7 @@ def run(params):
                             total_counts.append(df_grouped[k].count()[1:])
                             new_row = dict(zip(list(empty_row.keys()),
                                                ['Total number_{}'.format(object_set), *total_counts[t]]))
-                            df_summary_to_add = df_summary_to_add.append(new_row, ignore_index=True)
+                            df_summary_to_add = pd.concat([df_summary_to_add, pd.DataFrame([new_row])], ignore_index=True)
 
                             object_set_ref = object_set
                             t += 1
@@ -741,16 +735,16 @@ def run(params):
                             new_row = dict(zip(list(empty_row.keys()),
                                                ['Total number_{}_Class {}'.format(object_set, g + 1),
                                                 *group_count_per_row]))
-                            df_summary_to_add = df_summary_to_add.append(new_row, ignore_index=True)
+                            df_summary_to_add = pd.concat([df_summary_to_add, pd.DataFrame([new_row])], ignore_index=True)
 
                         # Add percentages
                         for g in range(group_max):
                             new_row = dict(zip(list(empty_row.keys()),
                                                ['{}_% of Class {}'.format(object_set, g + 1), *class_percent_per_row[g]]))
-                            df_summary_to_add = df_summary_to_add.append(new_row, ignore_index=True)
+                            df_summary_to_add = pd.concat([df_summary_to_add, pd.DataFrame([new_row])], ignore_index=True)
 
                         # Add an empty row after each object set if classes exists
-                        df_summary_to_add = df_summary_to_add.append(empty_row, ignore_index=True)
+                        df_summary_to_add = pd.concat([df_summary_to_add, pd.DataFrame([empty_row])], ignore_index=True)
 
                         t += 1
 
@@ -762,7 +756,7 @@ def run(params):
                     for t in range(len(total_counts)):
                         val = '{:.1%}'.format(total_counts[t] / grand_total)
                         new_row = {'Summary': '% of {}'.format(df_grouped_keys_nosum[t]), 'Frame 0': val}
-                        df_summary_to_add = df_summary_to_add.append(new_row, ignore_index=True)
+                        df_summary_to_add = pd.concat([df_summary_to_add, pd.DataFrame([new_row])], ignore_index=True)
 
             # Add the summary tab
             if add_summary:
@@ -778,18 +772,8 @@ def run(params):
                 df_summary_to_add.rename(columns={df_summary_to_add.columns[0]: summary_lbl}, inplace=True)
 
             # Put zeros if some summary values are NaN
-            if df_grouped[summary_lbl][df_grouped[summary_lbl].columns[1]].isnull().sum() > 0:
+            if df_grouped[summary_lbl][df_grouped[summary_lbl].columns[1]].isnull().values.sum() > 0:
                 df_grouped[summary_lbl][df_grouped[summary_lbl].columns[1]].fillna(0, inplace=True)
-
-            # Combine summary values as average when same summary results are stacked
-            # (gives average for a whole well for instance)
-            grouped_size = df_grouped[summary_lbl].groupby(by=df_grouped[summary_lbl].columns[0],
-                                                           as_index=False, sort=False).size()
-            if grouped_size.iloc[:, 1].max() > 1:
-                df_grouped[summary_lbl] = df_grouped[summary_lbl].groupby(by=df_grouped[summary_lbl].columns[0],
-                                                                          as_index=False, sort=False).mean()
-                # Put Average in front of each measurement
-                df_grouped[summary_lbl][df_grouped[summary_lbl].columns[0]] = 'Average_' + df_grouped[summary_lbl][df_grouped[summary_lbl].columns[0]]
 
             # Merge with potential existing summary tab
             df_grouped[summary_lbl] = pd.concat([df_summary_to_add, df_grouped[summary_lbl]], axis=0, ignore_index=True)
@@ -797,7 +781,7 @@ def run(params):
             # Removing double empty rows
             df_grouped[summary_lbl] = remove_double_empty_rows(df_grouped[summary_lbl])
 
-        # --- WRITING EXCEL FILES -----------------------------------------------------------------------------------
+        # --- WRITING INDIVIDUAL EXCEL FILES --------------------------------------------------------------------------
         # Writing sheets to excel
         with pd.ExcelWriter(output_file, engine="openpyxl") as writer:
             # Write Summary first
@@ -838,23 +822,25 @@ def run(params):
 
                         # Add latest summary tab to final super table
                         if file_index == len(final_input_list) - 1:
-                            temp_tab.append(df_grouped[summary_lbl][df_grouped[summary_lbl].columns[1]])
+                            temp_tab = pd.concat([temp_tab, df_grouped[summary_lbl][df_grouped[summary_lbl].columns[1]]],
+                                                 ignore_index=True)
 
                         if len(temp_tab) > 1:
                             # Add empty table to create space between parameters
-                            temp_tab.append(pd.Series('', index=range(temp_tab[0].shape[0])))
+                            temp_tab = pd.concat([temp_tab, pd.Series('', index=range(temp_tab[0].shape[0]))],
+                                                 ignore_index=True)
 
                             # Init table
                             well_tab = temp_tab[0].iloc[[0]]
 
                             # Add first row of other tables
                             for tab in temp_tab[1:]:
-                                well_tab = well_tab.append(pd.Series(tab.iloc[[0]]), ignore_index=True)
+                                well_tab = pd.concat([well_tab, pd.Series(tab.iloc[[0]])], ignore_index=True)
 
                             # Add other rows
                             for r in range(1, temp_tab[0].shape[0]):
                                 for tab in temp_tab:
-                                    well_tab = well_tab.append(pd.Series(tab.iloc[[r]]), ignore_index=True)
+                                    well_tab = pd.concat([well_tab, pd.Series(tab.iloc[[r]])], ignore_index=True)
 
                             # Drop empty rows
                             if isinstance(well_tab, pd.Series):
@@ -878,10 +864,12 @@ def run(params):
 
                 # Add first column only if temp_tab is empty
                 if not temp_tab:
-                    temp_tab.append(df_grouped[summary_lbl][df_grouped[summary_lbl].columns[0]])
+                    temp_tab = pd.concat([temp_tab, df_grouped[summary_lbl][df_grouped[summary_lbl].columns[0]]],
+                                         ignore_index=True)
 
                 # Add data to be combined
-                temp_tab.append(df_grouped[summary_lbl][df_grouped[summary_lbl].columns[1]])
+                temp_tab = pd.concat([temp_tab, df_grouped[summary_lbl][df_grouped[summary_lbl].columns[1]]],
+                                     ignore_index=True)
 
             else:
                 if df_big_summary.empty:
@@ -1003,16 +991,17 @@ def combine_tabs(df_raw):
                 summary_exists = True
 
                 # Add header as row
-                df_combined['Summary'] = pd.DataFrame([['', ''], df_combined['Summary'].columns.values.tolist()],
-                                                      columns=df_combined['Summary'].columns).append(
-                    df_combined['Summary'])
+                df_combined['Summary'] = pd.concat([pd.DataFrame([['', ''],
+                                                                  df_combined['Summary'].columns.values.tolist()],
+                                                                 columns=df_combined['Summary'].columns),
+                                                    df_combined['Summary']])
                 # Rename 1st column name to standardize it
                 df_combined['Summary'].rename(columns={df_combined['Summary'].columns[0]: 'Summary'}, inplace=True)
 
             else:  # If there is a 2nd summary tab (2nd object set)
                 # Add header as row
-                df_sum_temp = pd.DataFrame([['', ''], df_raw[k].columns.values.tolist()],
-                                           columns=df_raw[k].columns).append(df_raw[k])
+                df_sum_temp = pd.concat([pd.DataFrame([['', ''], df_raw[k].columns.values.tolist()], columns=df_raw[k].columns),
+                                         df_raw[k]])
 
                 df_sum_temp.columns = df_combined['Summary'].columns
                 df_combined['Summary'] = pd.concat([df_combined['Summary'], df_sum_temp], axis=0, ignore_index=True)
@@ -1330,6 +1319,20 @@ def is_multiwell(folder_name):
     return ans
 
 
+def is_combination_ok(choice_list, exit_combi_list):
+    do_exit = False
+    for li in exit_combi_list:
+        test_match = 0
+        for li_ind, li_item in enumerate(li):
+            if li_item == '' or choice_list[li_ind] == li_item:
+                test_match += 1
+
+        if test_match == 4:
+            do_exit = True
+
+    return do_exit
+
+
 def show_estimated_time(t1, nb_of_tables):
     t2 = datetime.now()
     duration = round((t2 - t1).total_seconds())
@@ -1409,6 +1412,11 @@ if __name__ == '__main__':
 #        - Fixed bug with stacked data and Cell ID being the same from various datasets (add_relation_values function)
 #        - Adding replacement of "Intensity" by "Int" in the clean_tab_name function
 #        - Updated change_duplicate_tab_names function to allow for more than 2x the same name with dots at the end
+# v2.32: - Switch to Aivia 15.0 with python 3.12.
+#        - Append function with DataFrame is removed and concatenate should be used.
+#        - Removed Average of average per image or fov in wells, as this is not the right calculation
+#        - Stop message if combination of choices is not valid for this script
+#        - IMPORTANT: do_extract_stats_only choice was removed. Stats are provided anyway with big tables.
 
 # TODO: progress bar with file in Recipes folder: '_progress_bar_file 1_from 10_'
 # TODO: Warning message when Neuron set detected but no ID
