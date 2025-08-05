@@ -37,6 +37,10 @@ Rename sheet titles and column headers in Excel tables from Aivia.
 Renaming is done thanks to a reference table (csv or excel based) where first column is the source name, 
 and second column is the new name. Each sheet is separated with an empty row. 
 First row of the reference table should be as the example below.
+Column names are searched all along the first row of the table, as measurement name can either be in:
+- column A on raw sheets out of Aivia,
+- column B or more if sheets were processed to combine all measurements as columns.
+
 If column headers or sheet titles are not found in the reference table, they would be deleted in the output.
 Below is an example:
 
@@ -75,24 +79,61 @@ Returns
 # [INPUT Name:inputPath Type:string DisplayName:'Any channel']
 # [OUTPUT Name:resultPath Type:string DisplayName:'Dummy to delete']
 def run(params):
-    # image_org = params['EntryPoint']
     image_location = params['inputPath']
     result_location = params['resultPath']
 
-    @magicgui(g_table_to_process={'label': 'Choose one Excel table to process '
+    @magicgui(g_table_to_process={'label': 'Choose one Excel table to process\n'
                                            '(all other Excel tables will be processed too):',
                                   'mode': 'r'},
+              lbl1={'label': '>> To create a reference table draft from the selected Excel file above,\n'
+                             'click the button below...',
+                    'widget_type': 'Label'},
+              g_create_ref_table={'widget_type': 'PushButton', 'label': 'Create a reference table draft'},
               g_ref_names_path={'label': 'Choose the reference table providing the new sheet and column names:',
                                 'mode': 'r'},
+              lbl2={'label': '    ', 'widget_type': 'Label'},
               g_remove_not_specified={"widget_type": "CheckBox", "visible": False,
                                       "label": "Remove any sheet or column if name is not mentioned in the reference table"},
-              call_button="Run")
-    def magic_gui(g_table_to_process=Path.home(), g_ref_names_path=Path.home(), g_remove_not_specified=True):
+              call_button="Run", persist="True")
+    def magic_gui(g_table_to_process=Path.home(), lbl1='', g_create_ref_table=True, g_ref_names_path=Path.home(),
+                  lbl2='', g_remove_not_specified=True):
         pass
 
     @magic_gui.called.connect
     def close_GUI_callback():
         magic_gui.close()
+
+    @magic_gui.g_create_ref_table.changed.connect
+    def trigger_ref_table_creation():
+        # Collect and define paths
+        cur_table_to_process = magic_gui.g_table_to_process.value
+        cur_ref_names_path = os.path.join(os.path.dirname(cur_table_to_process), '_Name reference table.xlsx')
+
+        # Create ref table from the selected example Excel file, so that completion is easier
+        first_table = pd.read_excel(cur_table_to_process, sheet_name=None)
+        ref_table_draft = create_ref_table_from_file(first_table)
+        with pd.ExcelWriter(cur_ref_names_path, engine="openpyxl") as writer:
+            ref_table_draft['Ref table'].to_excel(writer, sheet_name='Ref table', index=False)
+
+            # Resizing columns
+            for c in range(0, len(ref_table_draft['Ref table'].columns)):
+                col_letter = openpyxl.utils.cell.get_column_letter(c + 1)
+                len_header = len(str(ref_table_draft['Ref table'].columns[c]))
+                r_max = min(20, ref_table_draft['Ref table'].iloc[:, c].size)
+                len_values = max([len(str(ref_table_draft['Ref table'].iat[r_tmp, c])) for r_tmp in range(r_max)])
+                len_longest_text = int(max(len_header, len_values, 8) * 1.2)
+                writer.sheets['Ref table'].column_dimensions[col_letter].width = len_longest_text
+
+        # Writing output path into the expected field in the GUI
+        magic_gui.g_ref_names_path.value = str(cur_ref_names_path)
+
+        # Prompt to edit the reference table
+        Mbox('Edit reference table', 'The draft of the reference table will now open.\nComplete the new names to '
+                                     'replace the old ones, save the file and close it.\n'
+                                     'You can then come back to the script window and press "Run"...', 0)
+
+        # Opening the excel table
+        os.startfile(cur_ref_names_path)
 
     magic_gui.show(run=True)
     table_to_process = magic_gui.g_table_to_process.value
@@ -103,10 +144,10 @@ def run(params):
     input_folder = os.path.dirname(table_to_process)
     all_files = os.listdir(input_folder)
     indiv_plist = [os.path.join(os.path.abspath(input_folder), f) for f in all_files
-                  if (f.endswith('.xlsx') and not f.startswith('~'))]
+                   if (f.endswith('.xlsx') and not f.startswith('~'))]
 
     # Discard ref table if in the same folder
-    if ref_names_path in indiv_plist:
+    if os.path.dirname(ref_names_path) == input_folder and ref_names_path in indiv_plist:
         indiv_plist.remove(ref_names_path)
 
     # Check if user wants to continue with all Excel tables
@@ -140,20 +181,32 @@ def run(params):
 
         for t in tab_names:
             if t in ref_table_info.keys():
-                # Prepare new tab
+                colB_name = cur_table[t].columns[1]
                 new_tab_name = ref_table_info[t]['New sheet name']
-                new_table[new_tab_name] = pd.DataFrame(cur_table[t].iloc[:, 0].values,
-                                                       index=cur_table[t].index, columns=[new_tab_name])
-                t_count += 1
 
-                # Add column with new headers, if in the list
-                col_names = cur_table[t].columns.tolist()
-                for c in col_names:
-                    if c in ref_table_info[t].keys():
-                        to_append = cur_table[t].loc[:, c]
-                        new_c_name = ref_table_info[t][c]
-                        new_table[new_tab_name][new_c_name] = to_append
-                        c_count += 1
+                if str(colB_name) == 'Frame 0':  # Raw table format, fresh from Aivia, where 1 tab sheet = 1 measurement
+                    # We copy the whole tab, but modify the name in A1 cell
+                    new_table[new_tab_name] = cur_table[t].copy()
+
+                    # A1 cell modification
+                    c = list(ref_table_info[t].keys())[1]
+                    new_table[new_tab_name].rename(columns={c: ref_table_info[t][c]},
+                                                   inplace=True)
+
+                else:           # Table was processed and may contain multiple columns for multiple measurements
+                    # Prepare new tab, as only columns which were specified in the ref table will be copied to the new
+                    new_table[new_tab_name] = pd.DataFrame(cur_table[t].iloc[:, 0].values,
+                                                           index=cur_table[t].index, columns=[new_tab_name])
+                    t_count += 1
+
+                    # Add column with new headers, if in the list
+                    col_names = cur_table[t].columns.tolist()
+                    for c in col_names:
+                        if c in ref_table_info[t].keys():
+                            to_append = cur_table[t].loc[:, c]
+                            new_c_name = ref_table_info[t][c]
+                            new_table[new_tab_name][new_c_name] = to_append
+                            c_count += 1
 
         # Save new Excel table
         try:
@@ -162,19 +215,19 @@ def run(params):
             with pd.ExcelWriter(out_path, engine="openpyxl") as writer:
                 for sh in new_table.keys():
                     new_table[sh].to_excel(writer, sheet_name=sh, index=False)
-    
+
                     # Resizing columns
                     for c in range(0, len(new_table[sh].columns)):
                         col_letter = openpyxl.utils.cell.get_column_letter(c + 1)
                         len_header = len(str(new_table[sh].columns[c]))
                         len_values = len(str(new_table[sh].iat[0, c]))
-                        len_longest_text = max(len_header, len_values)
+                        len_longest_text = int(max(len_header, len_values, 5) * 1.2)
                         writer.sheets[sh].column_dimensions[col_letter].width = len_longest_text
 
             mess = f'{t_count} sheets and {c_count} columns were copied for the file:\n{os.path.basename(f)}'
             print(mess)
             f_count += 1
-                        
+
         except BaseException as e:
             mess = f'Following file was skipped:\n{os.path.basename(f)}\nError message:\n{e}'
             print(mess)
@@ -194,7 +247,7 @@ def run(params):
 
 def scan_ref_table(df_from_excel):
     """
-    :param df_from_excel: from the reading of the excel file
+    :param df_from_excel: from the reading of the excel file. Keeps only the first two columns
 
     return: a dictionary:
                 {'Sheet 1 old name': {
@@ -206,24 +259,69 @@ def scan_ref_table(df_from_excel):
     """
     out_dict, tmp_dict, tmp_sheet_name = {}, {}, ""
     start_new_sheet = True
+    df_from_excel_2cols = df_from_excel.iloc[:, 0:2]
 
-    for i, ro in df_from_excel.iterrows():
+    for i, ro in df_from_excel_2cols.iterrows():
         if not ro.isna().values.all():
             # All subsequent info should be associated to the same sheet
-            if start_new_sheet:
-                tmp_sheet_name = ro.iat[0]
-                tmp_dict['New sheet name'] = ro.iat[1]
-                start_new_sheet = False
+            if not pd.isna(ro.iat[1]):
+                if start_new_sheet:
+                    tmp_sheet_name = ro.iat[0]
+                    tmp_dict['New sheet name'] = ro.iat[1]
+                    start_new_sheet = False
 
-            else:
-                tmp_dict[ro.iat[0]] = ro.iat[1]       # expected to be column names
+                else:
+                    tmp_dict[ro.iat[0]] = ro.iat[1]       # expected to be column names
 
         else:
-            out_dict[tmp_sheet_name] = tmp_dict
+            if tmp_sheet_name:
+                out_dict[tmp_sheet_name] = tmp_dict
             tmp_dict, tmp_sheet_name = {}, ""
             start_new_sheet = True
 
-    out_dict[tmp_sheet_name] = tmp_dict
+    if tmp_sheet_name:
+        out_dict[tmp_sheet_name] = tmp_dict
+
+    return out_dict
+
+
+def create_ref_table_from_file(df_from_excel_file):
+    """
+    Expects a multi tab or sheets Excel input which results in a dictionary,
+    where keys are tab names, and value is the pd.DataFrame
+    :param df_from_excel_file: dictionary
+    :return: dictionary with only one key (= one tab)
+    """
+    out_dict, ro_ind = {}, 0
+
+    # Init output dict
+    out_dict['Ref table'] = pd.DataFrame(columns=['Old name', 'New name', '', 'Type of entry'])
+
+    for k in df_from_excel_file.keys():
+        cur_tab = df_from_excel_file[k]
+
+        # Name of tab
+        out_dict['Ref table'].at[ro_ind, 'Old name'] = k
+        out_dict['Ref table'].at[ro_ind, 'Type of entry'] = 'Sheet name'
+        ro_ind += 1
+
+        # Name of measurements
+        if str(cur_tab.columns[1]) == 'Frame 0':
+            out_dict['Ref table'].at[ro_ind, 'Old name'] = str(cur_tab.columns[0])
+            out_dict['Ref table'].at[ro_ind, 'Type of entry'] = 'Measurement name'
+            ro_ind += 1
+
+        else:       # expectation: measurement names are in column B and more
+            list_of_meas = cur_tab.columns[1:]
+            for meas in list_of_meas:
+                out_dict['Ref table'].at[ro_ind, 'Old name'] = meas
+                out_dict['Ref table'].at[ro_ind, 'Type of entry'] = 'Measurement name'
+                ro_ind += 1
+
+        # Creating an empty row to separate tabs
+        out_dict['Ref table'].at[ro_ind, 'Old name'] = ''
+        out_dict['Ref table'].at[ro_ind, 'Type of entry'] = '---'
+        ro_ind += 1
 
     return out_dict
 
@@ -241,3 +339,4 @@ if __name__ == '__main__':
 
 # Changelog:
 # v1.00: - First version only keeping columns which are listed in the ref table. Others are not kept.
+# v1.10: - Adding the ability to prefill an excel table with the existing tabs and column names
