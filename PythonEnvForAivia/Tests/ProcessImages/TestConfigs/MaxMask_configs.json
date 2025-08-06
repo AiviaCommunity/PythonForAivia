@@ -1,0 +1,30 @@
+[
+    {
+        "inputImagePath": "Tests/InputTestImages/Test_8bit_YX_y200_mitoFluorOnly_T15_MaxIP.tif", 
+        "inputMaskImagePath": "Tests/InputTestImages/Test_8bit_YX_y200_mitoSegOnly_T15_MaxIP.tif", 
+        "resultPath":"Tests/ProcessImages/GroundTruths/MaxMask/outputs/Test_MaxMask_8bit_YX_y200_mitoFluorOnly_T15_MaxIP.tif", 
+        "threshold":128, 
+        "groundTruthPath":"Tests/ProcessImages/GroundTruths/MaxMask/ground_truth/Test_MaxMask_8bit_YX_y200_mitoFluorOnly_T15_MaxIP.tif"
+    },
+    {
+        "inputImagePath": "Tests/InputTestImages/Test_8bit_ZYX_y200_mitoFluorOnly_T15.tif", 
+        "inputMaskImagePath": "Tests/InputTestImages/Test_8bit_ZYX_y200_mitoSegOnly_T15.tif", 
+        "resultPath":"Tests/ProcessImages/GroundTruths/MaxMask/outputs/Test_MaxMask_8bit_ZYX_y200_mitoSegOnly_T15.tif", 
+        "threshold":128, 
+        "groundTruthPath":"Tests/ProcessImages/GroundTruths/MaxMask/ground_truth/Test_MaxMask_8bit_ZYX_y200_mitoSegOnly_T15.tif"
+    },
+    {
+        "inputImagePath": "Tests/InputTestImages/Test_8bit_TYX_y200_mitoFluorOnly_MaxIP.tif", 
+        "inputMaskImagePath": "Tests/InputTestImages/Test_8bit_TYX_y200_mitoSegOnly_MaxIP.tif", 
+        "resultPath":"Tests/ProcessImages/GroundTruths/MaxMask/outputs/Test_MaxMask_8bit_TYX_y200_mitoFluorOnly_MaxIP.tif", 
+        "threshold":128, 
+        "groundTruthPath":"Tests/ProcessImages/GroundTruths/MaxMask/ground_truth/Test_MaxMask_8bit_TYX_y200_mitoFluorOnly_MaxIP.tif"
+    },
+    {
+        "inputImagePath": "Tests/InputTestImages/Test_8bit_TZYX_y200_mitoSegOnly.tif", 
+        "inputMaskImagePath": "Tests/InputTestImages/Test_8bit_TZYX_y200_mitoSegOnly.tif", 
+        "resultPath":"Tests/ProcessImages/GroundTruths/MaxMask/outputs/Test_MaxMask_8bit_TZYX_y200_d5mi10s_i000_c000.tif", 
+        "threshold":128, 
+        "groundTruthPath":"Tests/ProcessImages/GroundTruths/MaxMask/ground_truth/Test_MaxMask_8bit_TZYX_y200_d5mi10s_i000_c000.tif"
+    }
+]
