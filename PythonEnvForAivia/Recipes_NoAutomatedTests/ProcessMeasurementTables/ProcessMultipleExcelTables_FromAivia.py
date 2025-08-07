@@ -759,7 +759,7 @@ def run(params):
 
             # Add the summary tab
             if add_summary:
-                df_summary = pd.DataFrame(empty_row)
+                df_summary = pd.DataFrame([empty_row])
                 df_grouped[summary_lbl] = df_summary
 
             else:
