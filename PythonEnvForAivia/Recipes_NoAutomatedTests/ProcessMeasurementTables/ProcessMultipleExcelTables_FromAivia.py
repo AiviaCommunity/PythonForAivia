@@ -139,7 +139,6 @@ final_name_prefix = 'Analysis Summary'
 def get_scenario(ch1=choice_list1[0], ch2=choice_list2[0], ch3=choice_list3[0], ch4=choice_list4[0],
                  spacer='', text=''):
     """
-    :param spacer:
     :param ch1:
         For batch result, select one xlsx table, an automatic search is performed to process other tables in the same batch.
     :param ch2:
@@ -1242,9 +1241,10 @@ def get_split_name(txt: str):
         obj_name = txt.split('.')[0]
         meas_name = '.'.join(txt.split('.')[1:])
 
-        # Check if text doesn't end with '...'      # TODO: Aivia 14 changes the rule to place '...' (in the middle)
-        if txt.endswith('...') or txt.endswith('..'):
-            txt = txt.removesuffix('...').removesuffix('..')
+        # Check if text doesn't end with '...' or other variations
+        re_search = re.search(r'.+[^\.](\.{2,3}|\.[2-9])', txt)
+        if re_search:
+            txt = txt.removesuffix(re_search.groups()[0])
             if '.' not in txt:
                 obj_name = ''
             else:
@@ -1417,6 +1417,7 @@ if __name__ == '__main__':
 #        - Removed Average of average per image or fov in wells, as this is not the right calculation
 #        - Stop message if combination of choices is not valid for this script
 #        - IMPORTANT: do_extract_stats_only choice was removed. Stats are provided anyway with big tables.
+# v2.33: - Better handling of measurement names from Aivia 15.0, to avoid truncated names (such as "Class Confidence")
 
 # TODO: progress bar with file in Recipes folder: '_progress_bar_file 1_from 10_'
 # TODO: Warning message when Neuron set detected but no ID
