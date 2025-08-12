@@ -370,7 +370,8 @@ def run(params):
 
         # Collect tab names from first file
         tab_names_ref = df_raw_1.keys()
-        real_tab_names_ref = [clean_tab_name(df_raw_1[tmp_t].columns[0], ) for tmp_t in df_raw_1.keys()]
+        # real_tab_names_ref = [clean_tab_name(df_raw_1[tmp_t].columns[0], ) for tmp_t in df_raw_1.keys()]
+        real_tab_names_ref = list(tab_names_ref)
         real_tab_names_ref_tmp = change_duplicate_tab_names(real_tab_names_ref)
 
         # First table in final table
@@ -692,6 +693,10 @@ def run(params):
                     _, object_set = get_split_name(k)
                     if object_set == '':        # If only one object set, name is not present
                         object_set = 'Object 1'
+                    elif object_set == '--incomplete--':
+                        Mbox('Error', 'An unexpected error occurred, please contact Aivia team.\n\nError message:\n'
+                                      'Incomplete object set detected in "do_multiple_files_as_cols" bloc (line~700).', 0)
+                        sys.exit('')
 
                     if not k.endswith('Summary') and not any([k.endswith(cgref) for cgref in class_group_cut_ref]):
                         if object_set != object_set_ref:
@@ -1009,7 +1014,10 @@ def combine_tabs(df_raw):
         elif k != 'Summary' and df_temp.empty is True:
             # Determines what type of Aivia objects (i.e. Mesh, Slice of Cell, etc.) and measurement
             meas_name, object_name = get_split_name(k)
-            if meas_name == '--incomplete--':
+            if object_name == '--incomplete--' and meas_name == '--incomplete--':
+                object_name = df_raw[k].columns[0].split('.')[0]
+                meas_name = '.'.join(df_raw[k].columns[0].split('.')[1:])
+            elif meas_name == '--incomplete--':
                 meas_name = df_raw[k].columns[0]
 
             # Copying the sheet
@@ -1025,14 +1033,18 @@ def combine_tabs(df_raw):
         else:
             # Determines what type of Aivia objects (i.e. Mesh, Slice of Cell, etc.) and measurement
             meas_name, object_name_temp = get_split_name(k)
-            if meas_name == '--incomplete--':
+            if object_name_temp == '--incomplete--' and meas_name == '--incomplete--':
+                object_name_temp = df_raw[k].columns[0].split('.')[0]
+                meas_name = '.'.join(df_raw[k].columns[0].split('.')[1:])
+            elif meas_name == '--incomplete--':
                 meas_name = (df_raw[k].columns[0])[len(object_name_temp) + 1:] \
                     if len(object_name_temp) > 0 else df_raw[k].columns[0]
+                print(f'> Real measurement name was collected within the sheet: {meas_name}')
 
             # Check if object name changed or not
             if object_name_temp != object_name and object_name_temp != '':
                 # Adding prepared sheet to main series to create a new sheet
-                df_combined[object_name] = df_temp
+                df_combined[object_name[:31]] = df_temp                 # Limiting tab name to 31 characters
 
                 # Now using new name as the new reference
                 object_name = object_name_temp
@@ -1194,7 +1206,7 @@ def clean_tab_name(ta_name):
 
     # Limit tab name to 30 characters because Excel can't handle more!!!
     if len(ta_name) > 30:
-        ta_name = ta_name[0:28] + '..'
+        ta_name = ta_name[0:27] + '...'
 
     return ta_name
 
@@ -1241,16 +1253,22 @@ def get_split_name(txt: str):
         obj_name = txt.split('.')[0]
         meas_name = '.'.join(txt.split('.')[1:])
 
-        # Check if text doesn't end with '...' or other variations
-        re_search = re.search(r'.+[^\.](\.{2,3}|\.[2-9])', txt)
-        if re_search:
-            txt = txt.removesuffix(re_search.groups()[0])
-            if '.' not in txt:
-                obj_name = ''
-            else:
-                obj_name = txt.split('.')[0]
+        # Aivia 14/15 change: '...' in the middle of the tab name, cutting sometimes both object and meas names
+        if '...' in txt[1:-1]:
+            obj_name = '--incomplete--'
             meas_name = '--incomplete--'
-            print('{}: name can\'t be retrieved from this text.'.format(txt))
+
+        else:       # pre-Aivia 14
+            # Check if text doesn't end with '...' or other variations
+            re_search = re.search(r'.+[^\.](\.{2,3}|\.[2-9])', txt)
+            if re_search:
+                txt = txt.removesuffix(re_search.groups()[0])
+                if '.' not in txt:
+                    obj_name = ''
+                else:
+                    obj_name = txt.split('.')[0]
+                meas_name = '--incomplete--'
+                print(f'> Measurement name can\'t be retrieved from this text: {txt}')
 
     return meas_name, obj_name
 
@@ -1418,6 +1436,8 @@ if __name__ == '__main__':
 #        - Stop message if combination of choices is not valid for this script
 #        - IMPORTANT: do_extract_stats_only choice was removed. Stats are provided anyway with big tables.
 # v2.33: - Better handling of measurement names from Aivia 15.0, to avoid truncated names (such as "Class Confidence")
+#        - Dismissed use of clean tab name function as it is introducing errors with Aivia 14/15 tab name format.
+#        - Change in get_split_name function as Aivia 14/15 introduce '...' in the middle of tab names
 
 # TODO: progress bar with file in Recipes folder: '_progress_bar_file 1_from 10_'
 # TODO: Warning message when Neuron set detected but no ID
