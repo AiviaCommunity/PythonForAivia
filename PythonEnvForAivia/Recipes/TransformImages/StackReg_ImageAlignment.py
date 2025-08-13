@@ -4,6 +4,7 @@ import ctypes
 import sys
 from pathlib import Path
 
+
 def search_activation_path():
     for i in range(5):
         final_path = str(Path(__file__).parents[i]) + '\\env\\Scripts\\activate_this.py'
@@ -27,7 +28,6 @@ from magicgui import magicgui
 from skimage.io import imread, imsave
 import numpy as np
 from pystackreg import StackReg
-from pystackreg.util import to_uint16
 import imagecodecs
 
 # Manual input parameters (only used if 'use' is True below)
@@ -128,15 +128,12 @@ def run(params):
     sr = StackReg(reg_type)
 
     # Register 2D timelapse
-    out_npimg = to_uint16(sr.register_transform_stack(raw_npimg, reference=reg_method))          # 16-bit
+    # out_npimg = to_uint16(sr.register_transform_stack(raw_npimg, reference=reg_method))          # 16-bit
+    out_npimg = sr.register_transform_stack(raw_npimg, reference=reg_method)
 
     # Formatting result array
-    print(raw_npimg.dtype)
-    if raw_npimg.dtype is np.dtype('uint8'):
-        final_img[...] = out_npimg[...]
-        print('Note: Output converted from 16-bit to 8-bit.')
-    else:
-        final_img = out_npimg
+    # print(raw_npimg.dtype)
+    final_img = normalize_array(out_npimg, raw_npimg.dtype)
 
     # Save result
     imsave(resultLocation, final_img)
@@ -150,6 +147,36 @@ def gui(reg_typ=[*reg_types][0], reg_meth=[*reg_methods][0]):
     pass
 
 
+def normalize_array(arr: np.ndarray, target_dtype: np.dtype) -> np.ndarray:
+    """
+    Normalize a float64 NumPy array to uint8 or uint16.
+
+    Parameters:
+    - arr: np.ndarray
+        Input array of dtype float64.
+    - target_dtype: dtype
+        Target data type: 'np.uint8' or 'np.uint16'.
+
+    Returns:
+    - np.ndarray
+        Normalized array of the specified integer type.
+    """
+    if target_dtype not in [np.uint8, np.uint16]:
+        raise ValueError("target_dtype must be 'np.uint8' or 'np.uint16'")
+
+    arr_min = np.min(arr)
+    arr_max = np.max(arr)
+
+    if target_dtype == np.uint8:
+        scale = 255
+    else:
+        scale = 65535
+
+    # Normalize and convert
+    normalized = ((arr - arr_min) / (arr_max - arr_min) * scale).astype(target_dtype)
+    return normalized
+
+
 def show_error(message):
     ctypes.windll.user32.MessageBoxW(0, message, 'Error', 0)
     sys.exit(message)
@@ -157,9 +184,7 @@ def show_error(message):
 
 if __name__ == '__main__':
     params = {}
-    params['inputRawImagePath'] = r'D:\PythonCode\_tests\2D-TL-toalign_8b.aivia.tif'
-    # params['inputRawImagePath'] = r'D:\Data\__Leica Images\UK\Alain Stewart\23-03-13 Tara Spires-Jones' \
-    #                               r'\211027_SD001_16_ba17_b1_1_Dapi_405_spyh_488_T22_555_PSD95_647.lif - Series003-1.tif'
+    params['inputRawImagePath'] = r'D:\PythonCode\_tests\XYT_236x243x6_1ch_8bit_TL_adherent-cells_APP-Migration_A12.1.aivia.tif'
     params['resultPath'] = r'D:\PythonCode\_tests\2D-TL-aligned.tif'
     params['Calibration'] = '  : 0.4 microns, 0.4 microns, 1.2 microns, 2 seconds'
     params['TCount'] = 16
@@ -170,3 +195,5 @@ if __name__ == '__main__':
 # CHANGELOG
 # v1_00 PM: - Registration with default parameters of PyStackReg
 # v1_01 PM: - New virtual env code for auto-activation
+# v1_10 PM: - Works in 15.0 but black pixels instead of white saturated ones are present in resulting image.
+#           -
