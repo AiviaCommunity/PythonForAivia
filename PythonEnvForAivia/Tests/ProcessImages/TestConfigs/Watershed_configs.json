@@ -1,0 +1,30 @@
+[
+    {
+        "inputImagePath": "Tests/InputTestImages/Test_8bit_TYX_y200_mitoSegOnly_MaxIP.tif", 
+        "resultPath":"Tests/ProcessImages/GroundTruths/Watershed/outputs/Test_Watershed_8bit_TYX_y200_mitoSegOnly_MaxIP.tif", 
+        "groundTruthPath":"Tests/ProcessImages/GroundTruths/Watershed/ground_truth/Test_Watershed_8bit_TYX_y200_mitoSegOnly_MaxIP.tif",
+		"TCount":31,
+        "ZCount":1
+    },
+    {
+        "inputImagePath": "Tests/InputTestImages/Test_8bit_TZYX_y200_mitoSegOnly.tif", 
+        "resultPath":"Tests/ProcessImages/GroundTruths/Watershed/outputs/Test_Watershed_8bit_TZYX_y200_mitoSegOnly.tif", 
+        "groundTruthPath":"Tests/ProcessImages/GroundTruths/Watershed/ground_truth/Test_Watershed_8bit_TZYX_y200_mitoSegOnly.tif",
+		"TCount":31,
+        "ZCount":11
+    },
+	{
+        "inputImagePath": "Tests/InputTestImages/Test_8bit_ZYX_y200_mitoSegOnly.aivia.tif", 
+        "resultPath":"Tests/ProcessImages/GroundTruths/Watershed/outputs/Test_Watershed_8bit_ZYX_y200_mitoSegOnly.tif", 
+        "groundTruthPath":"Tests/ProcessImages/GroundTruths/Watershed/ground_truth/Test_Watershed_8bit_ZYX_y200_mitoSegOnly.tif",
+		"TCount":1,
+        "ZCount":11
+    },
+    {
+        "inputImagePath": "Tests/InputTestImages/Test_16bit_ZYX_y200_mitoSegOnly.aivia.tif", 
+        "resultPath":"Tests/ProcessImages/GroundTruths/Watershed/outputs/Test_Watershed_16bit_ZYX_y200_mitoSegOnly.tif", 
+        "groundTruthPath":"Tests/ProcessImages/GroundTruths/Watershed/ground_truth/Test_Watershed_16bit_ZYX_y200_mitoSegOnly.tif",
+		"TCount":1,
+        "ZCount":11
+    }
+]
