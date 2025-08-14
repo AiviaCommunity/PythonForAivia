@@ -1,7 +1,7 @@
 import unittest
 import json
 import os
-from Recipes.TransformImages import MaxMask
+from Recipes.ProcessImages import MaxMask
 from Tests.utils.comparison import isIdentical
 
 

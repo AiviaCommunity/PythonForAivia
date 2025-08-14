@@ -1,7 +1,7 @@
 import unittest
 import json
 import os
-from Recipes.TransformImages import MaxSlices
+from Recipes.ProcessImages import MaxSlices
 from Tests.utils.comparison import isIdentical
 
 
