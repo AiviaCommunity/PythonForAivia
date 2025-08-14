@@ -13,6 +13,7 @@ def search_activation_path():
     return ''
 
 activate_path = search_activation_path()
+
 if os.path.exists(activate_path):
     exec(open(activate_path).read(), {'__file__': activate_path})
     print(f'Aivia virtual environment activated\nUsing python: {activate_path}')
@@ -28,6 +29,7 @@ from magicgui import magicgui
 from skimage.io import imread, imsave
 import numpy as np
 from pystackreg import StackReg
+from pystackreg.util import to_uint16
 import imagecodecs
 
 # Manual input parameters (only used if 'use' is True below)
@@ -96,18 +98,16 @@ def run(params):
     if not os.path.exists(rawImageLocation):
         show_error(f'Error: {rawImageLocation} does not exist')
 
-    # Parsing calibration string
-    # calib_values = calibration[calibration.find(':') + 2:].split(', ')
-    # calib_indiv_values = [single.split(' ') for single in calib_values]
-
-    # pix_res_XY = float(calib_indiv_values[0][0])
-    # pix_res_Z = float(calib_indiv_values[2][0])
-
     # Loading input image
     raw_npimg = imread(rawImageLocation)
     raw_dims = np.asarray(raw_npimg.shape)
     print('-- Input dimensions (expected T, Z, Y, X): ', raw_dims, ' --')
 
+    # Checking Time axis
+    if raw_npimg.shape[0] != tCount:
+        show_error(f'Error: time dimension was not found on axis 1 (TYX).'
+                   f'\nContact support team, mentioning if image was cropped or not.')
+        
     # Preparing output
     final_img = np.zeros(raw_npimg.shape).astype(raw_npimg.dtype)
 
@@ -128,12 +128,16 @@ def run(params):
     sr = StackReg(reg_type)
 
     # Register 2D timelapse
-    # out_npimg = to_uint16(sr.register_transform_stack(raw_npimg, reference=reg_method))          # 16-bit
     out_npimg = sr.register_transform_stack(raw_npimg, reference=reg_method)
+    print(f'Raw image: Min = {np.min(raw_npimg)}, Max = {np.max(raw_npimg)}')
+    print(f'Processed image: Min = {np.min(out_npimg)}, Max = {np.max(out_npimg)}')
 
     # Formatting result array
     # print(raw_npimg.dtype)
-    final_img = normalize_array(out_npimg, raw_npimg.dtype)
+    if raw_npimg.dtype is np.dtype('uint8'):
+        final_img = out_npimg.astype(raw_npimg.dtype)
+    else:
+        final_img = to_uint16(out_npimg).astype(raw_npimg.dtype)
 
     # Save result
     imsave(resultLocation, final_img)
@@ -147,36 +151,6 @@ def gui(reg_typ=[*reg_types][0], reg_meth=[*reg_methods][0]):
     pass
 
 
-def normalize_array(arr: np.ndarray, target_dtype: np.dtype) -> np.ndarray:
-    """
-    Normalize a float64 NumPy array to uint8 or uint16.
-
-    Parameters:
-    - arr: np.ndarray
-        Input array of dtype float64.
-    - target_dtype: dtype
-        Target data type: 'np.uint8' or 'np.uint16'.
-
-    Returns:
-    - np.ndarray
-        Normalized array of the specified integer type.
-    """
-    if target_dtype not in [np.uint8, np.uint16]:
-        raise ValueError("target_dtype must be 'np.uint8' or 'np.uint16'")
-
-    arr_min = np.min(arr)
-    arr_max = np.max(arr)
-
-    if target_dtype == np.uint8:
-        scale = 255
-    else:
-        scale = 65535
-
-    # Normalize and convert
-    normalized = ((arr - arr_min) / (arr_max - arr_min) * scale).astype(target_dtype)
-    return normalized
-
-
 def show_error(message):
     ctypes.windll.user32.MessageBoxW(0, message, 'Error', 0)
     sys.exit(message)
@@ -184,10 +158,13 @@ def show_error(message):
 
 if __name__ == '__main__':
     params = {}
-    params['inputRawImagePath'] = r'D:\PythonCode\_tests\XYT_236x243x6_1ch_8bit_TL_adherent-cells_APP-Migration_A12.1.aivia.tif'
+    # params['inputRawImagePath'] = r'D:\PythonCode\Python_scripts\Projects\PythonEnvForAivia_A15.0_Py3.12\Tests' \
+    #                               r'\InputTestImages\Test_8bit_TYX_Particles.aivia.tif'
+    params['inputRawImagePath'] = r'D:\PythonCode\Python_scripts\Projects\PythonEnvForAivia_A15.0_Py3.12\Tests' \
+                                  r'\InputTestImages\Test_16bit_TYX_2DandT_Nuclei_Crop.aivia.tif'
     params['resultPath'] = r'D:\PythonCode\_tests\2D-TL-aligned.tif'
     params['Calibration'] = '  : 0.4 microns, 0.4 microns, 1.2 microns, 2 seconds'
-    params['TCount'] = 16
+    params['TCount'] = 3
     params['ZCount'] = 1
 
     run(params)
