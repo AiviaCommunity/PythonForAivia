@@ -6,5 +6,13 @@
         "ZCount": 1,
         "TCount":20, 
         "Calibration":"XYZT: 1 micrometers, 1 micrometers, 1 micrometers, 1 Default"
+    },
+	{
+        "inputRawImagePath": "Tests/InputTestImages/Test_16bit_TYX_Particles.aivia.tif", 
+        "resultPath":"Tests/TransformImages/GroundTruths/StackReg_ImageAlignment/outputs/Test_StackReg_ImageAlignment_16bit_TYX_Particles.aivia.tif",
+        "groundTruthPath":"Tests/TransformImages/GroundTruths/StackReg_ImageAlignment/ground_truth/Test_StackReg_ImageAlignment_16bit_TYX_Particles.aivia.tif",
+        "ZCount": 1,
+        "TCount":20, 
+        "Calibration":"XYZT: 1 micrometers, 1 micrometers, 1 micrometers, 1 Default"
     }
 ]
