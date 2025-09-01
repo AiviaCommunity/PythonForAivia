@@ -78,8 +78,6 @@ def run(params):
         print(f"Error: {image_location} does not exist")
         return
 
-    
-
     image_data = imread(image_location)
     dims = image_data.shape
     print('-- Input dimensions (expected (T) (Z), Y, X): ', np.asarray(dims), ' --')
@@ -153,8 +151,11 @@ def run(params):
     dummy_data = np.zeros(image_data.shape, dtype=image_data.dtype)
     imwrite(result_location, dummy_data)
 
-
-    if params['skip_aivia']==1:
+    # 'skip_aivia' tag for unittest only
+    if 'skip_aivia' not in params.keys():
+        params['skip_aivia'] = 0
+        
+    if params['skip_aivia'] == 1:
         return
     if not os.path.exists(aivia_path):
         print(f"Error: {aivia_path} does not exist")
