@@ -135,7 +135,7 @@ def run(params):
     # Formatting result array
     # print(raw_npimg.dtype)
     if raw_npimg.dtype is np.dtype('uint8'):
-        final_img = out_npimg.astype(raw_npimg.dtype)
+        final_img = out_npimg.clip(min=0, max=255).astype(raw_npimg.dtype)
     else:
         final_img = to_uint16(out_npimg).astype(raw_npimg.dtype)
 
@@ -173,4 +173,4 @@ if __name__ == '__main__':
 # v1_00 PM: - Registration with default parameters of PyStackReg
 # v1_01 PM: - New virtual env code for auto-activation
 # v1_10 PM: - Works in 15.0 but black pixels instead of white saturated ones are present in resulting image.
-#           -
+# v1_11 PM: - Fixed black and white pixels in registered images for 8 bit images
