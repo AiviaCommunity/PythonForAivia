@@ -67,6 +67,6 @@ tifffile==2024.5.22
 tqdm==4.66.4
 typing_extensions==4.12.1
 urllib3==2.2.3
-Werkzeug==3.0.3
+Werkzeug==3.1.4
 wheel==0.44.0
 wrapt==1.16.0
