@@ -40,7 +40,7 @@ opt-einsum==3.3.0
 optree==0.13.0
 packaging==24.0
 pillow==10.3.0
-protobuf==4.25.5
+protobuf==4.25.8
 pyasn1==0.6.1
 pyasn1_modules==0.4.1
 Pygments==2.18.0
