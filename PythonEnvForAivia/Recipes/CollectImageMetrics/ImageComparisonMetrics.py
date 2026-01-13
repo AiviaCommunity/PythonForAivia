@@ -4,6 +4,7 @@ from skimage.io import imread, imsave
 from skimage.metrics import mean_squared_error, structural_similarity
 from skimage.exposure import match_histograms, rescale_intensity
 import ctypes
+import sys
 
 """
 Calculates SSIM map as a result of the comparison of 2 channels and metrics values (in the log file). 
@@ -56,10 +57,10 @@ def run(params):
     # Checking existence of temporary files (individual channels)
     if not os.path.exists(RTimageLocation):
         print(f'Error: {RTimageLocation} does not exist')
-        return; 
+        return 
     if not os.path.exists(GTimageLocation):
         print(f'Error: {GTimageLocation} does not exist')
-        return; 
+        return
         
     # Loading input images
     RTData = imread(RTimageLocation)
