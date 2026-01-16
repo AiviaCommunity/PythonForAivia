@@ -41,7 +41,7 @@ optree==0.13.0
 packaging==24.0
 pillow==10.3.0
 protobuf==4.25.5
-pyasn1==0.6.1
+pyasn1==0.6.2
 pyasn1_modules==0.4.1
 Pygments==2.18.0
 pyparsing==3.1.4
