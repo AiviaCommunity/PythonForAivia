@@ -68,5 +68,5 @@ tqdm==4.66.4
 typing_extensions==4.12.1
 urllib3==2.2.3
 Werkzeug==3.0.3
-wheel==0.44.0
+wheel==0.46.2
 wrapt==1.16.0
