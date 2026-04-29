@@ -86,7 +86,7 @@ def run(params):
     # Choose files (or rely on an hard coded default folder)
     # For unittest
     input_folder = params.get('inputDirectory')
-    output_folder = params.get('resultPath')
+    output_folder = params.get('resultDirectory')
         
     if not input_folder:    # when run from Aivia
         input_folder = DEFAULT_FOLDER

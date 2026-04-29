@@ -29,7 +29,7 @@ def run_test(config):
     test_guidance = config.pop('testGuidance')
     ground_truth_path = config.pop('groundTruthPath')
     ground_truth_filepath = find_experiment_file(ground_truth_path)
-    result_filepath = find_experiment_file(config.get("resultPath"))
+    result_filepath = find_experiment_file(config.get("resultDirectory"))
     print(ground_truth_filepath)
     print(result_filepath)
     ctypes.windll.user32.MessageBoxW(0, test_guidance, 'Test guidance', 0)
@@ -47,7 +47,7 @@ def generate_test_method(config):
         self.dynamic_test_generator(config)
     return test_method
 
-config_json_path = os.path.join(os.path.dirname(__file__), "TestConfigs","AiviaExperimentCreator_configs.json")
+config_json_path = os.path.join(os.path.dirname(__file__), "TestConfigs", "AiviaExperimentCreator_configs.json")
 with open(config_json_path) as f:
     configurations = json.load(f)
 
