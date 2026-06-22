@@ -1,6 +1,7 @@
 import unittest
 import json
 import os
+import ctypes
 from Recipes.TransformImages import RGBtoLuminance
 from Tests.utils.comparison import isIdentical
 
@@ -20,13 +21,13 @@ NOTE: Default is not to show the histogram (=0). The option can be turned on onc
 
 
 def run_test(config):
-	ground_truth_path_1 = config.pop('groundTruthPath_1')
-	test_guidance = config.pop('testGuidance')
-	ctypes.windll.user32.MessageBoxW(0, test_guidance, 'Test guidance', 0)
+    ground_truth_path_1 = config.pop('groundTruthPath_1')
+    test_guidance = config.pop('testGuidance')
+    ctypes.windll.user32.MessageBoxW(0, test_guidance, 'Test guidance', 0)
 
     result_value = RGBtoLuminance.run(params=config)
     
-	assert isIdentical(ground_truth_path_1, config.get('gray_c'))
+    assert isIdentical(ground_truth_path_1, config.get('gray_c'))
 
     return True
 

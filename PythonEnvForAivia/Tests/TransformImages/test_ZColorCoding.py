@@ -1,6 +1,7 @@
 import unittest
 import json
 import os
+import ctypes
 from Recipes.TransformImages import ZColorCoding
 from Tests.utils.comparison import isIdentical
 
@@ -11,15 +12,15 @@ Can be used with timepoints too, but is not adapted to 4D/5D images.'''
 
 
 def run_test(config):
-	ground_truth_path_1 = config.pop('groundTruthPath_1')
-	ground_truth_path_2 = config.pop('groundTruthPath_2')
-	ground_truth_path_3 = config.pop('groundTruthPath_3')
+    ground_truth_path_1 = config.pop('groundTruthPath_1')
+    ground_truth_path_2 = config.pop('groundTruthPath_2')
+    ground_truth_path_3 = config.pop('groundTruthPath_3')
 
     result_value = ZColorCoding.run(params=config)
     
-	assert isIdentical(ground_truth_path_1, config.get('resultPathRed'))
-	assert isIdentical(ground_truth_path_2, config.get('resultPathGreen'))
-	assert isIdentical(ground_truth_path_3, config.get('resultPathBlue'))
+    assert isIdentical(ground_truth_path_1, config.get('resultPathRed'))
+    assert isIdentical(ground_truth_path_2, config.get('resultPathGreen'))
+    assert isIdentical(ground_truth_path_3, config.get('resultPathBlue'))
 
     return True
 

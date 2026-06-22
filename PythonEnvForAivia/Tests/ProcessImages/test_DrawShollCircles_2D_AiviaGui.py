@@ -1,6 +1,7 @@
 import unittest
 import json
 import os
+import ctypes
 from Recipes.ProcessImages import DrawShollCircles_2D_AiviaGui
 from Tests.utils.comparison import isIdentical
 
@@ -11,11 +12,11 @@ User can choose center position spacing and number of circles.'''
 
 
 def run_test(config):
-	ground_truth_path_1 = config.pop('groundTruthPath_1')
+    ground_truth_path_1 = config.pop('groundTruthPath_1')
 
     result_value = DrawShollCircles_2D_AiviaGui.run(params=config)
     
-	assert isIdentical(ground_truth_path_1, config.get('resultPath'))
+    assert isIdentical(ground_truth_path_1, config.get('resultPath'))
 
     return True
 

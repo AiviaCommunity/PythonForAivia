@@ -1,6 +1,7 @@
 import unittest
 import json
 import os
+import ctypes
 from Recipes.TransformImages import ScaleImage
 from Tests.utils.comparison import isIdentical
 
@@ -13,12 +14,12 @@ Output path is given with "params" for test and hardcoded for regular run in Aiv
 
 
 def run_test(config):
-	ground_truth_path_2 = config.pop('groundTruthPath_2')
-	file_output_value_2 = config.get('fileOutputPath_2')
+    ground_truth_path_2 = config.pop('groundTruthPath_2')
+    file_output_value_2 = config.get('fileOutputPath_2')
 
     result_value = ScaleImage.run(params=config)
     
-	assert isIdentical(ground_truth_path_2, file_output_value_2)
+    assert isIdentical(ground_truth_path_2, file_output_value_2)
 
     return True
 

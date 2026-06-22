@@ -1,6 +1,7 @@
 import unittest
 import json
 import os
+import ctypes
 from Recipes.TransformImages import Rotate2D
 from Tests.utils.comparison import isIdentical
 
@@ -12,13 +13,13 @@ NOTE: Resize image option is 0 (=No) by default. A manual test with option = 1 w
 
 
 def run_test(config):
-	ground_truth_path_1 = config.pop('groundTruthPath_1')
-	test_guidance = config.pop('testGuidance')
-	ctypes.windll.user32.MessageBoxW(0, test_guidance, 'Test guidance', 0)
+    ground_truth_path_1 = config.pop('groundTruthPath_1')
+    test_guidance = config.pop('testGuidance')
+    ctypes.windll.user32.MessageBoxW(0, test_guidance, 'Test guidance', 0)
 
     result_value = Rotate2D.run(params=config)
     
-	assert isIdentical(ground_truth_path_1, config.get('resultPath'))
+    assert isIdentical(ground_truth_path_1, config.get('resultPath'))
 
     return True
 

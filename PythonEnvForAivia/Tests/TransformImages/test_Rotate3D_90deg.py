@@ -1,6 +1,7 @@
 import unittest
 import json
 import os
+import ctypes
 from Recipes.TransformImages import Rotate3D_90deg
 from Tests.utils.comparison import isIdentical
 
@@ -13,14 +14,14 @@ NOTE: when Magicgui panel appears, select Y - Clockwise'''
 
 
 def run_test(config):
-	ground_truth_path_2 = config.pop('groundTruthPath_2')
-	file_output_value_2 = config.get('fileOutputPath_2')
-	test_guidance = config.pop('testGuidance')
-	ctypes.windll.user32.MessageBoxW(0, test_guidance, 'Test guidance', 0)
+    ground_truth_path_2 = config.pop('groundTruthPath_2')
+    file_output_value_2 = config.get('fileOutputPath_2')
+    test_guidance = config.pop('testGuidance')
+    ctypes.windll.user32.MessageBoxW(0, test_guidance, 'Test guidance', 0)
 
     result_value = Rotate3D_90deg.run(params=config)
     
-	assert isIdentical(ground_truth_path_2, file_output_value_2)
+    assert isIdentical(ground_truth_path_2, file_output_value_2)
 
     return True
 

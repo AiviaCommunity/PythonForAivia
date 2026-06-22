@@ -1,6 +1,7 @@
 import unittest
 import json
 import os
+import ctypes
 from Recipes.TransformImages import MaxIntensityProjectionRGB
 from Tests.utils.comparison import isIdentical
 
@@ -12,12 +13,12 @@ Works only in 3D (not 3D+t yet).'''
 
 
 def run_test(config):
-	ground_truth_path_2 = config.pop('groundTruthPath_2')
-	file_output_value_2 = config.get('fileOutputPath_2')
+    ground_truth_path_2 = config.pop('groundTruthPath_2')
+    file_output_value_2 = config.get('fileOutputPath_2')
 
     result_value = MaxIntensityProjectionRGB.run(params=config)
     
-	assert isIdentical(ground_truth_path_2, file_output_value_2)
+    assert isIdentical(ground_truth_path_2, file_output_value_2)
 
     return True
 

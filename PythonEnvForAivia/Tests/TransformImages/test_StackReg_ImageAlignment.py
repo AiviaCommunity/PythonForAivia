@@ -1,6 +1,7 @@
 import unittest
 import json
 import os
+import ctypes
 from Recipes.TransformImages import StackReg_ImageAlignment
 from Tests.utils.comparison import isIdentical
 
@@ -14,13 +15,13 @@ NOTE: Use default GUI options'''
 
 
 def run_test(config):
-	ground_truth_path_1 = config.pop('groundTruthPath_1')
-	test_guidance = config.pop('testGuidance')
-	ctypes.windll.user32.MessageBoxW(0, test_guidance, 'Test guidance', 0)
+    ground_truth_path_1 = config.pop('groundTruthPath_1')
+    test_guidance = config.pop('testGuidance')
+    ctypes.windll.user32.MessageBoxW(0, test_guidance, 'Test guidance', 0)
 
     result_value = StackReg_ImageAlignment.run(params=config)
     
-	assert isIdentical(ground_truth_path_1, config.get('resultPath'))
+    assert isIdentical(ground_truth_path_1, config.get('resultPath'))
 
     return True
 

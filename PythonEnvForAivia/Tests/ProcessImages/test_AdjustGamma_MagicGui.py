@@ -1,6 +1,7 @@
 import unittest
 import json
 import os
+import ctypes
 from Recipes.ProcessImages import AdjustGamma_MagicGui
 from Tests.utils.comparison import isIdentical
 
@@ -8,17 +9,17 @@ from Tests.utils.comparison import isIdentical
 '''
 Adjusts gamma of the input channel pixelwise according to O = I**gamma.
 This extra version of this script is a good example on how to quickly implement a GUI popup with MagicGui.
-NOTE: When running test, a GUI will pop up for each test.  '''
+NOTE: When running test, a GUI will pop up for each test. Select 0.75 and press Run '''
 
 
 def run_test(config):
-	ground_truth_path_1 = config.pop('groundTruthPath_1')
-	test_guidance = config.pop('testGuidance')
-	ctypes.windll.user32.MessageBoxW(0, test_guidance, 'Test guidance', 0)
+    ground_truth_path_1 = config.pop('groundTruthPath_1')
+    test_guidance = config.pop('testGuidance')
+    ctypes.windll.user32.MessageBoxW(0, test_guidance, 'Test guidance', 0)
 
     result_value = AdjustGamma_MagicGui.run(params=config)
     
-	assert isIdentical(ground_truth_path_1, config.get('resultPath'))
+    assert isIdentical(ground_truth_path_1, config.get('resultPath'))
 
     return True
 

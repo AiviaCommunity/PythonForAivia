@@ -1,6 +1,7 @@
 import unittest
 import json
 import os
+import ctypes
 from Recipes.ProcessImages import SuperpixelPainter
 from Tests.utils.comparison import isIdentical
 
@@ -16,19 +17,19 @@ Improvements that would make this more usable are:
 - Add ability to change color of superpixel boundaries
 - Convert the Compactness slider to a log scale
 - Scale image to screen size (need convert selected pixels by scaling factor)
-NOTE: When running test, a GUI will pop up for each test. Default configs: Compactness: 1, Marker: 10'''
+NOTE: When running test, a GUI will pop up for each test. Default configs: Compactness: 1, Marker: 10. Paint the superpixel in the TOP-LEFT corner of the image.'''
 
 
 def run_test(config):
-	ground_truth_path_1 = config.pop('groundTruthPath_1')
-	ground_truth_path_2 = config.pop('groundTruthPath_2')
-	test_guidance = config.pop('testGuidance')
-	ctypes.windll.user32.MessageBoxW(0, test_guidance, 'Test guidance', 0)
+    ground_truth_path_1 = config.pop('groundTruthPath_1')
+    ground_truth_path_2 = config.pop('groundTruthPath_2')
+    test_guidance = config.pop('testGuidance')
+    ctypes.windll.user32.MessageBoxW(0, test_guidance, 'Test guidance', 0)
 
     result_value = SuperpixelPainter.run(params=config)
     
-	assert isIdentical(ground_truth_path_1, config.get('resultObjectPath'))
-	assert isIdentical(ground_truth_path_2, config.get('resultMaskPath'))
+    assert isIdentical(ground_truth_path_1, config.get('resultObjectPath'))
+    assert isIdentical(ground_truth_path_2, config.get('resultMaskPath'))
 
     return True
 
