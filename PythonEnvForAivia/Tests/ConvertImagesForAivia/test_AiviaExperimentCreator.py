@@ -24,7 +24,7 @@ import glob
 def run_test(config):
     test_guidance = config.pop('testGuidance')
     ground_truth_filepath = config.pop('groundTruthPath_2')
-    result_filepath = config.pop('fileOutputPath_2')
+    result_filepath = config.get('fileOutputPath_2')
     print(result_filepath)
     ctypes.windll.user32.MessageBoxW(0, test_guidance, 'Test guidance', 0)
     AiviaExperimentCreator.run(config)

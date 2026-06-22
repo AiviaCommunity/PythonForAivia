@@ -1,6 +1,6 @@
 [
     {
-        "inputDirectory": "Tests/InputTestImages/dicom_stack",
+        "inputDirectory": "Tests/_InputImages",
 		"fileOutputPath_2": "Tests/ConvertImagesForAivia/AiviaExperimentCreator/OUT_Experiment_test.aiviaexperiment",
 		"groundTruthPath_2": "Tests/ConvertImagesForAivia/AiviaExperimentCreator/GT_Experiment_test.aiviaexperiment",
 		"testGuidance":"Select this test image \n'Tests/_InputImages/Test_8bit_YX_BinaryCylinder1_MaxIP.tif'\n\nThen press Open.\nWhen the prompt asks you if you want to select more images, click YES and select the image \n'Tests/_InputImages/Test_8bit_YX_BinaryCylinder2_MaxIP.tif'\n\nThen Press Open\nWhen the prompt asks you if you want to select more images, hit NO.\n\nWARNING: GT file contains hardcoded paths.\nCheck these before running the test."
