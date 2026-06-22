@@ -4,13 +4,24 @@ import os
 from Recipes.TransformImages import StackReg_ImageAlignment
 from Tests.utils.comparison import isIdentical
 
-# NOTE: When running this test< just accept default parameters for each run on the popup window
-# Don't change the parameter values in the popup window
+
+'''
+Performs a 2D registration for timelapses, using PyStackReg. No parameters available (default ones only).
+Methods:
+- Previous = Use previous image to calculate registration
+- First = First timepoint is used as the fixed reference.
+NOTE: Use default GUI options'''
+
 
 def run_test(config):
-    ground_truth_path = config.pop('groundTruthPath')
-    StackReg_ImageAlignment.run(params=config)
-    assert isIdentical(ground_truth_path, config.get("resultPath"))
+	ground_truth_path_1 = config.pop('groundTruthPath_1')
+	test_guidance = config.pop('testGuidance')
+	ctypes.windll.user32.MessageBoxW(0, test_guidance, 'Test guidance', 0)
+
+    result_value = StackReg_ImageAlignment.run(params=config)
+    
+	assert isIdentical(ground_truth_path_1, config.get('resultPath'))
+
     return True
 
 class Test_StackReg_ImageAlignment(unittest.TestCase):
@@ -22,7 +33,7 @@ def generate_test_method(config):
         self.dynamic_test_generator(config)
     return test_method
 
-config_json_path = os.path.join(os.path.dirname(__file__), "TestConfigs","StackReg_ImageAlignment_configs.json")
+config_json_path = os.path.join(os.path.dirname(__file__), "StackReg_ImageAlignment", "Config_StackReg_ImageAlignment.json")
 with open(config_json_path) as f:
     configurations = json.load(f)
 

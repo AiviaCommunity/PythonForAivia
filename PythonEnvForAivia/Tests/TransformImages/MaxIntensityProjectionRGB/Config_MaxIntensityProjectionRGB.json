@@ -1,0 +1,11 @@
+[
+    {
+        "inputBluePath": "Tests\\_InputImages\\Test_8bit_ZYX_Cells3D_ch2_nuc.tif",
+        "inputGreenPath": "Tests\\_InputImages\\Test_8bit_ZYX_Cells3D_ch1_mb.tif",
+        "inputRedPath": "Tests\\_InputImages\\Test_8bit_ZYX_Cells3D_ch2_nuc.tif",
+        "fileOutputPath_2": "Tests\\TransformImages\\MaxIntensityProjectionRGB\\OUT_Test_8bit_ZYX_Cells3D_ch2_nuc_processed.tif",
+        "groundTruthPath_2": "Tests\\TransformImages\\MaxIntensityProjectionRGB\\GT_Test_8bit_ZYX_Cells3D_ch2_nuc_processed.tif",
+        "ZCount": 60,
+        "TCount": 1
+    }
+]

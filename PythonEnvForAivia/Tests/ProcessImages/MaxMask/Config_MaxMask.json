@@ -1,0 +1,47 @@
+[
+    {
+        "inputMaskImagePath": "Tests\\_InputImages\\Test_8bit_TYX_mitoFluo_MaxIP.tif",
+        "inputImagePath": "Tests\\_InputImages\\Test_8bit_TYX_mitoFluo_MaxIP.tif",
+        "threshold": "128",
+        "resultPath": "Tests\\ProcessImages\\MaxMask\\OUT_Test_8bit_TYX_mitoFluo_MaxIP_Masked Image.tif",
+        "groundTruthPath_1": "Tests\\ProcessImages\\MaxMask\\GT_Test_8bit_TYX_mitoFluo_MaxIP_Masked Image.tif",
+        "ZCount": 1,
+        "TCount": 31
+    },
+    {
+        "inputMaskImagePath": "Tests\\_InputImages\\Test_8bit_ZYX_mitoFluo_T15.tif",
+        "inputImagePath": "Tests\\_InputImages\\Test_8bit_ZYX_mitoFluo_T15.tif",
+        "threshold": "128",
+        "resultPath": "Tests\\ProcessImages\\MaxMask\\OUT_Test_8bit_ZYX_mitoFluo_T15_Masked Image.tif",
+        "groundTruthPath_1": "Tests\\ProcessImages\\MaxMask\\GT_Test_8bit_ZYX_mitoFluo_T15_Masked Image.tif",
+        "ZCount": 11,
+        "TCount": 1
+    },
+    {
+        "inputMaskImagePath": "Tests\\_InputImages\\Test_16bit_ZYX_mitoFluo_T15.tif",
+        "inputImagePath": "Tests\\_InputImages\\Test_16bit_ZYX_mitoFluo_T15.tif",
+        "threshold": "128",
+        "resultPath": "Tests\\ProcessImages\\MaxMask\\OUT_Test_16bit_ZYX_mitoFluo_T15_Masked Image.tif",
+        "groundTruthPath_1": "Tests\\ProcessImages\\MaxMask\\GT_Test_16bit_ZYX_mitoFluo_T15_Masked Image.tif",
+        "ZCount": 11,
+        "TCount": 1
+    },
+    {
+        "inputMaskImagePath": "Tests\\_InputImages\\Test_8bit_TZYX_mitoFluo.tif",
+        "inputImagePath": "Tests\\_InputImages\\Test_8bit_TZYX_mitoFluo.tif",
+        "threshold": "128",
+        "resultPath": "Tests\\ProcessImages\\MaxMask\\OUT_Test_8bit_TZYX_mitoFluo_Masked Image.tif",
+        "groundTruthPath_1": "Tests\\ProcessImages\\MaxMask\\GT_Test_8bit_TZYX_mitoFluo_Masked Image.tif",
+        "ZCount": 11,
+        "TCount": 31
+    },
+    {
+        "inputMaskImagePath": "Tests\\_InputImages\\Test_16bit_TZYX_mitoFluo.tif",
+        "inputImagePath": "Tests\\_InputImages\\Test_16bit_TZYX_mitoFluo.tif",
+        "threshold": "128",
+        "resultPath": "Tests\\ProcessImages\\MaxMask\\OUT_Test_16bit_TZYX_mitoFluo_Masked Image.tif",
+        "groundTruthPath_1": "Tests\\ProcessImages\\MaxMask\\GT_Test_16bit_TZYX_mitoFluo_Masked Image.tif",
+        "ZCount": 11,
+        "TCount": 31
+    }
+]

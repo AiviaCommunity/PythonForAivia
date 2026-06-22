@@ -22,7 +22,7 @@ def generate_test_method(config):
         self.dynamic_test_generator(config)
     return test_method
 
-config_json_path = os.path.join(os.path.dirname(__file__), "TestConfigs","DICOMStackToTIFF_configs.json")
+config_json_path = os.path.join(os.path.dirname(__file__), "DICOMStackToTIFF", "Config_DICOMStackToTIFF.json")
 with open(config_json_path) as f:
     configurations = json.load(f)
 

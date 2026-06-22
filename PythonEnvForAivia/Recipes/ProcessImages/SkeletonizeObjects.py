@@ -43,7 +43,7 @@ Aivia objects
 """
 
 # [INPUT Name:inputImagePath Type:string DisplayName:'Input Image']
-# [INPUT Name:threshold Type:int DisplayName:'Threshold' Default:128 Min:0 Max:65535]
+# [INPUT Name:threshold Type:int DisplayName:'Threshold' Default:100 Min:0 Max:65535]
 # [INPUT Name:radius Type:int DisplayName:'Closing Radius' Default:0 Min:0 Max:100]
 # [OUTPUT Name:resultImagePath Type:string DisplayName:'Skeleton Image']
 # [OUTPUT Name:resultObjectPath Type:string DisplayName:'Skeleton Objects' Objects:3D MinSize:0.0 MaxSize:1000000000.0]

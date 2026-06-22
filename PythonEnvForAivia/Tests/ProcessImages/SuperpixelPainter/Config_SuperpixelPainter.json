@@ -1,0 +1,12 @@
+[
+    {
+        "inputImagePath": "Tests\\_InputImages\\Test_8bit_YX_mitoFluo_T15_MaxIP.tif",
+        "resultObjectPath": "Tests\\ProcessImages\\SuperpixelPainter\\OUT_Test_8bit_YX_mitoFluo_T15_MaxIP_Mask Objects.tif",
+        "groundTruthPath_1": "Tests\\ProcessImages\\SuperpixelPainter\\GT_Test_8bit_YX_mitoFluo_T15_MaxIP_Mask Objects.tif",
+        "resultMaskPath": "Tests\\ProcessImages\\SuperpixelPainter\\OUT_Test_8bit_YX_mitoFluo_T15_MaxIP_Mask Image.tif",
+        "groundTruthPath_2": "Tests\\ProcessImages\\SuperpixelPainter\\GT_Test_8bit_YX_mitoFluo_T15_MaxIP_Mask Image.tif",
+        "testGuidance": "NOTE: When running test, a GUI will pop up for each test. Default configs: Compactness: 1, Marker: 10. Paint the superpixel in the TOP-LEFT corner of the image.",
+        "ZCount": 1,
+        "TCount": 1
+    }
+]

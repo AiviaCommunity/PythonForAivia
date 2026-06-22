@@ -151,3 +151,4 @@ if __name__ == '__main__':
     run(params)
 
 # v2.01: - New virtual env code for auto-activation
+# v2.10: - changed imports for matplotlib colormaps, added logic for handling t and z series images separately

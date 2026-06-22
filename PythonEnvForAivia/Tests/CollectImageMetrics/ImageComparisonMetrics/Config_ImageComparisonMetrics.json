@@ -1,0 +1,35 @@
+[
+    {
+        "inputRTImagePath": "Tests\\_InputImages\\Test_8bit_YX_mitoFluo_T15_MaxIP.tif",
+        "inputGTImagePath": "Tests\\_InputImages\\Test_8bit_YX_mitoSeg_T15_MaxIP.tif",
+        "resultPath": "Tests\\CollectImageMetrics\\ImageComparisonMetrics\\OUT_Test_8bit_YX_mitoSeg_T15_MaxIP_SSIM image.tif",
+        "groundTruthPath_1": "Tests\\CollectImageMetrics\\ImageComparisonMetrics\\GT_Test_8bit_YX_mitoSeg_T15_MaxIP_SSIM image.tif",
+        "resultPathAdj": "Tests\\CollectImageMetrics\\ImageComparisonMetrics\\OUT_Test_8bit_YX_mitoSeg_T15_MaxIP_GT Hist match image.tif",
+        "groundTruthPath_2": "Tests\\CollectImageMetrics\\ImageComparisonMetrics\\GT_Test_8bit_YX_mitoSeg_T15_MaxIP_GT Hist match image.tif",
+        "groundTruthValueList_3": "10376.419324430479, 0.29743232254715524",
+        "ZCount": 1,
+        "TCount": 1
+    },
+    {
+        "inputRTImagePath": "Tests\\_InputImages\\Test_8bit_TYX_mitoFluo_MaxIP.tif",
+        "inputGTImagePath": "Tests\\_InputImages\\Test_8bit_TYX_mitoSeg_MaxIP.tif",
+        "resultPath": "Tests\\CollectImageMetrics\\ImageComparisonMetrics\\OUT_Test_8bit_TYX_mitoSeg_MaxIP_SSIM image.tif",
+        "groundTruthPath_1": "Tests\\CollectImageMetrics\\ImageComparisonMetrics\\GT_Test_8bit_TYX_mitoSeg_MaxIP_SSIM image.tif",
+        "resultPathAdj": "Tests\\CollectImageMetrics\\ImageComparisonMetrics\\OUT_Test_8bit_TYX_mitoSeg_MaxIP_GT Hist match image.tif",
+        "groundTruthPath_2": "Tests\\CollectImageMetrics\\ImageComparisonMetrics\\GT_Test_8bit_TYX_mitoSeg_MaxIP_GT Hist match image.tif",
+        "groundTruthValueList_3": "10688.767559486101, 0.28280655192335585",
+        "ZCount": 1,
+        "TCount": 31
+    },
+    {
+        "inputRTImagePath": "Tests\\_InputImages\\Test_8bit_ZYX_mitoFluo_T15.tif",
+        "inputGTImagePath": "Tests\\_InputImages\\Test_8bit_ZYX_mitoSeg_T15.tif",
+        "resultPath": "Tests\\CollectImageMetrics\\ImageComparisonMetrics\\OUT_Test_8bit_ZYX_mitoSeg_T15_SSIM image.tif",
+        "groundTruthPath_1": "Tests\\CollectImageMetrics\\ImageComparisonMetrics\\GT_Test_8bit_ZYX_mitoSeg_T15_SSIM image.tif",
+        "resultPathAdj": "Tests\\CollectImageMetrics\\ImageComparisonMetrics\\OUT_Test_8bit_ZYX_mitoSeg_T15_GT Hist match image.tif",
+        "groundTruthPath_2": "Tests\\CollectImageMetrics\\ImageComparisonMetrics\\GT_Test_8bit_ZYX_mitoSeg_T15_GT Hist match image.tif",
+        "groundTruthValueList_3": "24135.69579375848, 0.13827314978697997",
+        "ZCount": 11,
+        "TCount": 1
+    }
+]

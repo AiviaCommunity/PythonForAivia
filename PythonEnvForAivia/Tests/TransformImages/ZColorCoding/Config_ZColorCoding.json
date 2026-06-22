@@ -1,0 +1,62 @@
+[
+    {
+        "inputImagePath": "Tests\\_InputImages\\Test_8bit_TYX_mitoFluo_MaxIP.tif",
+        "colorMapChoice": "0",
+        "resultPathRed": "Tests\\TransformImages\\ZColorCoding\\OUT_Test_8bit_TYX_mitoFluo_MaxIP_Z Coloring - Red.tif",
+        "groundTruthPath_1": "Tests\\TransformImages\\ZColorCoding\\GT_Test_8bit_TYX_mitoFluo_MaxIP_Z Coloring - Red.tif",
+        "resultPathGreen": "Tests\\TransformImages\\ZColorCoding\\OUT_Test_8bit_TYX_mitoFluo_MaxIP_Z Coloring - Green.tif",
+        "groundTruthPath_2": "Tests\\TransformImages\\ZColorCoding\\GT_Test_8bit_TYX_mitoFluo_MaxIP_Z Coloring - Green.tif",
+        "resultPathBlue": "Tests\\TransformImages\\ZColorCoding\\OUT_Test_8bit_TYX_mitoFluo_MaxIP_Z Coloring - Blue.tif",
+        "groundTruthPath_3": "Tests\\TransformImages\\ZColorCoding\\GT_Test_8bit_TYX_mitoFluo_MaxIP_Z Coloring - Blue.tif",
+        "ZCount": 1,
+        "TCount": 31
+    },
+    {
+        "inputImagePath": "Tests\\_InputImages\\Test_8bit_ZYX_mitoFluo_T15.tif",
+        "colorMapChoice": "0",
+        "resultPathRed": "Tests\\TransformImages\\ZColorCoding\\OUT_Test_8bit_ZYX_mitoFluo_T15_Z Coloring - Red.tif",
+        "groundTruthPath_1": "Tests\\TransformImages\\ZColorCoding\\GT_Test_8bit_ZYX_mitoFluo_T15_Z Coloring - Red.tif",
+        "resultPathGreen": "Tests\\TransformImages\\ZColorCoding\\OUT_Test_8bit_ZYX_mitoFluo_T15_Z Coloring - Green.tif",
+        "groundTruthPath_2": "Tests\\TransformImages\\ZColorCoding\\GT_Test_8bit_ZYX_mitoFluo_T15_Z Coloring - Green.tif",
+        "resultPathBlue": "Tests\\TransformImages\\ZColorCoding\\OUT_Test_8bit_ZYX_mitoFluo_T15_Z Coloring - Blue.tif",
+        "groundTruthPath_3": "Tests\\TransformImages\\ZColorCoding\\GT_Test_8bit_ZYX_mitoFluo_T15_Z Coloring - Blue.tif",
+        "ZCount": 11,
+        "TCount": 1
+    },
+    {
+        "inputImagePath": "Tests\\_InputImages\\Test_16bit_ZYX_mitoFluo_T15.tif",
+        "colorMapChoice": "0",
+        "resultPathRed": "Tests\\TransformImages\\ZColorCoding\\OUT_Test_16bit_ZYX_mitoFluo_T15_Z Coloring - Red.tif",
+        "groundTruthPath_1": "Tests\\TransformImages\\ZColorCoding\\GT_Test_16bit_ZYX_mitoFluo_T15_Z Coloring - Red.tif",
+        "resultPathGreen": "Tests\\TransformImages\\ZColorCoding\\OUT_Test_16bit_ZYX_mitoFluo_T15_Z Coloring - Green.tif",
+        "groundTruthPath_2": "Tests\\TransformImages\\ZColorCoding\\GT_Test_16bit_ZYX_mitoFluo_T15_Z Coloring - Green.tif",
+        "resultPathBlue": "Tests\\TransformImages\\ZColorCoding\\OUT_Test_16bit_ZYX_mitoFluo_T15_Z Coloring - Blue.tif",
+        "groundTruthPath_3": "Tests\\TransformImages\\ZColorCoding\\GT_Test_16bit_ZYX_mitoFluo_T15_Z Coloring - Blue.tif",
+        "ZCount": 11,
+        "TCount": 1
+    },
+    {
+        "inputImagePath": "Tests\\_InputImages\\Test_8bit_TZYX_mitoFluo.tif",
+        "colorMapChoice": "0",
+        "resultPathRed": "Tests\\TransformImages\\ZColorCoding\\OUT_Test_8bit_TZYX_mitoFluo_Z Coloring - Red.tif",
+        "groundTruthPath_1": "Tests\\TransformImages\\ZColorCoding\\GT_Test_8bit_TZYX_mitoFluo_Z Coloring - Red.tif",
+        "resultPathGreen": "Tests\\TransformImages\\ZColorCoding\\OUT_Test_8bit_TZYX_mitoFluo_Z Coloring - Green.tif",
+        "groundTruthPath_2": "Tests\\TransformImages\\ZColorCoding\\GT_Test_8bit_TZYX_mitoFluo_Z Coloring - Green.tif",
+        "resultPathBlue": "Tests\\TransformImages\\ZColorCoding\\OUT_Test_8bit_TZYX_mitoFluo_Z Coloring - Blue.tif",
+        "groundTruthPath_3": "Tests\\TransformImages\\ZColorCoding\\GT_Test_8bit_TZYX_mitoFluo_Z Coloring - Blue.tif",
+        "ZCount": 11,
+        "TCount": 31
+    },
+    {
+        "inputImagePath": "Tests\\_InputImages\\Test_16bit_TZYX_mitoFluo.tif",
+        "colorMapChoice": "0",
+        "resultPathRed": "Tests\\TransformImages\\ZColorCoding\\OUT_Test_16bit_TZYX_mitoFluo_Z Coloring - Red.tif",
+        "groundTruthPath_1": "Tests\\TransformImages\\ZColorCoding\\GT_Test_16bit_TZYX_mitoFluo_Z Coloring - Red.tif",
+        "resultPathGreen": "Tests\\TransformImages\\ZColorCoding\\OUT_Test_16bit_TZYX_mitoFluo_Z Coloring - Green.tif",
+        "groundTruthPath_2": "Tests\\TransformImages\\ZColorCoding\\GT_Test_16bit_TZYX_mitoFluo_Z Coloring - Green.tif",
+        "resultPathBlue": "Tests\\TransformImages\\ZColorCoding\\OUT_Test_16bit_TZYX_mitoFluo_Z Coloring - Blue.tif",
+        "groundTruthPath_3": "Tests\\TransformImages\\ZColorCoding\\GT_Test_16bit_TZYX_mitoFluo_Z Coloring - Blue.tif",
+        "ZCount": 11,
+        "TCount": 31
+    }
+]

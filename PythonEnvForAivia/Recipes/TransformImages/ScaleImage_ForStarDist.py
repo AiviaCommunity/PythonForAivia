@@ -40,7 +40,7 @@ New image:
 
 """
 
-ref_stardist_diameter = 15      # in Pixels (empirical value based on 1 segmentation result taking average diameter)
+ref_stardist_diameter = 15      # in Pixels (empirical value based on 1 segmentation result taking average diameter) - 15
 conversion_threshold = 0.2      # difference between the scaling factor and 1, to see if it's worth doing the scaling
 
 interpolation_mode = 1  # 0: Nearest-neighbor, 1: Bi-linear , 2: Bi-quadratic, 3: Bi-cubic, 4: Bi-quartic, 5: Bi-quintic
@@ -50,7 +50,7 @@ IJTimeUnit = {'Minutes': 'min', 'Seconds': 's', 'Milliseconds': 'ms', 'Microseco
 
 # [INPUT Name:inputImagePath Type:string DisplayName:'Input Channel']
 # [INPUT Name:performZscaling Type:int DisplayName:'Perform Z scaling (1=Yes)' Default:1 Min:0 Max:1]
-# [INPUT Name:typicalObjDiam Type:double DisplayName:'Typical Object Diameter' Default:1.0 Min:0.001 Max:1000.0]
+# [INPUT Name:typicalObjDiam Type:double DisplayName:'Typical Object Diameter' Default:10.0 Min:0.001 Max:1000.0]
 # [OUTPUT Name:resultPath Type:string DisplayName:'Duplicate of input']
 def run(params):
     image_org = params['EntryPoint']
@@ -146,7 +146,12 @@ def run(params):
         out_data = img_as_ubyte(scaled_img)
         print('img_as_ubyte')
 
-    tmp_path = result_location.replace('.tif', '-scaled.tif')
+    # Output path depending on test mode or not
+    if 'fileOutputPath_2' in params.keys():
+        tmp_path = params['fileOutputPath_2']
+    else:
+        tmp_path = result_location.replace('.tif', '-scaled.tif')
+
     meta_info = {'axes': axes}
     if real_XYZ_calibration and zCount > 1:
         meta_info.update({'spacing': str(final_Z_cal), 'unit': 'um'})
@@ -169,8 +174,6 @@ def run(params):
     dummy_data = np.zeros(image_data.shape, dtype=image_data.dtype)
     imwrite(result_location, dummy_data)
 
-    if params['skip_aivia']==1:
-        return
     # Run external program
     cmdLine = 'start \"\" \"' + aivia_path + '\" \"' + tmp_path + '\"'
 
@@ -181,6 +184,7 @@ def run(params):
 if __name__ == '__main__':
     params = {'inputImagePath': 'D:\\PythonCode\\_tests\\3D-TL-toalign.aivia.tif',
               'resultPath': 'D:\\PythonCode\\_tests\\Output.tif',
+              'fileOutputPath_2': 'D:\\PythonCode\\_tests\\Output.tif',
               'TCount': 16,
               'ZCount': 41,
               'Calibration': 'XYZT: 0.4 Micrometers, 0.4 Micrometers, 1.2 Micrometers, 599.9996 Seconds',
@@ -193,3 +197,4 @@ if __name__ == '__main__':
 
 # CHANGELOG
 # v1_00: - Comes from ScaleImage_1_30_noGUI_IJstyle.py
+# v1_01: - Added an extra key in params for Unit test output

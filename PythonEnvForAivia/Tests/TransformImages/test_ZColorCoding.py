@@ -4,19 +4,23 @@ import os
 from Recipes.TransformImages import ZColorCoding
 from Tests.utils.comparison import isIdentical
 
-# NOTE: When running this test< just accept default parameters for each run on the popup window
-# Don't change the parameter values in the popup window
+
+'''
+Uses matplotlib colormaps to retrieve colors used to create color gradients applied to individual Z planes in a 3D image.
+Can be used with timepoints too, but is not adapted to 4D/5D images.'''
+
 
 def run_test(config):
-    ground_truth_path = config.pop('groundTruthPath')
-    ZColorCoding.run(params=config)
-    groundtruth_red = ground_truth_path.replace(".tif","_red.tif")
-    groundtruth_green = ground_truth_path.replace(".tif","_green.tif")
-    groundtruth_blue = ground_truth_path.replace(".tif","_blue.tif")
+	ground_truth_path_1 = config.pop('groundTruthPath_1')
+	ground_truth_path_2 = config.pop('groundTruthPath_2')
+	ground_truth_path_3 = config.pop('groundTruthPath_3')
+
+    result_value = ZColorCoding.run(params=config)
     
-    assert isIdentical(groundtruth_red, config.get("resultPathRed"))
-    assert isIdentical(groundtruth_green, config.get("resultPathGreen"))
-    assert isIdentical(groundtruth_blue, config.get("resultPathBlue"))
+	assert isIdentical(ground_truth_path_1, config.get('resultPathRed'))
+	assert isIdentical(ground_truth_path_2, config.get('resultPathGreen'))
+	assert isIdentical(ground_truth_path_3, config.get('resultPathBlue'))
+
     return True
 
 class Test_ZColorCoding(unittest.TestCase):
@@ -28,7 +32,7 @@ def generate_test_method(config):
         self.dynamic_test_generator(config)
     return test_method
 
-config_json_path = os.path.join(os.path.dirname(__file__), "TestConfigs","ZColorCoding_configs.json")
+config_json_path = os.path.join(os.path.dirname(__file__), "ZColorCoding", "Config_ZColorCoding.json")
 with open(config_json_path) as f:
     configurations = json.load(f)
 

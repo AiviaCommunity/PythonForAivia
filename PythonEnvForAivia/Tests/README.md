@@ -46,30 +46,24 @@ To run specific tests (for example, [`AdjustGamma.py`](../Recipes/ProcessImages/
 python -m unittest Tests.ProcessImages.test_AdjustGamma
 ```
 
-Running tests will result in each recipe's respective output to be saved to a folder called `GroundTruth/RECIPE_NAME/outputs/`, which is then cross referenced against `GroundTruth/RECIPE_NAME/ground_truth/`
+Running tests will result in each recipe's respective output to be saved to a folder called `RECIPE_NAME` with `OUT_` prefix, which is then cross referenced against files with `GT_` prefix
 
 # Test Directory Structure
 
 ## List of helper directories
-- [InputTestImages](../Tests/InputTestImages/): All input images for tests are stored here
+- [_InputImages](../Tests/_InputImages/): All input images for tests are stored here
 - [utils](../Tests/utils/): Common functions shared across all tests are stored here.
 
 
 Tests mimic the folder structure of [`Recipes`](../Recipes/). Each family (directory) of recipes has the following structure (an example for `AdjustGamma.py` is provided below:
 ```
 ProcessImages
-├── GroundTruths                       # Contains ground truth images and outputs
-│   │                                  #        of  ALL unit tests
-│   ├── AdjustGamma                    # Contains ground truth images and outputs
-│   │   │                              #        of  only AdjustGamma unit tests
-│   │   ├── ground_truth               #
-│   │   └── outputs                    #
-│   └── ...
-├── TestConfigs                        # Contains all .json configuration files for all tests
-│                                      #        The json config for AdjustGamma is titled:
-│                                      #        AdjustGamma_configs.json.
-│                                      #        All Configs have the suffix "_configs.json."
-└── test_AdjustGamma.py                # Unit tests for AdjustGamma recipe
+├── AdjustGamma                    # Contains .json config, ground truth images and outputs of only AdjustGamma unit tests
+│                                  #        The json config for AdjustGamma is titled: Config_AdjustGamma.json.
+│                                  #        Ground Truth files have the `GT_` prefix
+│                                  #        Output files from test have the `OUT_` prefix
+│
+└── test_AdjustGamma.py            # Unit tests for AdjustGamma recipe
 ```
 
 # Tests Performed
@@ -80,38 +74,38 @@ ProcessImages
 
 Parent Directory | Recipe Name | 2D | 2D +T | 3D | 3D+T | RGB
 -|-|-|-|-|-|-
-[ProcessImages](../Recipes/ProcessImages)| [`AdjustGamma.py`](../Recipes/ProcessImages/AdjustGamma.py)|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	
-[ProcessImages](../Recipes/ProcessImages)| [`AdjustGamma_MagicGui.py`](../Recipes/ProcessImages/AdjustGamma_MagicGui.py)|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	
-[ProcessImages](../Recipes/ProcessImages)| [`AdjustSigmoid.py`](../Recipes/ProcessImages/AdjustSigmoid.py)|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	
-[ProcessImages](../Recipes/ProcessImages)| [`DrawArrayOfShapes_2D.py`](../Recipes/ProcessImages/DrawArrayOfShapes_2D.py)|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|		|		|		
-[ProcessImages](../Recipes/ProcessImages)| [`DrawShapes_2D.py`](../Recipes/ProcessImages/DrawShapes_2D.py)|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|		|		|		
-[ProcessImages](../Recipes/ProcessImages)| [`DrawShollCircles_2D_AiviaGui.py`](../Recipes/ProcessImages/DrawShollCircles_2D_AiviaGui.py)|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|		|		|		
-[ProcessImages](../Recipes/ProcessImages)| [`MeijeringNeuriteness.py`](../Recipes/ProcessImages/MeijeringNeuriteness.py)|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|		|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|		|		![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)
-[ProcessImages](../Recipes/ProcessImages)| [`MorphologicalTexture.py`](../Recipes/ProcessImages/MorphologicalTexture.py)|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|		
-[ProcessImages](../Recipes/ProcessImages)| [`ShapeIndex.py`](../Recipes/ProcessImages/ShapeIndex.py)|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|		
-[ProcessImages](../Recipes/ProcessImages)| [`Skeletonize.py`](../Recipes/ProcessImages/Skeletonize.py)|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|		
-[ProcessImages](../Recipes/ProcessImages)| [`SkeletonizeObjects.py`](../Recipes/ProcessImages/SkeletonizeObjects.py)|		|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|		|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|		
-[ProcessImages](../Recipes/ProcessImages)| [`SplitLabeledMask.py`](../Recipes/ProcessImages/SplitLabeledMask.py)|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|		|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|		|		
-[ProcessImages](../Recipes/ProcessImages)| [`SuperpixelPainter.py`](../Recipes/ProcessImages/SuperpixelPainter.py)|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|		|		|		|		
-[ProcessImages](../Recipes/ProcessImages)| [`ThresholdWithoutBorders2D.py`](../Recipes/ProcessImages/ThresholdWithoutBorders2D.py)|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|		|		|		
-[ProcessImages](../Recipes/ProcessImages)| [`ThresholdWithoutBorders3D.py`](../Recipes/ProcessImages/ThresholdWithoutBorders3D.py)|		|		|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|		
-[ProcessImages](../Recipes/ProcessImages)| [`Watershed.py`](../Recipes/ProcessImages/Watershed.py)|		|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|		
-[TransformImages](../Recipes/TransformImages)| [`MaxIntensityProjection.py`](../Recipes/TransformImages/MaxIntensityProjection.py)|		|		|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|		|	
-[TransformImages](../Recipes/TransformImages)| [`MaxIntensityProjectionRGB.py`](../Recipes/TransformImages/MaxIntensityProjectionRGB.py)|		|		|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|		|	
-[TransformImages](../Recipes/TransformImages)| [`MaxMask.py`](../Recipes/TransformImages/MaxMask.py)|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|	
-[TransformImages](../Recipes/TransformImages)| [`MaxSlices.py`](../Recipes/TransformImages/MaxSlices.py)|		|		|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|	
-[TransformImages](../Recipes/TransformImages)| [`MinSlices.py`](../Recipes/TransformImages/MinSlices.py)|		|		|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|	
-[TransformImages](../Recipes/TransformImages)| [`RGBtoLuminance.py`](../Recipes/TransformImages/RGBtoLuminance.py)|		|		|		|		|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)
-[TransformImages](../Recipes/TransformImages)| [`Rotate2D.py`](../Recipes/TransformImages/Rotate2D.py)|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|		|		|		|	
-[TransformImages](../Recipes/TransformImages)| [`Rotate3D_90deg.py`](../Recipes/TransformImages/Rotate3D_90deg.py)|		|		|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|		|	
-[TransformImages](../Recipes/TransformImages)| [`ScaleImage.py`](../Recipes/TransformImages/ScaleImage.py)|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|	
-[TransformImages](../Recipes/TransformImages)| [`ScaleImage_ForStarDist.py`](../Recipes/TransformImages/ScaleImage_ForStarDist.py)|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|	
-[TransformImages](../Recipes/TransformImages)| [`StackReg_ImageAlignment.py`](../Recipes/TransformImages/StackReg_ImageAlignment.py)|		|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|		|		|	
-[TransformImages](../Recipes/TransformImages)| [`ZColorCoding.py`](../Recipes/TransformImages/ZColorCoding.py)|		|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|	
-[ConvertImagesForAivia](../Recipes/ConvertImagesForAivia)| [`AiviaExperimentCreator.py`](../Recipes/ConvertImagesForAivia/AiviaExperimentCreator.py)|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|	![#f03c15](https://placehold.co/15x15/f03c15/f03c15.png)	|	![#f03c15](https://placehold.co/15x15/f03c15/f03c15.png)	|	![#f03c15](https://placehold.co/15x15/f03c15/f03c15.png)	|	![#f03c15](https://placehold.co/15x15/f03c15/f03c15.png)
-[ConvertImagesForAivia](../Recipes/ConvertImagesForAivia)| [`DICOMStackToTIFF.py`](../Recipes/ConvertImagesForAivia/DICOMStackToTIFF.py)|		|		|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|		|	
-[ConvertImagesForAivia](../Recipes/ConvertImagesForAivia)| [`MultiWellPlateConverter_OperaPhenix.py`](../Recipes/ConvertImagesForAivia/MultiWellPlateConverter_OperaPhenix.py)|		|		|		|		|	
-[CollectImageMetrics](../Recipes/CollectImageMetrics)| [`CalculateIntersectionOverUnion.py`](../Recipes/CollectImageMetrics/CalculateIntersectionOverUnion.py)	|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|	
-[CollectImageMetrics](../Recipes/CollectImageMetrics)| [`ImageComparisonMetrics.py`](../Recipes/CollectImageMetrics/ImageComparisonMetrics.py)	|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)	|	![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png)
-[CollectImageMetrics](../Recipes/CollectImageMetrics)| [`ReadTiffTags.py`](../Recipes/CollectImageMetrics/ReadTiffTags.py)	|	![#f03c15](https://placehold.co/15x15/f03c15/f03c15.png)	|	![#f03c15](https://placehold.co/15x15/f03c15/f03c15.png)	|	![#f03c15](https://placehold.co/15x15/f03c15/f03c15.png)	|	![#f03c15](https://placehold.co/15x15/f03c15/f03c15.png)	|	![#f03c15](https://placehold.co/15x15/f03c15/f03c15.png)
-
+[ProcessImages](../Recipes/ProcessImages)| [`AdjustGamma.py`](../Recipes/ProcessImages/AdjustGamma.py)|	![#c5f015][g]	|	![#c5f015][g]	|	![#c5f015][g]	|	![#c5f015][g]	|	
+[ProcessImages](../Recipes/ProcessImages)| [`AdjustGamma_MagicGui.py`](../Recipes/ProcessImages/AdjustGamma_MagicGui.py)|	![#c5f015][g]	|	![#c5f015][g]	|	![#c5f015][g]	|	![#c5f015][g]	|
+[ProcessImages](../Recipes/ProcessImages)| [`AdjustSigmoid.py`](../Recipes/ProcessImages/AdjustSigmoid.py)|	![#c5f015][g]	|	![#c5f015][g]	|	![#c5f015][g]	|	![#c5f015][g]	|	
+[ProcessImages](../Recipes/ProcessImages)| [`DrawArrayOfShapes_2D.py`](../Recipes/ProcessImages/DrawArrayOfShapes_2D.py)|	![#c5f015][g]	|	![#c5f015][g]	|		|		|		
+[ProcessImages](../Recipes/ProcessImages)| [`DrawShapes_2D.py`](../Recipes/ProcessImages/DrawShapes_2D.py)|	![#c5f015][g]	|	![#c5f015][g]	|		|		|		
+[ProcessImages](../Recipes/ProcessImages)| [`DrawShollCircles_2D_AiviaGui.py`](../Recipes/ProcessImages/DrawShollCircles_2D_AiviaGui.py)|	![#c5f015][g]	|	![#c5f015][g]	|		|		|		
+[ProcessImages](../Recipes/ProcessImages)| [`MeijeringNeuriteness.py`](../Recipes/ProcessImages/MeijeringNeuriteness.py)|	![#c5f015][g]	|		|	![#c5f015][g]	|		|
+[ProcessImages](../Recipes/ProcessImages)| [`MorphologicalTexture.py`](../Recipes/ProcessImages/MorphologicalTexture.py)|	![#c5f015][g]	|	![#c5f015][g]	|	![#c5f015][g]	|	![#c5f015][g]	|		
+[ProcessImages](../Recipes/ProcessImages)| [`ShapeIndex.py`](../Recipes/ProcessImages/ShapeIndex.py)|	![#c5f015][g]	|	![#c5f015][g]	|	![#c5f015][g]	|	![#c5f015][g]	|		
+[ProcessImages](../Recipes/ProcessImages)| [`Skeletonize.py`](../Recipes/ProcessImages/Skeletonize.py)|	![#c5f015][g]	|	![#c5f015][g]	|	![#c5f015][g]	|	![#c5f015][g]	|		
+[ProcessImages](../Recipes/ProcessImages)| [`SkeletonizeObjects.py`](../Recipes/ProcessImages/SkeletonizeObjects.py)|		|		|	![#c5f015][g]	|	![#c5f015][g]	|		
+[ProcessImages](../Recipes/ProcessImages)| [`SplitLabeledMask.py`](../Recipes/ProcessImages/SplitLabeledMask.py)|	![#c5f015][g]	|		|	![#c5f015][g]	|		|		
+[ProcessImages](../Recipes/ProcessImages)| [`SuperpixelPainter.py`](../Recipes/ProcessImages/SuperpixelPainter.py)|	![#c5f015][g]	|		|		|		|		
+[ProcessImages](../Recipes/ProcessImages)| [`ThresholdWithoutBorders2D.py`](../Recipes/ProcessImages/ThresholdWithoutBorders2D.py)|	![#c5f015][g]	|	![#c5f015][g]	|		|		|		
+[ProcessImages](../Recipes/ProcessImages)| [`ThresholdWithoutBorders3D.py`](../Recipes/ProcessImages/ThresholdWithoutBorders3D.py)|		|		|	![#c5f015][g]	|	![#c5f015][g]	|		
+[ProcessImages](../Recipes/ProcessImages)| [`Watershed.py`](../Recipes/ProcessImages/Watershed.py)|	![#c5f015][g]	|	![#c5f015][g]	|	![#c5f015][g]	|	![#c5f015][g]	|		
+[TransformImages](../Recipes/TransformImages)| [`MaxIntensityProjection.py`](../Recipes/TransformImages/MaxIntensityProjection.py)|		|		|	![#c5f015][g]	|		|	
+[TransformImages](../Recipes/TransformImages)| [`MaxIntensityProjectionRGB.py`](../Recipes/TransformImages/MaxIntensityProjectionRGB.py)|		|		|	![#c5f015][g]	|		|	
+[TransformImages](../Recipes/TransformImages)| [`MaxMask.py`](../Recipes/TransformImages/MaxMask.py)|	![#c5f015][g]	|	![#c5f015][g]	|	![#c5f015][g]	|	![#c5f015][g]	|	
+[TransformImages](../Recipes/TransformImages)| [`MaxSlices.py`](../Recipes/TransformImages/MaxSlices.py)|		|		|	![#c5f015][g]	|	![#c5f015][g]	|	
+[TransformImages](../Recipes/TransformImages)| [`MinSlices.py`](../Recipes/TransformImages/MinSlices.py)|		|		|	![#c5f015][g]	|	![#c5f015][g]	|	
+[TransformImages](../Recipes/TransformImages)| [`RGBtoLuminance.py`](../Recipes/TransformImages/RGBtoLuminance.py)|		|		|		|		|	![#c5f015][g]
+[TransformImages](../Recipes/TransformImages)| [`Rotate2D.py`](../Recipes/TransformImages/Rotate2D.py)|	![#c5f015][g]	|		|		|		|	
+[TransformImages](../Recipes/TransformImages)| [`Rotate3D_90deg.py`](../Recipes/TransformImages/Rotate3D_90deg.py)|		|		|	![#c5f015][g]	|		|	
+[TransformImages](../Recipes/TransformImages)| [`ScaleImage.py`](../Recipes/TransformImages/ScaleImage.py)|	![#c5f015][g]	|	![#c5f015][g]	|	![#c5f015][g]	|	![#c5f015][g]	|	
+[TransformImages](../Recipes/TransformImages)| [`ScaleImage_ForStarDist.py`](../Recipes/TransformImages/ScaleImage_ForStarDist.py)|	![#c5f015][g]	|	![#c5f015][g]	|	![#c5f015][g]	|	![#c5f015][g]	|	
+[TransformImages](../Recipes/TransformImages)| [`StackReg_ImageAlignment.py`](../Recipes/TransformImages/StackReg_ImageAlignment.py)|		|	![#c5f015][g]	|		|		|	
+[TransformImages](../Recipes/TransformImages)| [`ZColorCoding.py`](../Recipes/TransformImages/ZColorCoding.py)|		|	![#c5f015][g]	|	![#c5f015][g]	|	![#c5f015][g]	|	
+[ConvertImagesForAivia](../Recipes/ConvertImagesForAivia)| [`AiviaExperimentCreator.py`](../Recipes/ConvertImagesForAivia/AiviaExperimentCreator.py)|	![#c5f015][g]	|	![#f03c15][r]	|	![#f03c15][r]	|	![#f03c15][r]	|	![#f03c15][r]
+[ConvertImagesForAivia](../Recipes/ConvertImagesForAivia)| [`DICOMStackToTIFF.py`](../Recipes/ConvertImagesForAivia/DICOMStackToTIFF.py)|		|		|	![#c5f015][g]	|		|	
+[CollectImageMetrics](../Recipes/CollectImageMetrics)| [`CalculateIntersectionOverUnion.py`](../Recipes/CollectImageMetrics/CalculateIntersectionOverUnion.py)	|	![#c5f015][g]	|	![#c5f015][g]	|	![#c5f015][g]	|	![#c5f015][g]	|	
+[CollectImageMetrics](../Recipes/CollectImageMetrics)| [`ImageComparisonMetrics.py`](../Recipes/CollectImageMetrics/ImageComparisonMetrics.py)	|	![#c5f015][g]	|	![#c5f015][g]	|	![#c5f015][g]	|	![#c5f015][g]	|
+ 
+[g]: https://placehold.co/15x15/c5f015/c5f015.png
+[r]: https://placehold.co/15x15/f03c15/f03c15.png

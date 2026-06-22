@@ -12,6 +12,7 @@ def search_activation_path():
     return ''
 
 activate_path = search_activation_path()
+activate_path = r'D:\PythonCode\Python_scripts\Projects\PythonEnvForAivia\env\Scripts\activate_this.py'            # TODO: test line to remove!
 
 if os.path.exists(activate_path):
     exec(open(activate_path).read(), {'__file__': activate_path})
@@ -86,7 +87,6 @@ def run(params):
     # Choose files (or rely on an hard coded default folder)
     # For unittest
     input_folder = params.get('inputDirectory')
-    output_folder = params.get('resultDirectory')
         
     if not input_folder:    # when run from Aivia
         input_folder = DEFAULT_FOLDER
@@ -121,9 +121,6 @@ def run(params):
 
     if ans == 2:
         sys.exit('Process terminated by user')
-
-    if not output_folder:    # when run from Aivia
-        output_folder = input_folder
 
     # Standardizing n groups to existing layouts
     if 2 < n_groups < 4:
@@ -178,8 +175,14 @@ def run(params):
     well_sx, well_sy = plate_box_info[-2:]
 
     # Main LOOP -----------------------------------------------------------------------------------------------
+    # Output path depending on test mode or not
+    if 'fileOutputPath_2' in params.keys():
+        out_path = params['fileOutputPath_2']
+    else:
+        out_path = os.path.join(input_folder, 'Experiment_{}.aiviaexperiment'.format(datetime.date.today()))
+
     # Init output file
-    output_file = open(os.path.join(output_folder, 'Experiment_{}.aiviaexperiment'.format(datetime.date.today())), 'w+')
+    output_file = open(out_path, 'w+')
     output_file.write(str(PREFIX))
 
     # Define well XY indexes
@@ -260,16 +263,16 @@ def run(params):
     mess = 'The experiment file was saved as:\n{}'.format(output_file.name)
     with concurrent.futures.ThreadPoolExecutor() as executor:
         future = executor.submit(Mbox, 'Process completed', mess, 0)
-    print(mess)  # for log
+    print(mess)  # for
 
     # If run from Aivia, not unittest
     if not params.get('inputDirectory'):
-        os.startfile(output_folder)
+        os.startfile(input_folder)
 
 
 def well_coord(args):
     # Returns [y, x] well center coordinates as a list
-    [nx, ny, start_x, start_y, well_dist_x, well_dist_y, well_size_x, well_size_y] = args
+    [nx, ny, start_x, start_y, well_dist_x, well_dist_y, well_size_x, well_size_y] = args  # TODO !!!!!!!!!!!!!!!
 
     end_x = start_x + well_dist_x * (nx - 1)
     end_y = start_y + well_dist_y * (ny - 1)
@@ -321,3 +324,4 @@ if __name__ == '__main__':
 # v1.31: - New virtual env code for auto-activation
 # v1.32: - Support for pixel size metadata from Aivia 14.1. Added several new layouts
 #        - Added handling of unittest I/O
+# v1.33: - Added key in params for output path of file during tests

@@ -5,12 +5,25 @@ from Recipes.ProcessImages import ShapeIndex
 from Tests.utils.comparison import isIdentical
 
 
-# NOTE: This class does not work for RGB images
+'''
+Computes the shape index as derived from the eigenvalues of the Hessian
+and returns it as a new channel scaled to 8bit space.
+
+Different values indicate convexity/concavitiy and shapes:
+ - cups / caps
+ - troughs / domes
+ - ruts / ridges
+ - saddle ruts / saddle ridges
+ - saddles'''
+
 
 def run_test(config):
-    ground_truth_path = config.pop('groundTruthPath')
-    ShapeIndex.run(params=config)
-    assert isIdentical(ground_truth_path, config.get("resultPath"))
+	ground_truth_path_1 = config.pop('groundTruthPath_1')
+
+    result_value = ShapeIndex.run(params=config)
+    
+	assert isIdentical(ground_truth_path_1, config.get('resultPath'))
+
     return True
 
 class Test_ShapeIndex(unittest.TestCase):
@@ -22,7 +35,7 @@ def generate_test_method(config):
         self.dynamic_test_generator(config)
     return test_method
 
-config_json_path = os.path.join(os.path.dirname(__file__), "TestConfigs","ShapeIndex_configs.json")
+config_json_path = os.path.join(os.path.dirname(__file__), "ShapeIndex", "Config_ShapeIndex.json")
 with open(config_json_path) as f:
     configurations = json.load(f)
 

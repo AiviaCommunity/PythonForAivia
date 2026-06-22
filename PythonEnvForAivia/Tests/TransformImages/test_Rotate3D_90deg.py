@@ -4,14 +4,24 @@ import os
 from Recipes.TransformImages import Rotate3D_90deg
 from Tests.utils.comparison import isIdentical
 
-# NOTE: When running this test< just accept default parameters for each run on the popup window
-# Don't change the parameter values in the popup window
+
+'''
+Scales the input channel up or down (isotropic factor) and rotates the volume 90 degrees around one axis (not centered).
+Works only for 3D (not timelapses) and for single channels.
+Output path is given with "params" for test and hardcoded for regular run in Aivia
+NOTE: when Magicgui panel appears, select Y - Clockwise'''
+
 
 def run_test(config):
-    ground_truth_path = config.pop('groundTruthPath')
-    Rotate3D_90deg.run(params=config)
-    new_path =  config.get("resultPath").replace('.tif', '-rotated.tif')
-    assert isIdentical(ground_truth_path, new_path)
+	ground_truth_path_2 = config.pop('groundTruthPath_2')
+	file_output_value_2 = config.get('fileOutputPath_2')
+	test_guidance = config.pop('testGuidance')
+	ctypes.windll.user32.MessageBoxW(0, test_guidance, 'Test guidance', 0)
+
+    result_value = Rotate3D_90deg.run(params=config)
+    
+	assert isIdentical(ground_truth_path_2, file_output_value_2)
+
     return True
 
 class Test_Rotate3D_90deg(unittest.TestCase):
@@ -23,7 +33,7 @@ def generate_test_method(config):
         self.dynamic_test_generator(config)
     return test_method
 
-config_json_path = os.path.join(os.path.dirname(__file__), "TestConfigs","Rotate3D_90deg_configs.json")
+config_json_path = os.path.join(os.path.dirname(__file__), "Rotate3D_90deg", "Config_Rotate3D_90deg.json")
 with open(config_json_path) as f:
     configurations = json.load(f)
 

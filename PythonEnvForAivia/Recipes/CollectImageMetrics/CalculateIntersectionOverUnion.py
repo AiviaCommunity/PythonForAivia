@@ -50,21 +50,26 @@ def run(params):
     RTData = imread(RTimageLocation)
     GTData = imread(GTimageLocation)
     
-    # Get masks from any image where positive mask has intensity above or equal 1
-    component1 = np.where(RTData == 0, 0, 1).astype(np.uint8)
-    component2 = np.where(GTData == 0, 0, 1).astype(np.uint8)
-    
-    overlap = component1*component2 # Logical AND
-    union = component1 + component2 # Logical OR
-    
-    IoU = overlap.sum()/float(union.sum())
+    # Force binary via > 0
+    mask1 = RTData > 0
+    mask2 = GTData > 0
+
+    intersection_mask = np.logical_and(mask1, mask2)
+    intersection = intersection_mask.sum()
+    union = np.logical_or(mask1, mask2).sum()
+
+    if union == 0:
+        IoU = 0.0
+    else:
+        IoU = intersection / union
+
     print(f'___ Intersection over Union = {IoU} ___')    # Value appears in the log if Verbosity option is set to 'Everything'
     
     # Display result too in a popup
     ctypes.windll.user32.MessageBoxW(0, str(IoU), 'Intersection over Union', 0)
     
     # Convert intersection to 8-bit range
-    outputData = rescale_intensity(overlap, out_range='uint8').astype(RTData.dtype)
+    outputData = intersection_mask.astype(RTData.dtype) * np.iinfo(RTData.dtype).max
     
     imsave(resultLocation, outputData)
     

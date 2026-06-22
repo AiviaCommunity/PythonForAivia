@@ -68,10 +68,17 @@ def run(params):
             current_z = image_data[z, :, :]
             curr_z_nozeros = np.where(current_z > 0, current_z, -1)
             output_data[z, :, :] = np.where(curr_z_nozeros < proj_output, 0, vbin)
+            
+    else:           # (image is 3D+t)
+        pass
         
+    if 'fileOutputPath_2' in params.keys():
+        temp_location = params['fileOutputPath_2']
+    else:
         temp_location = result_location.replace('.tif', 'tmp.tif')
-        imsave(temp_location, proj_output)
+    imsave(temp_location, proj_output)
     
+    # Dummy save to avoid error in Aivia
     imsave(result_location, output_data)
     
     aivia_path = params['CallingExecutable']
@@ -90,8 +97,12 @@ def run(params):
 
 if __name__ == '__main__':
     params = {}
-    params['inputImagePath'] = 'D:\\python-tests\\3Dimage.aivia.tif'
-    params['resultPath'] = 'D:\\python-tests\\3DMaxMap.tif'
+    params['inputImagePath'] = r'D:\\python-tests\3Dimage.aivia.tif'
+    params['resultPath'] = r'D:\python-tests\dummy.aivia.tif'
+    params['fileOutputPath_2'] = r'D:\python-tests\3DMaxMap.tif'
     params['TCount'] = 1
     
     run(params)
+
+# CHANGELOG
+# v1.01: - Added an extra key in params for Unit test output

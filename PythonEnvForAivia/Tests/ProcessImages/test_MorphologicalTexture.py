@@ -5,12 +5,26 @@ from Recipes.ProcessImages import MorphologicalTexture
 from Tests.utils.comparison import isIdentical
 
 
-# NOTE: This class does not work for RGB images
+'''
+Estimates image texure using morphological transforms.
+Closing and opening operations are performed in parallel. A disk kernel
+is used for 2D images, and a ball kernel is used for 3D images. The user
+defines the size of these kernels.
+The closing returns the max value within that neighborhood for every
+voxel, resulting in a brighter image.
+The opening returns the min value within that neighborhood for every
+voxel, resulting in a darker image.
+The opening result is then subtracted from the closing result to create
+the final output.'''
+
 
 def run_test(config):
-    ground_truth_path = config.pop('groundTruthPath')
-    MorphologicalTexture.run(params=config)
-    assert isIdentical(ground_truth_path, config.get("resultPath"))
+	ground_truth_path_1 = config.pop('groundTruthPath_1')
+
+    result_value = MorphologicalTexture.run(params=config)
+    
+	assert isIdentical(ground_truth_path_1, config.get('resultPath'))
+
     return True
 
 class Test_MorphologicalTexture(unittest.TestCase):
@@ -22,7 +36,7 @@ def generate_test_method(config):
         self.dynamic_test_generator(config)
     return test_method
 
-config_json_path = os.path.join(os.path.dirname(__file__), "TestConfigs","MorphologicalTexture_configs.json")
+config_json_path = os.path.join(os.path.dirname(__file__), "MorphologicalTexture", "Config_MorphologicalTexture.json")
 with open(config_json_path) as f:
     configurations = json.load(f)
 

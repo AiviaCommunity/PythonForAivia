@@ -46,8 +46,8 @@ IJTimeUnit = {'Minutes': 'min', 'Seconds': 's', 'Milliseconds': 'ms', 'Microseco
 
 # [INPUT Name:inputImagePath Type:string DisplayName:'Input Channel']
 # [INPUT Name:scaleDirection Type:int DisplayName:'Down or Upscale (0 or 1)' Default:0 Min:0 Max:1]
-# [INPUT Name:scaleFactorZ Type:double DisplayName:'Z scale factor' Default:1.0 Min:0.01 Max:20.0]
-# [INPUT Name:scaleFactorXY Type:double DisplayName:'XY scale factor' Default:1.0 Min:0.01 Max:20.0]
+# [INPUT Name:scaleFactorZ Type:double DisplayName:'Z scale factor' Default:1.5 Min:0.01 Max:20.0]
+# [INPUT Name:scaleFactorXY Type:double DisplayName:'XY scale factor' Default:2.0 Min:0.01 Max:20.0]
 # [OUTPUT Name:resultPath Type:string DisplayName:'Duplicate of input']
 def run(params):
     image_org = params['EntryPoint']
@@ -76,6 +76,10 @@ def run(params):
     
     if not os.path.exists(image_location):
         print(f"Error: {image_location} does not exist")
+        return
+
+    if not os.path.exists(aivia_path):
+        print(f"Error: {aivia_path} does not exist")
         return
 
     image_data = imread(image_location)
@@ -120,7 +124,6 @@ def run(params):
     scaled_img = transform.rescale(image_data, final_scale, interpolation_mode)
 
     # Formatting result array
-    
     if image_data.dtype is np.dtype('u2'):
         out_data = img_as_uint(scaled_img)
         print('img_as_uint')
@@ -128,7 +131,12 @@ def run(params):
         out_data = img_as_ubyte(scaled_img)
         print('img_as_ubyte')
 
-    tmp_path = result_location.replace('.tif', '-scaled.tif')
+    # Output path depending on test mode or not
+    if 'fileOutputPath_2' in params.keys():
+        tmp_path = params['fileOutputPath_2']
+    else:
+        tmp_path = result_location.replace('.tif', '-scaled.tif')
+
     meta_info = {'axes': axes}
     if real_XYZ_calibration and zCount > 1:
         meta_info.update({'spacing': str(final_Z_cal), 'unit': 'um'})
@@ -151,15 +159,6 @@ def run(params):
     dummy_data = np.zeros(image_data.shape, dtype=image_data.dtype)
     imwrite(result_location, dummy_data)
 
-    # 'skip_aivia' tag for unittest only
-    if 'skip_aivia' not in params.keys():
-        params['skip_aivia'] = 0
-        
-    if params['skip_aivia'] == 1:
-        return
-    if not os.path.exists(aivia_path):
-        print(f"Error: {aivia_path} does not exist")
-        return
     # Run external program
     cmdLine = 'start \"\" \"' + aivia_path + '\" \"' + tmp_path + '\"'
 
@@ -169,7 +168,8 @@ def run(params):
 
 if __name__ == '__main__':
     params = {'inputImagePath': 'D:\\PythonCode\\_tests\\3D-TL-toalign.aivia.tif',
-              'resultPath': 'D:\\PythonCode\\_tests\\Output.tif',
+              'resultPath': 'D:\\PythonCode\\_tests\\dummy-output.tif',
+              'fileOutputPath_2': 'D:\\PythonCode\\_tests\\Output.tif',
               'TCount': 16,
               'ZCount': 41,
               'Calibration': 'XYZT: 0.4 Micrometers, 0.4 Micrometers, 1.2 Micrometers, 599.9996 Seconds',
@@ -189,3 +189,4 @@ if __name__ == '__main__':
 # v1_20: - Adding time handling (but not rescale with time dimension)
 # v1_30: - Fusing with parallel version updating aivia_path using new API params value
 #        - Time increment is not recognized in Aivia at the moment
+# v1_31: - Added an extra key in params for Unit test output

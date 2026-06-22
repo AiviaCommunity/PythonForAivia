@@ -1,0 +1,46 @@
+[
+    {
+        "inputImagePath": "Tests\\_InputImages\\Test_8bit_ZYX_mitoSeg_T15.tif",
+        "radius": "0",
+        "threshold": "100",
+        "resultObjectPath": "Tests\\ProcessImages\\SkeletonizeObjects\\OUT_Test_8bit_ZYX_mitoSeg_T15_Skeleton Objects.tif",
+        "groundTruthPath_1": "Tests\\ProcessImages\\SkeletonizeObjects\\GT_Test_8bit_ZYX_mitoSeg_T15_Skeleton Objects.tif",
+        "resultImagePath": "Tests\\ProcessImages\\SkeletonizeObjects\\OUT_Test_8bit_ZYX_mitoSeg_T15_Skeleton Image.tif",
+        "groundTruthPath_2": "Tests\\ProcessImages\\SkeletonizeObjects\\GT_Test_8bit_ZYX_mitoSeg_T15_Skeleton Image.tif",
+        "ZCount": 11,
+        "TCount": 1
+    },
+    {
+        "inputImagePath": "Tests\\_InputImages\\Test_16bit_ZYX_mitoSeg_T15.tif",
+        "radius": "0",
+        "threshold": "100",
+        "resultObjectPath": "Tests\\ProcessImages\\SkeletonizeObjects\\OUT_Test_16bit_ZYX_mitoSeg_T15_Skeleton Objects.tif",
+        "groundTruthPath_1": "Tests\\ProcessImages\\SkeletonizeObjects\\GT_Test_16bit_ZYX_mitoSeg_T15_Skeleton Objects.tif",
+        "resultImagePath": "Tests\\ProcessImages\\SkeletonizeObjects\\OUT_Test_16bit_ZYX_mitoSeg_T15_Skeleton Image.tif",
+        "groundTruthPath_2": "Tests\\ProcessImages\\SkeletonizeObjects\\GT_Test_16bit_ZYX_mitoSeg_T15_Skeleton Image.tif",
+        "ZCount": 11,
+        "TCount": 1
+    },
+    {
+        "inputImagePath": "Tests\\_InputImages\\Test_8bit_TZYX_mitoSeg.tif",
+        "radius": "0",
+        "threshold": "100",
+        "resultObjectPath": "Tests\\ProcessImages\\SkeletonizeObjects\\OUT_Test_8bit_TZYX_mitoSeg_Skeleton Objects.tif",
+        "groundTruthPath_1": "Tests\\ProcessImages\\SkeletonizeObjects\\GT_Test_8bit_TZYX_mitoSeg_Skeleton Objects.tif",
+        "resultImagePath": "Tests\\ProcessImages\\SkeletonizeObjects\\OUT_Test_8bit_TZYX_mitoSeg_Skeleton Image.tif",
+        "groundTruthPath_2": "Tests\\ProcessImages\\SkeletonizeObjects\\GT_Test_8bit_TZYX_mitoSeg_Skeleton Image.tif",
+        "ZCount": 11,
+        "TCount": 31
+    },
+    {
+        "inputImagePath": "Tests\\_InputImages\\Test_16bit_TZYX_mitoSeg.tif",
+        "radius": "0",
+        "threshold": "100",
+        "resultObjectPath": "Tests\\ProcessImages\\SkeletonizeObjects\\OUT_Test_16bit_TZYX_mitoSeg_Skeleton Objects.tif",
+        "groundTruthPath_1": "Tests\\ProcessImages\\SkeletonizeObjects\\GT_Test_16bit_TZYX_mitoSeg_Skeleton Objects.tif",
+        "resultImagePath": "Tests\\ProcessImages\\SkeletonizeObjects\\OUT_Test_16bit_TZYX_mitoSeg_Skeleton Image.tif",
+        "groundTruthPath_2": "Tests\\ProcessImages\\SkeletonizeObjects\\GT_Test_16bit_TZYX_mitoSeg_Skeleton Image.tif",
+        "ZCount": 11,
+        "TCount": 31
+    }
+]

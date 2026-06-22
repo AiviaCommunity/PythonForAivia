@@ -42,7 +42,7 @@ Aivia channel
 """
 
 # [INPUT Name:inputImagePath Type:string DisplayName:'Input Image']
-# [INPUT Name:threshold Type:int DisplayName:'Threshold' Default:128 Min:0 Max:65535]
+# [INPUT Name:threshold Type:int DisplayName:'Threshold' Default:100 Min:0 Max:65535]
 # [INPUT Name:radius Type:int DisplayName:'Closing Radius' Default:0 Min:0 Max:100]
 # [OUTPUT Name:resultPath Type:string DisplayName:'Skeleton']
 def run(params):

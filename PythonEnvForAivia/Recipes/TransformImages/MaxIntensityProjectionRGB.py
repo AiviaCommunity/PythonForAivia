@@ -76,9 +76,13 @@ def run(params):
             proj_output[:, :, 2-c] = np.amax(image_data[c], axis = 0)
     
     # Saving 3 channel image as single tif
-    temp_location = result_location.replace('.tif', 'tmp.tif')
+    if 'fileOutputPath_2' in params.keys():
+        temp_location = params['fileOutputPath_2']
+    else:
+        temp_location = result_location.replace('.tif', 'tmp.tif')
     imsave(temp_location, proj_output.astype(np.uint8))
-    
+
+    # Dummy save to avoid error in Aivia
     imsave(result_location, output_data)
     
     aivia_path = params['CallingExecutable']
@@ -100,7 +104,11 @@ if __name__ == '__main__':
     params['inputRedPath'] = 'D:\\python-tests\\3Dimage.aivia.tif'
     params['inputGreenPath'] = 'D:\\python-tests\\3Dimage.aivia.tif'
     params['inputBluePath'] = 'D:\\python-tests\\3Dimage.aivia.tif'
-    params['resultPath'] = 'D:\\python-tests\\3DMaxMap.tif'
+    params['resultPath'] = 'D:\\python-tests\\dummy.aivia.tif'
+    params['fileOutputPath_2'] = 'D:\\python-tests\\3DMaxMap.tif'
     params['TCount'] = 1
     
     run(params)
+
+# CHANGELOG
+# v1.01: - Added an extra key in params for Unit test output

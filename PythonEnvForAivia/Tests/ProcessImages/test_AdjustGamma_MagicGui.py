@@ -4,14 +4,22 @@ import os
 from Recipes.ProcessImages import AdjustGamma_MagicGui
 from Tests.utils.comparison import isIdentical
 
-# NOTE: When running test, a GUI will pop up for each test.  
-# The interface will ask for a value for gamma. Set it to `0.75`
-# or resultant images will not match ground truth files stored.
+
+'''
+Adjusts gamma of the input channel pixelwise according to O = I**gamma.
+This extra version of this script is a good example on how to quickly implement a GUI popup with MagicGui.
+NOTE: When running test, a GUI will pop up for each test.  '''
+
 
 def run_test(config):
-    ground_truth_path = config.pop('groundTruthPath')
-    AdjustGamma_MagicGui.run(params=config)
-    assert isIdentical(ground_truth_path, config.get("resultPath"))
+	ground_truth_path_1 = config.pop('groundTruthPath_1')
+	test_guidance = config.pop('testGuidance')
+	ctypes.windll.user32.MessageBoxW(0, test_guidance, 'Test guidance', 0)
+
+    result_value = AdjustGamma_MagicGui.run(params=config)
+    
+	assert isIdentical(ground_truth_path_1, config.get('resultPath'))
+
     return True
 
 class Test_AdjustGamma_MagicGui(unittest.TestCase):
@@ -23,7 +31,7 @@ def generate_test_method(config):
         self.dynamic_test_generator(config)
     return test_method
 
-config_json_path = os.path.join(os.path.dirname(__file__), "TestConfigs","AdjustGamma_MagicGui_configs.json")
+config_json_path = os.path.join(os.path.dirname(__file__), "AdjustGamma_MagicGui", "Config_AdjustGamma_MagicGui.json")
 with open(config_json_path) as f:
     configurations = json.load(f)
 

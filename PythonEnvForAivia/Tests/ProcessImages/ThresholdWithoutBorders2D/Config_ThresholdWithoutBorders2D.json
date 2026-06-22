@@ -1,0 +1,20 @@
+[
+    {
+        "inputImagePath": "Tests\\_InputImages\\Test_8bit_YX_Fluo_nuclei.tif",
+        "radius": "0",
+        "threshold": "100",
+        "resultObjectPath": "Tests\\ProcessImages\\ThresholdWithoutBorders2D\\OUT_Test_8bit_YX_Fluo_nuclei_Objects.tif",
+        "groundTruthPath_1": "Tests\\ProcessImages\\ThresholdWithoutBorders2D\\GT_Test_8bit_YX_Fluo_nuclei_Objects.tif",
+        "ZCount": 1,
+        "TCount": 1
+    },
+    {
+        "inputImagePath": "Tests\\_InputImages\\Test_16bit_YX_Fluo_nuclei.tif",
+        "radius": "0",
+        "threshold": "100",
+        "resultObjectPath": "Tests\\ProcessImages\\ThresholdWithoutBorders2D\\OUT_Test_16bit_YX_Fluo_nuclei_Objects.tif",
+        "groundTruthPath_1": "Tests\\ProcessImages\\ThresholdWithoutBorders2D\\GT_Test_16bit_YX_Fluo_nuclei_Objects.tif",
+        "ZCount": 1,
+        "TCount": 1
+    }
+]

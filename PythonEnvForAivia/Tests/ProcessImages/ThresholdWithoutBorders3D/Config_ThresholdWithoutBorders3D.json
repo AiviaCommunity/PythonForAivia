@@ -1,0 +1,29 @@
+[
+    {
+        "inputImagePath": "Tests\\_InputImages\\Test_8bit_ZYX_Cells3D_ch2_nuc.tif",
+        "radius": "2",
+        "threshold": "128",
+        "resultObjectPath": "Tests\\ProcessImages\\ThresholdWithoutBorders3D\\OUT_Test_8bit_ZYX_Cells3D_ch2_nuc_Objects.tif",
+        "groundTruthPath_1": "Tests\\ProcessImages\\ThresholdWithoutBorders3D\\GT_Test_8bit_ZYX_Cells3D_ch2_nuc_Objects.tif",
+        "ZCount": 60,
+        "TCount": 1
+    },
+    {
+        "inputImagePath": "Tests\\_InputImages\\Test_16bit_ZYX_Cells3D_ch2_nuc.tif",
+        "radius": "2",
+        "threshold": "128",
+        "resultObjectPath": "Tests\\ProcessImages\\ThresholdWithoutBorders3D\\OUT_Test_16bit_ZYX_Cells3D_ch2_nuc_Objects.tif",
+        "groundTruthPath_1": "Tests\\ProcessImages\\ThresholdWithoutBorders3D\\GT_Test_16bit_ZYX_Cells3D_ch2_nuc_Objects.tif",
+        "ZCount": 60,
+        "TCount": 1
+    },
+    {
+        "inputImagePath": "Tests\\_InputImages\\Test_16bit_TZYX_3DandT_Nuclei.tif",
+        "radius": "2",
+        "threshold": "128",
+        "resultObjectPath": "Tests\\ProcessImages\\ThresholdWithoutBorders3D\\OUT_Test_16bit_TZYX_3DandT_Nuclei_Objects.tif",
+        "groundTruthPath_1": "Tests\\ProcessImages\\ThresholdWithoutBorders3D\\GT_Test_16bit_TZYX_3DandT_Nuclei_Objects.tif",
+        "ZCount": 11,
+        "TCount": 3
+    }
+]

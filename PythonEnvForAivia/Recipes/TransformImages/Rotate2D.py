@@ -54,7 +54,7 @@ aivia_path = parentDir + '\\Aivia.exe'
 
 # [INPUT Name:inputImagePath Type:string DisplayName:'Input Channel']
 # [INPUT Name:resize Type:int DisplayName:'Resize image (0 = No, 1 = Yes)' Default:0 Min:0 Max:1]
-# [INPUT Name:rotAngle Type:int DisplayName:'Rotation Angle (-180 to 180)' Default:0 Min:0 Max:180]
+# [INPUT Name:rotAngle Type:int DisplayName:'Rotation Angle (-180 to 180)' Default:90 Min:0 Max:180]
 # [OUTPUT Name:resultPath Type:string DisplayName:'Rotated channel']
 def run(params):
     global interpolation_mode

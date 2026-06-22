@@ -9,7 +9,7 @@ import os
 import glob
 
 
-# FOR TESTING YOU MUST MANUALLY SELECT THESE TWO FILES WHEN THE PROMPT COMES UP
+# NOTE: FOR TESTING YOU MUST MANUALLY SELECT THESE TWO FILES WHEN THE PROMPT COMES UP
 # Select the following image and hit OK
 # PythonEnvForAivia\Tests\InputTestImages\Test_8bit_YX_BinaryCylinder1_MaxIP.tif
 # When the prompt asks you if you want to select more images, select the following image and hit OK
@@ -21,16 +21,10 @@ import glob
 # (e.g. Notepad++ with the Compare plugin).
 
 
-def find_experiment_file(directory):
-    files = glob.glob(os.path.join(directory, "*.aiviaexperiment"))
-    return files[0] if files else None
-
 def run_test(config):
     test_guidance = config.pop('testGuidance')
-    ground_truth_path = config.pop('groundTruthPath')
-    ground_truth_filepath = find_experiment_file(ground_truth_path)
-    result_filepath = find_experiment_file(config.get("resultDirectory"))
-    print(ground_truth_filepath)
+    ground_truth_filepath = config.pop('groundTruthPath_2')
+    result_filepath = config.pop('fileOutputPath_2')
     print(result_filepath)
     ctypes.windll.user32.MessageBoxW(0, test_guidance, 'Test guidance', 0)
     AiviaExperimentCreator.run(config)
@@ -47,7 +41,7 @@ def generate_test_method(config):
         self.dynamic_test_generator(config)
     return test_method
 
-config_json_path = os.path.join(os.path.dirname(__file__), "TestConfigs", "AiviaExperimentCreator_configs.json")
+config_json_path = os.path.join(os.path.dirname(__file__), "AiviaExperimentCreator", "Config_AiviaExperimentCreator.json")
 with open(config_json_path) as f:
     configurations = json.load(f)
 

@@ -5,10 +5,24 @@ from Recipes.ProcessImages import MinSlices
 from Tests.utils.comparison import isIdentical
 
 
+'''
+Performs a slicewise minimum intensity projection through Z with a given
+width about a slice.
+
+For example, using a width value of 2 means that for every slice, every
+voxel in XY will be replaced with the minimum value found within the 2
+slices before and after that slice.
+
+Works only in 3D.'''
+
+
 def run_test(config):
-    ground_truth_path = config.pop('groundTruthPath')
-    MinSlices.run(params=config)
-    assert isIdentical(ground_truth_path, config.get("resultPath"))
+	ground_truth_path_1 = config.pop('groundTruthPath_1')
+
+    result_value = MinSlices.run(params=config)
+    
+	assert isIdentical(ground_truth_path_1, config.get('resultPath'))
+
     return True
 
 class Test_MinSlices(unittest.TestCase):
@@ -20,7 +34,7 @@ def generate_test_method(config):
         self.dynamic_test_generator(config)
     return test_method
 
-config_json_path = os.path.join(os.path.dirname(__file__), "TestConfigs","MinSlices_configs.json")
+config_json_path = os.path.join(os.path.dirname(__file__), "MinSlices", "Config_MinSlices.json")
 with open(config_json_path) as f:
     configurations = json.load(f)
 

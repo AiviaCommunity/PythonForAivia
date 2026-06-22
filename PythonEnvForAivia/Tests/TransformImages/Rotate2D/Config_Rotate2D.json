@@ -1,0 +1,22 @@
+[
+    {
+        "inputImagePath": "Tests\\_InputImages\\Test_8bit_YX_mitoFluo_T15_MaxIP.tif",
+        "rotAngle": "90",
+        "resize": "0",
+        "resultPath": "Tests\\TransformImages\\Rotate2D\\OUT_Test_8bit_YX_mitoFluo_T15_MaxIP_Rotated channel.tif",
+        "groundTruthPath_1": "Tests\\TransformImages\\Rotate2D\\GT_Test_8bit_YX_mitoFluo_T15_MaxIP_Rotated channel.tif",
+        "testGuidance": "NOTE: Resize image option is 0 (=No) by default. A manual test with option = 1 would be advised",
+        "ZCount": 1,
+        "TCount": 1
+    },
+    {
+        "inputImagePath": "Tests\\_InputImages\\Test_16bit_YX_Fluo_nuclei.tif",
+        "rotAngle": "90",
+        "resize": "0",
+        "resultPath": "Tests\\TransformImages\\Rotate2D\\OUT_Test_16bit_YX_Fluo_nuclei_Rotated channel.tif",
+        "groundTruthPath_1": "Tests\\TransformImages\\Rotate2D\\GT_Test_16bit_YX_Fluo_nuclei_Rotated channel.tif",
+        "testGuidance": "NOTE: Resize image option is 0 (=No) by default. A manual test with option = 1 would be advised",
+        "ZCount": 1,
+        "TCount": 1
+    }
+]

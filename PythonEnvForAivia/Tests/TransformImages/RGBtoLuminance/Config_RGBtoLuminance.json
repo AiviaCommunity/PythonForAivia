@@ -1,0 +1,13 @@
+[
+    {
+        "red_c": "Tests\\_InputImages\\Test_RGB_YX_PigSkin_red.tif",
+        "green_c": "Tests\\_InputImages\\Test_RGB_YX_PigSkin_green.tif",
+        "blue_c": "Tests\\_InputImages\\Test_RGB_YX_PigSkin_blue.tif",
+        "histogram": "0",
+        "gray_c": "Tests\\TransformImages\\RGBtoLuminance\\OUT_Test_RGB_YX_PigSkin_blue_Luminance.tif",
+        "groundTruthPath_1": "Tests\\TransformImages\\RGBtoLuminance\\GT_Test_RGB_YX_PigSkin_blue_Luminance.tif",
+        "testGuidance": "NOTE: Default is not to show the histogram (=0). The option can be turned on once when running the test manually, but no GT is expected",
+        "ZCount": 1,
+        "TCount": 1
+    }
+]

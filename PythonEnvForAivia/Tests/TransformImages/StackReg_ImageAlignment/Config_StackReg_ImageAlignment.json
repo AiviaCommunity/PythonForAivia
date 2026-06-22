@@ -1,0 +1,10 @@
+[
+    {
+        "inputRawImagePath": "Tests\\_InputImages\\Test_8bit_TYX_mitoFluo_MaxIP.tif",
+        "resultPath": "Tests\\TransformImages\\StackReg_ImageAlignment\\OUT_Test_8bit_TYX_mitoFluo_MaxIP_Registered stack.tif",
+        "groundTruthPath_1": "Tests\\TransformImages\\StackReg_ImageAlignment\\GT_Test_8bit_TYX_mitoFluo_MaxIP_Registered stack.tif",
+        "testGuidance": "NOTE: Use default GUI options",
+        "ZCount": 1,
+        "TCount": 31
+    }
+]

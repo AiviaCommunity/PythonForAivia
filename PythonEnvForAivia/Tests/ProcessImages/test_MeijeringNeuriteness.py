@@ -5,10 +5,27 @@ from Recipes.ProcessImages import MeijeringNeuriteness
 from Tests.utils.comparison import isIdentical
 
 
+'''
+Finds and enhances bright ridges within the image that are within a reasonable
+range of the size given by the user. Returns a max projection through scale space
+for 5 evenly-spaced Gaussian sigmas.
+
+Because np.arange() is used to contruct the array of sigma values, the largest
+sigma is excluded.
+https://docs.scipy.org/doc/numpy/reference/generated/numpy.arange.html
+
+For example, if the user specifies min and max sigmas of 0.1 and 0.6, respectively,
+the transform is performed for Gaussian sigma values of 0.1, 0.2, 0.3, 0.4, 0.5.
+The maximum values from all of the transforms is output at every voxel.'''
+
+
 def run_test(config):
-    ground_truth_path = config.pop('groundTruthPath')
-    MeijeringNeuriteness.run(params=config)
-    assert isIdentical(ground_truth_path, config.get("resultPath"))
+	ground_truth_path_1 = config.pop('groundTruthPath_1')
+
+    result_value = MeijeringNeuriteness.run(params=config)
+    
+	assert isIdentical(ground_truth_path_1, config.get('resultPath'))
+
     return True
 
 class Test_MeijeringNeuriteness(unittest.TestCase):
@@ -20,7 +37,7 @@ def generate_test_method(config):
         self.dynamic_test_generator(config)
     return test_method
 
-config_json_path = os.path.join(os.path.dirname(__file__), "TestConfigs","MeijeringNeuriteness_configs.json")
+config_json_path = os.path.join(os.path.dirname(__file__), "MeijeringNeuriteness", "Config_MeijeringNeuriteness.json")
 with open(config_json_path) as f:
     configurations = json.load(f)
 

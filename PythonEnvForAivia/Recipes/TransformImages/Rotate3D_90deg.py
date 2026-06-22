@@ -12,6 +12,7 @@ def search_activation_path():
     return ''
 
 activate_path = search_activation_path()
+
 if os.path.exists(activate_path):
     exec(open(activate_path).read(), {'__file__': activate_path})
     print(f'Aivia virtual environment activated\nUsing python: {activate_path}')
@@ -98,7 +99,9 @@ def run(params):
         print(f"Error: {image_location} does not exist")
         return
 
-
+    if not os.path.exists(aivia_path):
+        print(f"Error: {aivia_path} does not exist")
+        return
 
     raw_data = imread(image_location)
     dims = raw_data.shape
@@ -156,12 +159,17 @@ def run(params):
 
     # Defining axes for output metadata and scale factor variable
     axes = 'ZYX'
-    meta_info = {'axes': axes, 'spacing': str(final_cal), 'unit': 'um'}
+    meta_info = {'axes': axes, 'spacing': str(final_cal), 'unit': 'um'}   # TODO: change to TZCYX for ImageJ style???
 
     # Formatting voxel calibration values
     inverted_XY_cal = 1 / final_cal
 
-    tmp_path = result_location.replace('.tif', '-rotated.tif')
+    # Output path depending on test mode or not
+    if 'fileOutputPath_2' in params.keys():
+        tmp_path = params['fileOutputPath_2']
+    else:
+        tmp_path = result_location.replace('.tif', '-rotated.tif')
+
     print('Saving image in temp location:\n', tmp_path)
     imwrite(tmp_path, out_data, imagej=True, photometric='minisblack', metadata=meta_info,
             resolution=(inverted_XY_cal, inverted_XY_cal))
@@ -169,12 +177,7 @@ def run(params):
     # Dummy save
     # dummy_data = np.zeros(image_data.shape, dtype=image_data.dtype)
     # imwrite(result_location, dummy_data)
-    # Added for handling testing without opening aivia
-    if params["skip_aivia"] == 1:
-        return
-    if not os.path.exists(aivia_path):
-        print(f"Error: {aivia_path} does not exist")
-        return
+
     # Run external program
     cmdLine = 'start \"\" \"' + aivia_path + '\" \"' + tmp_path + '\"'
 
@@ -184,7 +187,8 @@ def run(params):
 
 if __name__ == '__main__':
     params = {'inputImagePath': r'D:\PythonCode\_tests\3D_Embryo_Fluo-IsotropicCube-8b.aivia.tif',
-              'resultPath': r'D:\PythonCode\_tests\output.tif',
+              'resultPath': r'D:\PythonCode\_tests\dummy-output.tif',
+              'fileOutputPath_2': r'D:\PythonCode\_tests\output.tif',
               'TCount': 1,
               'ZCount': 192,
               'Calibration': 'XYZT: 0.46 micrometers, 0.46 micrometers, 0.46 micrometers, 1 Default'}
@@ -194,3 +198,4 @@ if __name__ == '__main__':
 # v1_00: - Including isotropic scaling and proper export to Aivia
 # v1_10: - Adding a GUI to choose rotation axis + virtual environment activation
 # v1_11: - New virtual env code for auto-activation
+# v1.12: - Added an extra key in params for Unit test output

@@ -1,0 +1,26 @@
+[
+    {
+        "inputImagePath": "Tests\\_InputImages\\Test_8bit_YX_mitoFluo_T15_MaxIP.tif",
+        "resultPath": "Tests\\ProcessImages\\DrawArrayOfShapes_2D\\OUT_Test_8bit_YX_mitoFluo_T15_MaxIP_Shape mask.tif",
+        "groundTruthPath_1": "Tests\\ProcessImages\\DrawArrayOfShapes_2D\\GT_Test_8bit_YX_mitoFluo_T15_MaxIP_Shape mask.tif",
+        "testGuidance": "NOTE: When running test, a GUI will pop up for each test.  \nPress `Reset values to default (96 multiwell template)` and proceed\n\nCreate array of shapes in 2D or 2D+t images.",
+        "ZCount": 1,
+        "TCount": 1
+    },
+    {
+        "inputImagePath": "Tests\\_InputImages\\Test_16bit_YX_Fluo_nuclei.tif",
+        "resultPath": "Tests\\ProcessImages\\DrawArrayOfShapes_2D\\OUT_Test_16bit_YX_Fluo_nuclei_Shape mask.tif",
+        "groundTruthPath_1": "Tests\\ProcessImages\\DrawArrayOfShapes_2D\\GT_Test_16bit_YX_Fluo_nuclei_Shape mask.tif",
+        "testGuidance": "NOTE: When running test, a GUI will pop up for each test.  \nPress `Reset values to default (96 multiwell template)` and proceed\n\nCreate array of shapes in 2D or 2D+t images.",
+        "ZCount": 1,
+        "TCount": 1
+    },
+    {
+        "inputImagePath": "Tests\\_InputImages\\Test_8bit_TYX_mitoFluo_MaxIP.tif",
+        "resultPath": "Tests\\ProcessImages\\DrawArrayOfShapes_2D\\OUT_Test_8bit_TYX_mitoFluo_MaxIP_Shape mask.tif",
+        "groundTruthPath_1": "Tests\\ProcessImages\\DrawArrayOfShapes_2D\\GT_Test_8bit_TYX_mitoFluo_MaxIP_Shape mask.tif",
+        "testGuidance": "NOTE: When running test, a GUI will pop up for each test.  \nPress `Reset values to default (96 multiwell template)` and proceed\n\nCreate array of shapes in 2D or 2D+t images.",
+        "ZCount": 1,
+        "TCount": 31
+    }
+]

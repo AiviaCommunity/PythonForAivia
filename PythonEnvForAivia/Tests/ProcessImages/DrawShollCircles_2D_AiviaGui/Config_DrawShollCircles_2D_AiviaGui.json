@@ -1,0 +1,35 @@
+[
+    {
+        "inputImagePath": "Tests\\_InputImages\\Test_8bit_YX_mitoFluo_T15_MaxIP.tif",
+        "centerX": "0",
+        "centerY": "0",
+        "spacing": "10",
+        "circleNumber": "10",
+        "resultPath": "Tests\\ProcessImages\\DrawShollCircles_2D_AiviaGui\\OUT_Test_8bit_YX_mitoFluo_T15_MaxIP_Sholl Circles.tif",
+        "groundTruthPath_1": "Tests\\ProcessImages\\DrawShollCircles_2D_AiviaGui\\GT_Test_8bit_YX_mitoFluo_T15_MaxIP_Sholl Circles.tif",
+        "ZCount": 1,
+        "TCount": 1
+    },
+    {
+        "inputImagePath": "Tests\\_InputImages\\Test_16bit_YX_Fluo_nuclei.tif",
+        "centerX": "0",
+        "centerY": "0",
+        "spacing": "10",
+        "circleNumber": "10",
+        "resultPath": "Tests\\ProcessImages\\DrawShollCircles_2D_AiviaGui\\OUT_Test_16bit_YX_Fluo_nuclei_Sholl Circles.tif",
+        "groundTruthPath_1": "Tests\\ProcessImages\\DrawShollCircles_2D_AiviaGui\\GT_Test_16bit_YX_Fluo_nuclei_Sholl Circles.tif",
+        "ZCount": 1,
+        "TCount": 1
+    },
+    {
+        "inputImagePath": "Tests\\_InputImages\\Test_8bit_TYX_mitoFluo_MaxIP.tif",
+        "centerX": "0",
+        "centerY": "0",
+        "spacing": "10",
+        "circleNumber": "10",
+        "resultPath": "Tests\\ProcessImages\\DrawShollCircles_2D_AiviaGui\\OUT_Test_8bit_TYX_mitoFluo_MaxIP_Sholl Circles.tif",
+        "groundTruthPath_1": "Tests\\ProcessImages\\DrawShollCircles_2D_AiviaGui\\GT_Test_8bit_TYX_mitoFluo_MaxIP_Sholl Circles.tif",
+        "ZCount": 1,
+        "TCount": 31
+    }
+]

@@ -5,11 +5,13 @@ from skimage.segmentation import clear_border
 from skimage.measure import label
 from skimage.morphology import closing, ball
 from skimage.util import img_as_ubyte, img_as_uint
+import sys
+import ctypes
 
 """
 See: https://scikit-image.org/docs/dev/api/skimage.segmentation.html#skimage.segmentation.clear_border
 
-Tresholds an image for segmentation, then clears any objects intersecting the image borders before
+Thresholds an image for segmentation, then clears any objects intersecting the image borders before
 creating an object set in Aivia.
 
 This recipe only works in 3D. Use ThresholdWithoutBorders2D instead for 2D cases.
@@ -45,7 +47,7 @@ Aivia objects
 
 # [INPUT Name:inputImagePath Type:string DisplayName:'Input Image']
 # [INPUT Name:threshold Type:int DisplayName:'Threshold' Default:128 Min:0 Max:65535]
-# [INPUT Name:radius Type:int DisplayName:'Closing Radius' Default:0 Min:0 Max:100]
+# [INPUT Name:radius Type:int DisplayName:'Closing Radius' Default:2 Min:0 Max:100]
 # [OUTPUT Name:resultObjectPath Type:string DisplayName:'Objects' Objects:3D MinSize:0.0 MaxSize:1000000000.0]
 def run(params):
     image_location = params['inputImagePath']
@@ -88,10 +90,17 @@ def run(params):
         mask = label(clear_border(mask))
         axes = 'YXZ'
     
+    print(f"Max before conversion: {np.max(mask)}")
+    
     if image_data.dtype == np.uint16:
         mask = img_as_uint(mask)
     else:
+        if np.max(mask) > 255:
+            mess = f"Found {np.max(mask)} objects but image is 8-bit. Consider converting to 16-bit before."
+            ctypes.windll.user32.MessageBoxW(0, mess, 'Error', 0)
+            sys.exit(mess)
         mask = img_as_ubyte(mask)
+    print(f"Max after conversion: {np.max(mask)}")
 
     imsave(result_object_location, mask, metadata={'axes': axes})
 

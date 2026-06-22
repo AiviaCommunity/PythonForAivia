@@ -4,13 +4,19 @@ import os
 from Recipes.ProcessImages import DrawShollCircles_2D_AiviaGui
 from Tests.utils.comparison import isIdentical
 
-# NOTE: When running test, a GUI will pop up for each test.  
-# Press `Reset values to default` and proceed
+
+'''
+Create Sholl circles on 2D or 2D+t images.
+User can choose center position spacing and number of circles.'''
+
 
 def run_test(config):
-    ground_truth_path = config.pop('groundTruthPath')
-    DrawShollCircles_2D_AiviaGui.run(params=config)
-    assert isIdentical(ground_truth_path, config.get("resultPath"))
+	ground_truth_path_1 = config.pop('groundTruthPath_1')
+
+    result_value = DrawShollCircles_2D_AiviaGui.run(params=config)
+    
+	assert isIdentical(ground_truth_path_1, config.get('resultPath'))
+
     return True
 
 class Test_DrawShollCircles_2D_AiviaGui(unittest.TestCase):
@@ -22,7 +28,7 @@ def generate_test_method(config):
         self.dynamic_test_generator(config)
     return test_method
 
-config_json_path = os.path.join(os.path.dirname(__file__), "TestConfigs","DrawShollCircles_2D_AiviaGui_configs.json")
+config_json_path = os.path.join(os.path.dirname(__file__), "DrawShollCircles_2D_AiviaGui", "Config_DrawShollCircles_2D_AiviaGui.json")
 with open(config_json_path) as f:
     configurations = json.load(f)
 

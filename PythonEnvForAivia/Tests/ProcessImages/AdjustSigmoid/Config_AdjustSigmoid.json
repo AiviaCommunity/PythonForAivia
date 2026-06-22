@@ -1,0 +1,65 @@
+[
+    {
+        "inputImagePath": "Tests\\_InputImages\\Test_8bit_YX_mitoFluo_T15_MaxIP.tif",
+        "gain": "10.0",
+        "cutoff": "0.5",
+        "resultPath": "Tests\\ProcessImages\\AdjustSigmoid\\OUT_Test_8bit_YX_mitoFluo_T15_MaxIP_Sigmoid.tif",
+        "groundTruthPath_1": "Tests\\ProcessImages\\AdjustSigmoid\\GT_Test_8bit_YX_mitoFluo_T15_MaxIP_Sigmoid.tif",
+        "ZCount": 1,
+        "TCount": 1
+    },
+    {
+        "inputImagePath": "Tests\\_InputImages\\Test_16bit_YX_Fluo_nuclei.tif",
+        "gain": "10.0",
+        "cutoff": "0.5",
+        "resultPath": "Tests\\ProcessImages\\AdjustSigmoid\\OUT_Test_16bit_YX_Fluo_nuclei_Sigmoid.tif",
+        "groundTruthPath_1": "Tests\\ProcessImages\\AdjustSigmoid\\GT_Test_16bit_YX_Fluo_nuclei_Sigmoid.tif",
+        "ZCount": 1,
+        "TCount": 1
+    },
+    {
+        "inputImagePath": "Tests\\_InputImages\\Test_8bit_TYX_mitoFluo_MaxIP.tif",
+        "gain": "10.0",
+        "cutoff": "0.5",
+        "resultPath": "Tests\\ProcessImages\\AdjustSigmoid\\OUT_Test_8bit_TYX_mitoFluo_MaxIP_Sigmoid.tif",
+        "groundTruthPath_1": "Tests\\ProcessImages\\AdjustSigmoid\\GT_Test_8bit_TYX_mitoFluo_MaxIP_Sigmoid.tif",
+        "ZCount": 1,
+        "TCount": 31
+    },
+    {
+        "inputImagePath": "Tests\\_InputImages\\Test_8bit_ZYX_mitoFluo_T15.tif",
+        "gain": "10.0",
+        "cutoff": "0.5",
+        "resultPath": "Tests\\ProcessImages\\AdjustSigmoid\\OUT_Test_8bit_ZYX_mitoFluo_T15_Sigmoid.tif",
+        "groundTruthPath_1": "Tests\\ProcessImages\\AdjustSigmoid\\GT_Test_8bit_ZYX_mitoFluo_T15_Sigmoid.tif",
+        "ZCount": 11,
+        "TCount": 1
+    },
+    {
+        "inputImagePath": "Tests\\_InputImages\\Test_16bit_ZYX_mitoFluo_T15.tif",
+        "gain": "10.0",
+        "cutoff": "0.5",
+        "resultPath": "Tests\\ProcessImages\\AdjustSigmoid\\OUT_Test_16bit_ZYX_mitoFluo_T15_Sigmoid.tif",
+        "groundTruthPath_1": "Tests\\ProcessImages\\AdjustSigmoid\\GT_Test_16bit_ZYX_mitoFluo_T15_Sigmoid.tif",
+        "ZCount": 11,
+        "TCount": 1
+    },
+    {
+        "inputImagePath": "Tests\\_InputImages\\Test_8bit_TZYX_mitoFluo.tif",
+        "gain": "10.0",
+        "cutoff": "0.5",
+        "resultPath": "Tests\\ProcessImages\\AdjustSigmoid\\OUT_Test_8bit_TZYX_mitoFluo_Sigmoid.tif",
+        "groundTruthPath_1": "Tests\\ProcessImages\\AdjustSigmoid\\GT_Test_8bit_TZYX_mitoFluo_Sigmoid.tif",
+        "ZCount": 11,
+        "TCount": 31
+    },
+    {
+        "inputImagePath": "Tests\\_InputImages\\Test_16bit_TZYX_mitoFluo.tif",
+        "gain": "10.0",
+        "cutoff": "0.5",
+        "resultPath": "Tests\\ProcessImages\\AdjustSigmoid\\OUT_Test_16bit_TZYX_mitoFluo_Sigmoid.tif",
+        "groundTruthPath_1": "Tests\\ProcessImages\\AdjustSigmoid\\GT_Test_16bit_TZYX_mitoFluo_Sigmoid.tif",
+        "ZCount": 11,
+        "TCount": 31
+    }
+]
