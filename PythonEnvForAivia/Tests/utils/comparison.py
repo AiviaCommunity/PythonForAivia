@@ -20,6 +20,8 @@ def isIdentical(image_path1, image_path2):
         data1 = tif1.asarray()
         data2 = tif2.asarray()
         
+        print(f"Shape of GT = {data1.shape}\nShape of OUT = {data2.shape}")
+        
         # Compare the arrays
         return np.array_equal(data1, data2)
 
