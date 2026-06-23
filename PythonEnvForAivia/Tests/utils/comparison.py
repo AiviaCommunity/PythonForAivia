@@ -1,6 +1,7 @@
 import tifffile as tif
 import numpy as np
 import json
+import os
 
 
 def isIdentical(image_path1, image_path2):
@@ -40,3 +41,11 @@ def isJsonIdentical(json_path1, json_path2):
     if json_data1 == json_data2:
         return True
     return False
+
+
+if __name__ == "__main__":
+    fd = r'..\TransformImages\MaxIntensityProjectionRGB'
+    p1 = os.path.join(fd, 'GT_Test_8bit_ZYX_Cells3D_ch2_nuc_processed.tif')
+    p2 = os.path.join(fd, 'OUT_Test_8bit_ZYX_Cells3D_ch2_nuc_processed.tif')
+
+    result = isIdentical(p1, p2)
