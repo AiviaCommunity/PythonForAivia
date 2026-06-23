@@ -77,7 +77,7 @@ def run(params):
         print(f"Error: {image_location} does not exist")
         return
 
-    if not os.path.exists(aivia_path):
+    if not 'fileOutputPath_2' in params.keys() and not os.path.exists(aivia_path):
         print(f"Error: {aivia_path} does not exist")
         return
 
@@ -153,6 +153,10 @@ def run(params):
     else:
         # To avoid calibration in XYZ
         imwrite(tmp_path, out_data, imagej=True, photometric='minisblack', metadata=meta_info) 
+
+    # Added for handling testing without opening aivia
+    if aivia_path == "None":
+        return
     
     # Dummy save
     dummy_data = np.zeros(image_data.shape, dtype=image_data.dtype)

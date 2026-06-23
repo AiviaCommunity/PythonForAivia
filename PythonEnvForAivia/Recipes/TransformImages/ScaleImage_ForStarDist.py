@@ -169,7 +169,11 @@ def run(params):
         # To avoid calibration in XYZ
         imwrite(tmp_path, out_data, imagej=True, photometric='minisblack', metadata=meta_info)
 
-        # Dummy save
+    # Added for handling testing without opening aivia
+    if aivia_path == "None":
+        return
+    
+    # Dummy save
     dummy_data = np.zeros(image_data.shape, dtype=image_data.dtype)
     imwrite(result_location, dummy_data)
 
