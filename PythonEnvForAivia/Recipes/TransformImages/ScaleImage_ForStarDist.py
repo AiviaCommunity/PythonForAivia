@@ -107,7 +107,8 @@ def run(params):
     mess = 'Calculated scaling factor to remember for backward conversion: {:.3f}.\n\n' \
            'Value is also available in the log (Help menu > Open log) where you can search for ' \
            '"Scaling factor for StarDist".'.format(scale_factor_xy)
-    ctypes.windll.user32.MessageBoxW(0, mess, 'Scaling factor to remember', 0)
+    if not aivia_path == "None":
+        ctypes.windll.user32.MessageBoxW(0, mess, 'Scaling factor to remember', 0)
     print(mess)
 
     # Z scaling factor
