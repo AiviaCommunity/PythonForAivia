@@ -1,6 +1,7 @@
 import unittest
 import json
 import os
+import ctypes
 from Recipes.ProcessImages import ThresholdWithoutBorders2D
 from Tests.utils.comparison import isIdentical
 
@@ -12,11 +13,11 @@ This recipe only works in 2D. Use ThresholdWithoutBorders3D instead for 3D cases
 
 
 def run_test(config):
-	ground_truth_path_1 = config.pop('groundTruthPath_1')
+    ground_truth_path_1 = config.pop('groundTruthPath_1')
 
     result_value = ThresholdWithoutBorders2D.run(params=config)
     
-	assert isIdentical(ground_truth_path_1, config.get('resultObjectPath'))
+    assert isIdentical(ground_truth_path_1, config.get('resultObjectPath'))
 
     return True
 

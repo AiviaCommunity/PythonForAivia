@@ -3,63 +3,84 @@
         "inputImagePath": "Tests\\_InputImages\\Test_8bit_YX_mitoFluo_T15_MaxIP.tif",
         "typicalObjDiam": "10.0",
         "performZscaling": "1",
+        "resultPath": "",
         "fileOutputPath_2": "Tests\\TransformImages\\ScaleImage_ForStarDist\\OUT_Test_8bit_YX_mitoFluo_T15_MaxIP_processed.tif",
         "groundTruthPath_2": "Tests\\TransformImages\\ScaleImage_ForStarDist\\GT_Test_8bit_YX_mitoFluo_T15_MaxIP_processed.tif",
+        "CallingExecutable": "None",
         "ZCount": 1,
-        "TCount": 1
+        "TCount": 1,
+        "Calibration": "XYZT: 1 Default, 1 Default, 1 Default, 1 Default"
     },
     {
         "inputImagePath": "Tests\\_InputImages\\Test_16bit_YX_Fluo_nuclei.tif",
         "typicalObjDiam": "10.0",
         "performZscaling": "1",
+        "resultPath": "",
         "fileOutputPath_2": "Tests\\TransformImages\\ScaleImage_ForStarDist\\OUT_Test_16bit_YX_Fluo_nuclei_processed.tif",
         "groundTruthPath_2": "Tests\\TransformImages\\ScaleImage_ForStarDist\\GT_Test_16bit_YX_Fluo_nuclei_processed.tif",
+        "CallingExecutable": "None",
         "ZCount": 1,
-        "TCount": 1
+        "TCount": 1,
+        "Calibration": "XYZT: 0.3 micrometers, 0.3 micrometers, 1 Default, 1 Default"
     },
     {
         "inputImagePath": "Tests\\_InputImages\\Test_8bit_TYX_mitoFluo_MaxIP.tif",
         "typicalObjDiam": "10.0",
         "performZscaling": "1",
+        "resultPath": "",
         "fileOutputPath_2": "Tests\\TransformImages\\ScaleImage_ForStarDist\\OUT_Test_8bit_TYX_mitoFluo_MaxIP_processed.tif",
         "groundTruthPath_2": "Tests\\TransformImages\\ScaleImage_ForStarDist\\GT_Test_8bit_TYX_mitoFluo_MaxIP_processed.tif",
+        "CallingExecutable": "None",
         "ZCount": 1,
-        "TCount": 31
+        "TCount": 31,
+        "Calibration": "XYZT: 1 Default, 1 Default, 1 Default, 1 Default"
     },
     {
         "inputImagePath": "Tests\\_InputImages\\Test_8bit_ZYX_mitoFluo_T15.tif",
         "typicalObjDiam": "10.0",
         "performZscaling": "1",
+        "resultPath": "",
         "fileOutputPath_2": "Tests\\TransformImages\\ScaleImage_ForStarDist\\OUT_Test_8bit_ZYX_mitoFluo_T15_processed.tif",
         "groundTruthPath_2": "Tests\\TransformImages\\ScaleImage_ForStarDist\\GT_Test_8bit_ZYX_mitoFluo_T15_processed.tif",
+        "CallingExecutable": "None",
         "ZCount": 11,
-        "TCount": 1
+        "TCount": 1,
+        "Calibration": "XYZT: 1 Default, 1 Default, 1 Default, 1 Default"
     },
     {
         "inputImagePath": "Tests\\_InputImages\\Test_16bit_ZYX_mitoFluo_T15.tif",
         "typicalObjDiam": "10.0",
         "performZscaling": "1",
+        "resultPath": "",
         "fileOutputPath_2": "Tests\\TransformImages\\ScaleImage_ForStarDist\\OUT_Test_16bit_ZYX_mitoFluo_T15_processed.tif",
         "groundTruthPath_2": "Tests\\TransformImages\\ScaleImage_ForStarDist\\GT_Test_16bit_ZYX_mitoFluo_T15_processed.tif",
+        "CallingExecutable": "None",
         "ZCount": 11,
-        "TCount": 1
+        "TCount": 1,
+        "Calibration": "XYZT: 1 Default, 1 Default, 1 Default, 1 Default"
     },
     {
         "inputImagePath": "Tests\\_InputImages\\Test_8bit_TZYX_mitoFluo.tif",
         "typicalObjDiam": "10.0",
         "performZscaling": "1",
+        "resultPath": "",
         "fileOutputPath_2": "Tests\\TransformImages\\ScaleImage_ForStarDist\\OUT_Test_8bit_TZYX_mitoFluo_processed.tif",
         "groundTruthPath_2": "Tests\\TransformImages\\ScaleImage_ForStarDist\\GT_Test_8bit_TZYX_mitoFluo_processed.tif",
+        "CallingExecutable": "None",
         "ZCount": 11,
-        "TCount": 31
+        "TCount": 31,
+        "Calibration": "XYZT: 1 Default, 1 Default, 1 Default, 1 Default"
     },
     {
         "inputImagePath": "Tests\\_InputImages\\Test_16bit_TZYX_mitoFluo.tif",
         "typicalObjDiam": "10.0",
         "performZscaling": "1",
+        "resultPath": "",
         "fileOutputPath_2": "Tests\\TransformImages\\ScaleImage_ForStarDist\\OUT_Test_16bit_TZYX_mitoFluo_processed.tif",
         "groundTruthPath_2": "Tests\\TransformImages\\ScaleImage_ForStarDist\\GT_Test_16bit_TZYX_mitoFluo_processed.tif",
+        "CallingExecutable": "None",
         "ZCount": 11,
-        "TCount": 31
+        "TCount": 31,
+        "Calibration": "XYZT: 1 Default, 1 Default, 1 Default, 1 Default"
     }
 ]

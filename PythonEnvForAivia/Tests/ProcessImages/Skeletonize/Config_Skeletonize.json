@@ -6,7 +6,8 @@
         "resultPath": "Tests\\ProcessImages\\Skeletonize\\OUT_Test_8bit_YX_mitoSeg_T15_MaxIP_Skeleton.tif",
         "groundTruthPath_1": "Tests\\ProcessImages\\Skeletonize\\GT_Test_8bit_YX_mitoSeg_T15_MaxIP_Skeleton.tif",
         "ZCount": 1,
-        "TCount": 1
+        "TCount": 1,
+        "Calibration": "XYZT: 1 Default, 1 Default, 1 Default, 1 Default"
     },
     {
         "inputImagePath": "Tests\\_InputImages\\Test_16bit_YX_Fluo_nuclei_binary.tif",
@@ -15,7 +16,8 @@
         "resultPath": "Tests\\ProcessImages\\Skeletonize\\OUT_Test_16bit_YX_Fluo_nuclei_binary_Skeleton.tif",
         "groundTruthPath_1": "Tests\\ProcessImages\\Skeletonize\\GT_Test_16bit_YX_Fluo_nuclei_binary_Skeleton.tif",
         "ZCount": 1,
-        "TCount": 1
+        "TCount": 1,
+        "Calibration": "XYZT: 1 Default, 1 Default, 1 Default, 1 Default"
     },
     {
         "inputImagePath": "Tests\\_InputImages\\Test_8bit_TYX_mitoSeg_MaxIP.tif",
@@ -24,7 +26,8 @@
         "resultPath": "Tests\\ProcessImages\\Skeletonize\\OUT_Test_8bit_TYX_mitoSeg_MaxIP_Skeleton.tif",
         "groundTruthPath_1": "Tests\\ProcessImages\\Skeletonize\\GT_Test_8bit_TYX_mitoSeg_MaxIP_Skeleton.tif",
         "ZCount": 1,
-        "TCount": 31
+        "TCount": 31,
+        "Calibration": "XYZT: 1 Default, 1 Default, 1 Default, 1 Default"
     },
     {
         "inputImagePath": "Tests\\_InputImages\\Test_16bit_TYX_mitoFluo_MaxIP_binary.tif",
@@ -33,7 +36,8 @@
         "resultPath": "Tests\\ProcessImages\\Skeletonize\\OUT_Test_16bit_TYX_mitoFluo_MaxIP_binary_Skeleton.tif",
         "groundTruthPath_1": "Tests\\ProcessImages\\Skeletonize\\GT_Test_16bit_TYX_mitoFluo_MaxIP_binary_Skeleton.tif",
         "ZCount": 1,
-        "TCount": 31
+        "TCount": 31,
+        "Calibration": "XYZT: 1 Default, 1 Default, 1 Default, 1 Default"
     },
     {
         "inputImagePath": "Tests\\_InputImages\\Test_8bit_ZYX_mitoSeg_T15.tif",
@@ -42,7 +46,8 @@
         "resultPath": "Tests\\ProcessImages\\Skeletonize\\OUT_Test_8bit_ZYX_mitoSeg_T15_Skeleton.tif",
         "groundTruthPath_1": "Tests\\ProcessImages\\Skeletonize\\GT_Test_8bit_ZYX_mitoSeg_T15_Skeleton.tif",
         "ZCount": 11,
-        "TCount": 1
+        "TCount": 1,
+        "Calibration": "XYZT: 1 Default, 1 Default, 1 Default, 1 Default"
     },
     {
         "inputImagePath": "Tests\\_InputImages\\Test_16bit_ZYX_mitoSeg_T15.tif",
@@ -51,7 +56,8 @@
         "resultPath": "Tests\\ProcessImages\\Skeletonize\\OUT_Test_16bit_ZYX_mitoSeg_T15_Skeleton.tif",
         "groundTruthPath_1": "Tests\\ProcessImages\\Skeletonize\\GT_Test_16bit_ZYX_mitoSeg_T15_Skeleton.tif",
         "ZCount": 11,
-        "TCount": 1
+        "TCount": 1,
+        "Calibration": "XYZT: 1 Default, 1 Default, 1 Default, 1 Default"
     },
     {
         "inputImagePath": "Tests\\_InputImages\\Test_8bit_TZYX_mitoSeg.tif",
@@ -60,7 +66,8 @@
         "resultPath": "Tests\\ProcessImages\\Skeletonize\\OUT_Test_8bit_TZYX_mitoSeg_Skeleton.tif",
         "groundTruthPath_1": "Tests\\ProcessImages\\Skeletonize\\GT_Test_8bit_TZYX_mitoSeg_Skeleton.tif",
         "ZCount": 11,
-        "TCount": 31
+        "TCount": 31,
+        "Calibration": "XYZT: 1 Default, 1 Default, 1 Default, 1 Default"
     },
     {
         "inputImagePath": "Tests\\_InputImages\\Test_16bit_TZYX_mitoSeg.tif",
@@ -69,6 +76,7 @@
         "resultPath": "Tests\\ProcessImages\\Skeletonize\\OUT_Test_16bit_TZYX_mitoSeg_Skeleton.tif",
         "groundTruthPath_1": "Tests\\ProcessImages\\Skeletonize\\GT_Test_16bit_TZYX_mitoSeg_Skeleton.tif",
         "ZCount": 11,
-        "TCount": 31
+        "TCount": 31,
+        "Calibration": "XYZT: 1 Default, 1 Default, 1 Default, 1 Default"
     }
 ]

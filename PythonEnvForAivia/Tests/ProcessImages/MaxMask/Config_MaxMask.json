@@ -6,7 +6,8 @@
         "resultPath": "Tests\\ProcessImages\\MaxMask\\OUT_Test_8bit_TYX_mitoFluo_MaxIP_Masked Image.tif",
         "groundTruthPath_1": "Tests\\ProcessImages\\MaxMask\\GT_Test_8bit_TYX_mitoFluo_MaxIP_Masked Image.tif",
         "ZCount": 1,
-        "TCount": 31
+        "TCount": 31,
+        "Calibration": "XYZT: 1 Default, 1 Default, 1 Default, 1 Default"
     },
     {
         "inputMaskImagePath": "Tests\\_InputImages\\Test_8bit_ZYX_mitoFluo_T15.tif",
@@ -15,7 +16,8 @@
         "resultPath": "Tests\\ProcessImages\\MaxMask\\OUT_Test_8bit_ZYX_mitoFluo_T15_Masked Image.tif",
         "groundTruthPath_1": "Tests\\ProcessImages\\MaxMask\\GT_Test_8bit_ZYX_mitoFluo_T15_Masked Image.tif",
         "ZCount": 11,
-        "TCount": 1
+        "TCount": 1,
+        "Calibration": "XYZT: 1 Default, 1 Default, 1 Default, 1 Default"
     },
     {
         "inputMaskImagePath": "Tests\\_InputImages\\Test_16bit_ZYX_mitoFluo_T15.tif",
@@ -24,7 +26,8 @@
         "resultPath": "Tests\\ProcessImages\\MaxMask\\OUT_Test_16bit_ZYX_mitoFluo_T15_Masked Image.tif",
         "groundTruthPath_1": "Tests\\ProcessImages\\MaxMask\\GT_Test_16bit_ZYX_mitoFluo_T15_Masked Image.tif",
         "ZCount": 11,
-        "TCount": 1
+        "TCount": 1,
+        "Calibration": "XYZT: 1 Default, 1 Default, 1 Default, 1 Default"
     },
     {
         "inputMaskImagePath": "Tests\\_InputImages\\Test_8bit_TZYX_mitoFluo.tif",
@@ -33,7 +36,8 @@
         "resultPath": "Tests\\ProcessImages\\MaxMask\\OUT_Test_8bit_TZYX_mitoFluo_Masked Image.tif",
         "groundTruthPath_1": "Tests\\ProcessImages\\MaxMask\\GT_Test_8bit_TZYX_mitoFluo_Masked Image.tif",
         "ZCount": 11,
-        "TCount": 31
+        "TCount": 31,
+        "Calibration": "XYZT: 1 Default, 1 Default, 1 Default, 1 Default"
     },
     {
         "inputMaskImagePath": "Tests\\_InputImages\\Test_16bit_TZYX_mitoFluo.tif",
@@ -42,6 +46,7 @@
         "resultPath": "Tests\\ProcessImages\\MaxMask\\OUT_Test_16bit_TZYX_mitoFluo_Masked Image.tif",
         "groundTruthPath_1": "Tests\\ProcessImages\\MaxMask\\GT_Test_16bit_TZYX_mitoFluo_Masked Image.tif",
         "ZCount": 11,
-        "TCount": 31
+        "TCount": 31,
+        "Calibration": "XYZT: 1 Default, 1 Default, 1 Default, 1 Default"
     }
 ]

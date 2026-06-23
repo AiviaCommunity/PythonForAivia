@@ -1,6 +1,7 @@
 import unittest
 import json
 import os
+import ctypes
 from Recipes.ProcessImages import MorphologicalTexture
 from Tests.utils.comparison import isIdentical
 
@@ -19,11 +20,11 @@ the final output.'''
 
 
 def run_test(config):
-	ground_truth_path_1 = config.pop('groundTruthPath_1')
+    ground_truth_path_1 = config.pop('groundTruthPath_1')
 
     result_value = MorphologicalTexture.run(params=config)
     
-	assert isIdentical(ground_truth_path_1, config.get('resultPath'))
+    assert isIdentical(ground_truth_path_1, config.get('resultPath'))
 
     return True
 

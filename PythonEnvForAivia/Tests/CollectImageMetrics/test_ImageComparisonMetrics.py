@@ -1,6 +1,7 @@
 import unittest
 import json
 import os
+import ctypes
 from Recipes.CollectImageMetrics import ImageComparisonMetrics
 from Tests.utils.comparison import isIdentical
 
@@ -23,17 +24,18 @@ IMPORTANT: Input channels need to have the same bit depth'''
 
 
 def run_test(config):
-	ground_truth_path_1 = config.pop('groundTruthPath_1')
-	ground_truth_path_2 = config.pop('groundTruthPath_2')
-	ground_truth_value_list_3 = config.pop('groundTruthValueList_3')
+    ground_truth_path_1 = config.pop('groundTruthPath_1')
+    ground_truth_path_2 = config.pop('groundTruthPath_2')
+    ground_truth_value_list_3 = config.pop('groundTruthValueList_3')
 
     result_value = ImageComparisonMetrics.run(params=config)
     
-	assert isIdentical(ground_truth_path_1, config.get('resultPath'))
-	assert isIdentical(ground_truth_path_2, config.get('resultPathAdj'))
-	n_values = len(result_value)   # Expected to contain multiple values
-	for val_ind in range(n_values):
-		assert (result_value[val_ind] == ground_truth_value_list_3[val_ind]), f'Expected {ground_truth_value_list_3[val_ind]} but result was {result_value[val_ind]}'
+    assert isIdentical(ground_truth_path_1, config.get('resultPath'))
+    assert isIdentical(ground_truth_path_2, config.get('resultPathAdj'))
+    n_values = len(result_value)   # Expected to contain multiple values
+    gt_values = ground_truth_value_list_3.split(', ')   # Expected to contain multiple values
+    for val_ind in range(n_values):
+        assert (str(result_value[val_ind]) == str(gt_values[val_ind])), f'Expected {gt_values[val_ind]} but result was {result_value[val_ind]}'
 
     return True
 

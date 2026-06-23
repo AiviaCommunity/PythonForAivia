@@ -4,26 +4,29 @@
         "inputGTImagePath": "Tests\\_InputImages\\Test_8bit_YX_BinaryCylinder_MaxIP_2.tif",
         "resultPath": "Tests\\CollectImageMetrics\\CalculateIntersectionOverUnion\\OUT_Test_8bit_YX_BinaryCylinder_MaxIP_2_Intersection Mask.tif",
         "groundTruthPath_1": "Tests\\CollectImageMetrics\\CalculateIntersectionOverUnion\\GT_Test_8bit_YX_BinaryCylinder_MaxIP_2_Intersection Mask.tif",
-        "groundTruthValue_2": "0.364081632653061",
+        "groundTruthValue_2": "0.3640816326530612",
         "ZCount": 1,
-        "TCount": 1
+        "TCount": 1,
+        "Calibration": "XYZT: 1 Default, 1 Default, 1 Default, 1 Default"
     },
     {
         "inputRTImagePath": "Tests\\_InputImages\\Test_8bit_ZYX_BinaryCylinder_1.tif",
         "inputGTImagePath": "Tests\\_InputImages\\Test_8bit_ZYX_BinaryCylinder_2.tif",
         "resultPath": "Tests\\CollectImageMetrics\\CalculateIntersectionOverUnion\\OUT_Test_8bit_ZYX_BinaryCylinder_2_Intersection Mask.tif",
         "groundTruthPath_1": "Tests\\CollectImageMetrics\\CalculateIntersectionOverUnion\\GT_Test_8bit_ZYX_BinaryCylinder_2_Intersection Mask.tif",
-        "groundTruthValue_2": "0.364081632653061",
+        "groundTruthValue_2": "0.3640816326530612",
         "ZCount": 50,
-        "TCount": 1
+        "TCount": 1,
+        "Calibration": "XYZT: 1 Default, 1 Default, 1 Default, 1 Default"
     },
     {
         "inputRTImagePath": "Tests\\_InputImages\\Test_16bit_ZYX_mitoSeg_T15.tif",
         "inputGTImagePath": "Tests\\_InputImages\\Test_16bit_ZYX_mitoSeg_T15.tif",
         "resultPath": "Tests\\CollectImageMetrics\\CalculateIntersectionOverUnion\\OUT_Test_16bit_ZYX_mitoSeg_T15_Intersection Mask.tif",
         "groundTruthPath_1": "Tests\\CollectImageMetrics\\CalculateIntersectionOverUnion\\GT_Test_16bit_ZYX_mitoSeg_T15_Intersection Mask.tif",
-        "groundTruthValue_2": "1",
+        "groundTruthValue_2": "1.0",
         "ZCount": 11,
-        "TCount": 1
+        "TCount": 1,
+        "Calibration": "XYZT: 1 Default, 1 Default, 1 Default, 1 Default"
     }
 ]

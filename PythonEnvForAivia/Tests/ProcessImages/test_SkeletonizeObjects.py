@@ -1,6 +1,7 @@
 import unittest
 import json
 import os
+import ctypes
 from Recipes.ProcessImages import SkeletonizeObjects
 from Tests.utils.comparison import isIdentical
 
@@ -18,13 +19,13 @@ Computes a skeleton of the input image based on the thinning of its binarization
 
 
 def run_test(config):
-	ground_truth_path_1 = config.pop('groundTruthPath_1')
-	ground_truth_path_2 = config.pop('groundTruthPath_2')
+    ground_truth_path_1 = config.pop('groundTruthPath_1')
+    ground_truth_path_2 = config.pop('groundTruthPath_2')
 
     result_value = SkeletonizeObjects.run(params=config)
     
-	assert isIdentical(ground_truth_path_1, config.get('resultObjectPath'))
-	assert isIdentical(ground_truth_path_2, config.get('resultImagePath'))
+    assert isIdentical(ground_truth_path_1, config.get('resultObjectPath'))
+    assert isIdentical(ground_truth_path_2, config.get('resultImagePath'))
 
     return True
 

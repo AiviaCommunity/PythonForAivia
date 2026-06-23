@@ -1,6 +1,7 @@
 import unittest
 import json
 import os
+import ctypes
 from Recipes.ProcessImages import ThresholdWithoutBorders3D
 from Tests.utils.comparison import isIdentical
 
@@ -19,11 +20,11 @@ applying this recipe if they expect more than 255 objects to be segmented.'''
 
 
 def run_test(config):
-	ground_truth_path_1 = config.pop('groundTruthPath_1')
+    ground_truth_path_1 = config.pop('groundTruthPath_1')
 
     result_value = ThresholdWithoutBorders3D.run(params=config)
     
-	assert isIdentical(ground_truth_path_1, config.get('resultObjectPath'))
+    assert isIdentical(ground_truth_path_1, config.get('resultObjectPath'))
 
     return True
 

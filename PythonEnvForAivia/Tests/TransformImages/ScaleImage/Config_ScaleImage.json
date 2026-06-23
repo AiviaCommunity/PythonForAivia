@@ -2,71 +2,92 @@
     {
         "inputImagePath": "Tests\\_InputImages\\Test_8bit_YX_mitoFluo_T15_MaxIP.tif",
         "scaleFactorXY": "2.0",
-        "scaleFactorZ": "1,5",
+        "scaleFactorZ": "1.5",
         "scaleDirection": "0",
+        "resultPath": "",
         "fileOutputPath_2": "Tests\\TransformImages\\ScaleImage\\OUT_Test_8bit_YX_mitoFluo_T15_MaxIP_processed.tif",
         "groundTruthPath_2": "Tests\\TransformImages\\ScaleImage\\GT_Test_8bit_YX_mitoFluo_T15_MaxIP_processed.tif",
+        "CallingExecutable": "None",
         "ZCount": 1,
-        "TCount": 1
+        "TCount": 1,
+        "Calibration": "XYZT: 1 Default, 1 Default, 1 Default, 1 Default"
     },
     {
         "inputImagePath": "Tests\\_InputImages\\Test_16bit_YX_Fluo_nuclei.tif",
         "scaleFactorXY": "2.0",
-        "scaleFactorZ": "1,5",
+        "scaleFactorZ": "1.5",
         "scaleDirection": "0",
+        "resultPath": "",
         "fileOutputPath_2": "Tests\\TransformImages\\ScaleImage\\OUT_Test_16bit_YX_Fluo_nuclei_processed.tif",
         "groundTruthPath_2": "Tests\\TransformImages\\ScaleImage\\GT_Test_16bit_YX_Fluo_nuclei_processed.tif",
+        "CallingExecutable": "None",
         "ZCount": 1,
-        "TCount": 1
+        "TCount": 1,
+        "Calibration": "XYZT: 1 Default, 1 Default, 1 Default, 1 Default"
     },
     {
         "inputImagePath": "Tests\\_InputImages\\Test_8bit_TYX_mitoFluo_MaxIP.tif",
         "scaleFactorXY": "2.0",
-        "scaleFactorZ": "1,5",
+        "scaleFactorZ": "1.5",
         "scaleDirection": "0",
+        "resultPath": "",
         "fileOutputPath_2": "Tests\\TransformImages\\ScaleImage\\OUT_Test_8bit_TYX_mitoFluo_MaxIP_processed.tif",
         "groundTruthPath_2": "Tests\\TransformImages\\ScaleImage\\GT_Test_8bit_TYX_mitoFluo_MaxIP_processed.tif",
+        "CallingExecutable": "None",
         "ZCount": 1,
-        "TCount": 31
+        "TCount": 31,
+        "Calibration": "XYZT: 1 Default, 1 Default, 1 Default, 1 Default"
     },
     {
         "inputImagePath": "Tests\\_InputImages\\Test_8bit_ZYX_mitoFluo_T15.tif",
         "scaleFactorXY": "2.0",
-        "scaleFactorZ": "1,5",
+        "scaleFactorZ": "1.5",
         "scaleDirection": "0",
+        "resultPath": "",
         "fileOutputPath_2": "Tests\\TransformImages\\ScaleImage\\OUT_Test_8bit_ZYX_mitoFluo_T15_processed.tif",
         "groundTruthPath_2": "Tests\\TransformImages\\ScaleImage\\GT_Test_8bit_ZYX_mitoFluo_T15_processed.tif",
+        "CallingExecutable": "None",
         "ZCount": 11,
-        "TCount": 1
+        "TCount": 1,
+        "Calibration": "XYZT: 1 Default, 1 Default, 1 Default, 1 Default"
     },
     {
         "inputImagePath": "Tests\\_InputImages\\Test_16bit_ZYX_mitoFluo_T15.tif",
         "scaleFactorXY": "2.0",
-        "scaleFactorZ": "1,5",
+        "scaleFactorZ": "1.5",
         "scaleDirection": "0",
+        "resultPath": "",
         "fileOutputPath_2": "Tests\\TransformImages\\ScaleImage\\OUT_Test_16bit_ZYX_mitoFluo_T15_processed.tif",
         "groundTruthPath_2": "Tests\\TransformImages\\ScaleImage\\GT_Test_16bit_ZYX_mitoFluo_T15_processed.tif",
+        "CallingExecutable": "None",
         "ZCount": 11,
-        "TCount": 1
+        "TCount": 1,
+        "Calibration": "XYZT: 1 Default, 1 Default, 1 Default, 1 Default"
     },
     {
         "inputImagePath": "Tests\\_InputImages\\Test_8bit_TZYX_mitoFluo.tif",
         "scaleFactorXY": "2.0",
-        "scaleFactorZ": "1,5",
+        "scaleFactorZ": "1.5",
         "scaleDirection": "0",
+        "resultPath": "",
         "fileOutputPath_2": "Tests\\TransformImages\\ScaleImage\\OUT_Test_8bit_TZYX_mitoFluo_processed.tif",
         "groundTruthPath_2": "Tests\\TransformImages\\ScaleImage\\GT_Test_8bit_TZYX_mitoFluo_processed.tif",
+        "CallingExecutable": "None",
         "ZCount": 11,
-        "TCount": 31
+        "TCount": 31,
+        "Calibration": "XYZT: 1 Default, 1 Default, 1 Default, 1 Default"
     },
     {
         "inputImagePath": "Tests\\_InputImages\\Test_16bit_TZYX_mitoFluo.tif",
         "scaleFactorXY": "2.0",
-        "scaleFactorZ": "1,5",
+        "scaleFactorZ": "1.5",
         "scaleDirection": "0",
+        "resultPath": "",
         "fileOutputPath_2": "Tests\\TransformImages\\ScaleImage\\OUT_Test_16bit_TZYX_mitoFluo_processed.tif",
         "groundTruthPath_2": "Tests\\TransformImages\\ScaleImage\\GT_Test_16bit_TZYX_mitoFluo_processed.tif",
+        "CallingExecutable": "None",
         "ZCount": 11,
-        "TCount": 31
+        "TCount": 31,
+        "Calibration": "XYZT: 1 Default, 1 Default, 1 Default, 1 Default"
     }
 ]

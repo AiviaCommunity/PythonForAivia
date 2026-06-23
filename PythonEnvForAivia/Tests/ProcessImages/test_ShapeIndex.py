@@ -1,6 +1,7 @@
 import unittest
 import json
 import os
+import ctypes
 from Recipes.ProcessImages import ShapeIndex
 from Tests.utils.comparison import isIdentical
 
@@ -18,11 +19,11 @@ Different values indicate convexity/concavitiy and shapes:
 
 
 def run_test(config):
-	ground_truth_path_1 = config.pop('groundTruthPath_1')
+    ground_truth_path_1 = config.pop('groundTruthPath_1')
 
     result_value = ShapeIndex.run(params=config)
     
-	assert isIdentical(ground_truth_path_1, config.get('resultPath'))
+    assert isIdentical(ground_truth_path_1, config.get('resultPath'))
 
     return True
 

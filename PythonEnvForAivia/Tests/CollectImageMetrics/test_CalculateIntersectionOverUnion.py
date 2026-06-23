@@ -1,6 +1,7 @@
 import unittest
 import json
 import os
+import ctypes
 from Recipes.CollectImageMetrics import CalculateIntersectionOverUnion
 from Tests.utils.comparison import isIdentical
 
@@ -18,13 +19,13 @@ File > Options > Logging > Verbosity = everything'''
 
 
 def run_test(config):
-	ground_truth_path_1 = config.pop('groundTruthPath_1')
-	ground_truth_value_2 = config.pop('groundTruthValue_2')
+    ground_truth_path_1 = config.pop('groundTruthPath_1')
+    ground_truth_value_2 = config.pop('groundTruthValue_2')
 
     result_value = CalculateIntersectionOverUnion.run(params=config)
     
-	assert isIdentical(ground_truth_path_1, config.get('resultPath'))
-	assert (result_value == ground_truth_value_2), f'Expected {ground_truth_value_2} but result was {result_value}'
+    assert isIdentical(ground_truth_path_1, config.get('resultPath'))
+    assert (str(result_value) == str(ground_truth_value_2)), f'Expected {ground_truth_value_2} but result was {result_value}'
 
     return True
 

@@ -4,20 +4,23 @@
         "resultPath": "Tests\\ProcessImages\\SplitLabeledMask\\OUT_Test_8bit_YX_mitoSeg_T15_labeled_Split Labeled Mask.tif",
         "groundTruthPath_1": "Tests\\ProcessImages\\SplitLabeledMask\\GT_Test_8bit_YX_mitoSeg_T15_labeled_Split Labeled Mask.tif",
         "ZCount": 1,
-        "TCount": 1
+        "TCount": 1,
+        "Calibration": "XYZT: 1 Default, 1 Default, 1 Default, 1 Default"
     },
     {
         "inputImagePath": "Tests\\_InputImages\\Test_16bit_YX_Fluo_nuclei_labeled.tif",
         "resultPath": "Tests\\ProcessImages\\SplitLabeledMask\\OUT_Test_16bit_YX_Fluo_nuclei_labeled_Split Labeled Mask.tif",
         "groundTruthPath_1": "Tests\\ProcessImages\\SplitLabeledMask\\GT_Test_16bit_YX_Fluo_nuclei_labeled_Split Labeled Mask.tif",
         "ZCount": 1,
-        "TCount": 1
+        "TCount": 1,
+        "Calibration": "XYZT: 1 Default, 1 Default, 1 Default, 1 Default"
     },
     {
         "inputImagePath": "Tests\\_InputImages\\Test_8bit_ZYX_mitoSeg_T15_labeled.tif",
         "resultPath": "Tests\\ProcessImages\\SplitLabeledMask\\OUT_Test_8bit_ZYX_mitoSeg_T15_labeled_Split Labeled Mask.tif",
         "groundTruthPath_1": "Tests\\ProcessImages\\SplitLabeledMask\\GT_Test_8bit_ZYX_mitoSeg_T15_labeled_Split Labeled Mask.tif",
         "ZCount": 11,
-        "TCount": 1
+        "TCount": 1,
+        "Calibration": "XYZT: 1 Default, 1 Default, 1 Default, 1 Default"
     }
 ]

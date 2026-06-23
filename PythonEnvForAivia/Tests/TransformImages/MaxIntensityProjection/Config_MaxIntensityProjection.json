@@ -5,8 +5,10 @@
         "groundTruthPath_1": "Tests\\TransformImages\\MaxIntensityProjection\\GT_Test_8bit_ZYX_mitoFluo_T15_Max Intensity Location.tif",
         "fileOutputPath_2": "Tests\\TransformImages\\MaxIntensityProjection\\OUT_Test_8bit_ZYX_mitoFluo_T15_processed.tif",
         "groundTruthPath_2": "Tests\\TransformImages\\MaxIntensityProjection\\GT_Test_8bit_ZYX_mitoFluo_T15_processed.tif",
+        "CallingExecutable": "None",
         "ZCount": 11,
-        "TCount": 1
+        "TCount": 1,
+        "Calibration": "XYZT: 1 Default, 1 Default, 1 Default, 1 Default"
     },
     {
         "inputImagePath": "Tests\\_InputImages\\Test_16bit_ZYX_mitoFluo_T15.tif",
@@ -14,7 +16,9 @@
         "groundTruthPath_1": "Tests\\TransformImages\\MaxIntensityProjection\\GT_Test_16bit_ZYX_mitoFluo_T15_Max Intensity Location.tif",
         "fileOutputPath_2": "Tests\\TransformImages\\MaxIntensityProjection\\OUT_Test_16bit_ZYX_mitoFluo_T15_processed.tif",
         "groundTruthPath_2": "Tests\\TransformImages\\MaxIntensityProjection\\GT_Test_16bit_ZYX_mitoFluo_T15_processed.tif",
+        "CallingExecutable": "None",
         "ZCount": 11,
-        "TCount": 1
+        "TCount": 1,
+        "Calibration": "XYZT: 1 Default, 1 Default, 1 Default, 1 Default"
     }
 ]

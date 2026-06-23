@@ -33,6 +33,8 @@ def generate_test_method(config):
         self.dynamic_test_generator(config)
     return test_method
 
+print("* [TEST] ProcessImages > DrawShapes_2D")
+
 config_json_path = os.path.join(os.path.dirname(__file__), "DrawShapes_2D", "Config_DrawShapes_2D.json")
 with open(config_json_path) as f:
     configurations = json.load(f)

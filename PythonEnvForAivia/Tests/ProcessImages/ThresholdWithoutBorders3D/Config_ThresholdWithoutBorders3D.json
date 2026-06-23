@@ -6,7 +6,8 @@
         "resultObjectPath": "Tests\\ProcessImages\\ThresholdWithoutBorders3D\\OUT_Test_8bit_ZYX_Cells3D_ch2_nuc_Objects.tif",
         "groundTruthPath_1": "Tests\\ProcessImages\\ThresholdWithoutBorders3D\\GT_Test_8bit_ZYX_Cells3D_ch2_nuc_Objects.tif",
         "ZCount": 60,
-        "TCount": 1
+        "TCount": 1,
+        "Calibration": "XYZT: 1 Default, 1 Default, 1 Default, 1 Default"
     },
     {
         "inputImagePath": "Tests\\_InputImages\\Test_16bit_ZYX_Cells3D_ch2_nuc.tif",
@@ -15,7 +16,8 @@
         "resultObjectPath": "Tests\\ProcessImages\\ThresholdWithoutBorders3D\\OUT_Test_16bit_ZYX_Cells3D_ch2_nuc_Objects.tif",
         "groundTruthPath_1": "Tests\\ProcessImages\\ThresholdWithoutBorders3D\\GT_Test_16bit_ZYX_Cells3D_ch2_nuc_Objects.tif",
         "ZCount": 60,
-        "TCount": 1
+        "TCount": 1,
+        "Calibration": "XYZT: 1 Default, 1 Default, 1 Default, 1 Default"
     },
     {
         "inputImagePath": "Tests\\_InputImages\\Test_16bit_TZYX_3DandT_Nuclei.tif",
@@ -24,6 +26,7 @@
         "resultObjectPath": "Tests\\ProcessImages\\ThresholdWithoutBorders3D\\OUT_Test_16bit_TZYX_3DandT_Nuclei_Objects.tif",
         "groundTruthPath_1": "Tests\\ProcessImages\\ThresholdWithoutBorders3D\\GT_Test_16bit_TZYX_3DandT_Nuclei_Objects.tif",
         "ZCount": 11,
-        "TCount": 3
+        "TCount": 3,
+        "Calibration": "XYZT: 1 Default, 1 Default, 1 Default, 1 Default"
     }
 ]

@@ -8,6 +8,7 @@
         "groundTruthPath_1": "Tests\\TransformImages\\RGBtoLuminance\\GT_Test_RGB_YX_PigSkin_blue_Luminance.tif",
         "testGuidance": "NOTE: Default is not to show the histogram (=0). The option can be turned on once when running the test manually, but no GT is expected",
         "ZCount": 1,
-        "TCount": 1
+        "TCount": 1,
+        "Calibration": "XYZT: 1 Default, 1 Default, 1 Default, 1 Default"
     }
 ]

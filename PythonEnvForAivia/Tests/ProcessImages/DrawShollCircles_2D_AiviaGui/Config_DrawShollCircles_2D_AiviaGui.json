@@ -8,7 +8,8 @@
         "resultPath": "Tests\\ProcessImages\\DrawShollCircles_2D_AiviaGui\\OUT_Test_8bit_YX_mitoFluo_T15_MaxIP_Sholl Circles.tif",
         "groundTruthPath_1": "Tests\\ProcessImages\\DrawShollCircles_2D_AiviaGui\\GT_Test_8bit_YX_mitoFluo_T15_MaxIP_Sholl Circles.tif",
         "ZCount": 1,
-        "TCount": 1
+        "TCount": 1,
+        "Calibration": "XYZT: 1 Default, 1 Default, 1 Default, 1 Default"
     },
     {
         "inputImagePath": "Tests\\_InputImages\\Test_16bit_YX_Fluo_nuclei.tif",
@@ -19,7 +20,8 @@
         "resultPath": "Tests\\ProcessImages\\DrawShollCircles_2D_AiviaGui\\OUT_Test_16bit_YX_Fluo_nuclei_Sholl Circles.tif",
         "groundTruthPath_1": "Tests\\ProcessImages\\DrawShollCircles_2D_AiviaGui\\GT_Test_16bit_YX_Fluo_nuclei_Sholl Circles.tif",
         "ZCount": 1,
-        "TCount": 1
+        "TCount": 1,
+        "Calibration": "XYZT: 0.3 micrometers, 0.3 micrometers, 1 Default, 1 Default"
     },
     {
         "inputImagePath": "Tests\\_InputImages\\Test_8bit_TYX_mitoFluo_MaxIP.tif",
@@ -30,6 +32,7 @@
         "resultPath": "Tests\\ProcessImages\\DrawShollCircles_2D_AiviaGui\\OUT_Test_8bit_TYX_mitoFluo_MaxIP_Sholl Circles.tif",
         "groundTruthPath_1": "Tests\\ProcessImages\\DrawShollCircles_2D_AiviaGui\\GT_Test_8bit_TYX_mitoFluo_MaxIP_Sholl Circles.tif",
         "ZCount": 1,
-        "TCount": 31
+        "TCount": 31,
+        "Calibration": "XYZT: 1 Default, 1 Default, 1 Default, 1 Default"
     }
 ]
