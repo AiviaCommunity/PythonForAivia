@@ -53,7 +53,6 @@ IJTimeUnit = {'Minutes': 'min', 'Seconds': 's', 'Milliseconds': 'ms', 'Microseco
 # [INPUT Name:typicalObjDiam Type:double DisplayName:'Typical Object Diameter' Default:10.0 Min:0.001 Max:1000.0]
 # [OUTPUT Name:resultPath Type:string DisplayName:'Duplicate of input']
 def run(params):
-    image_org = params['EntryPoint']
     image_location = params['inputImagePath']
     result_location = params['resultPath']
     typical_diameter = float(params['typicalObjDiam'])
@@ -191,7 +190,6 @@ if __name__ == '__main__':
               'scaleFactorXY': 2,
               'scaleFactorZ': 1,
               'scaleDirection': 0,
-              'EntryPoint': '',
               'CallingExecutable': ''}
     run(params)
 
