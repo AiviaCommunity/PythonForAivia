@@ -28,9 +28,9 @@ import shlex
 import subprocess
 import imagecodecs
 import numpy as np
-from skimage import transform, img_as_uint, img_as_ubyte
+from skimage import transform
+from skimage.util import img_as_uint, img_as_ubyte
 from tifffile import imread, imwrite
-from os.path import dirname as up
 from magicgui import magicgui
 
 
@@ -65,30 +65,17 @@ axis_rot_options = {'ClockWise': {'X': (1, 0), 'Y': (0, 2), 'Z': (2, 1)},
 interpolation_mode = 1  # 0: Nearest-neighbor, 1: Bi-linear , 2: Bi-quadratic, 3: Bi-cubic, 4: Bi-quartic, 5: Bi-quintic
 
 
-# Get path to the Aivia executable
-def getParentDir(curr_dir, level=1):
-    for i in range(level):
-        parent_dir = up(curr_dir)
-        curr_dir = parent_dir
-    return curr_dir
-
-
-exeDir = sys.executable
-parentDir = getParentDir(exeDir, level=2)
-aivia_path = parentDir + '\\Aivia.exe'
-
-
 # [INPUT Name:inputImagePath Type:string DisplayName:'Input Channel']
 # [OUTPUT Name:resultPath Type:string DisplayName:'Duplicate of input']
 def run(params):
     global axis_rot_options, interpolation_mode
-    # image_org = params['EntryPoint']
     image_location = params['inputImagePath']
     result_location = params['resultPath']
     zCount = int(params['ZCount'])
     tCount = int(params['TCount'])
     pixel_cal_tmp = params['Calibration']
     pixel_cal = pixel_cal_tmp[6:].split(', ')           # Expects calibration with 'XYZT: ' in front
+    aivia_path = params['CallingExecutable']
 
     # Getting XY and Z calibration values                # Expecting only 'Micrometers' in this code
     XY_cal = float(pixel_cal[0].split(' ')[0])
@@ -99,7 +86,7 @@ def run(params):
         print(f"Error: {image_location} does not exist")
         return
 
-    if not os.path.exists(aivia_path):
+    if not 'fileOutputPath_2' in params.keys() and not os.path.exists(aivia_path):
         print(f"Error: {aivia_path} does not exist")
         return
 
@@ -174,9 +161,13 @@ def run(params):
     imwrite(tmp_path, out_data, imagej=True, photometric='minisblack', metadata=meta_info,
             resolution=(inverted_XY_cal, inverted_XY_cal))
 
+    # Added for handling testing without opening aivia
+    if aivia_path == "None":
+        return
+
     # Dummy save
-    # dummy_data = np.zeros(image_data.shape, dtype=image_data.dtype)
-    # imwrite(result_location, dummy_data)
+    dummy_data = np.zeros(raw_data.shape, dtype=raw_data.dtype)
+    imwrite(result_location, dummy_data)
 
     # Run external program
     cmdLine = 'start \"\" \"' + aivia_path + '\" \"' + tmp_path + '\"'
@@ -198,4 +189,4 @@ if __name__ == '__main__':
 # v1_00: - Including isotropic scaling and proper export to Aivia
 # v1_10: - Adding a GUI to choose rotation axis + virtual environment activation
 # v1_11: - New virtual env code for auto-activation
-# v1.12: - Added an extra key in params for Unit test output
+# v1.12: - Added an extra key in params for Unit test output and changed the way to catch Aivia.exe path
