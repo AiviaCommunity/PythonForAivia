@@ -58,6 +58,7 @@ def run(params):
     
     new_input_dims = np.insert(input_dims, 0, 3)
     image_data = np.zeros(new_input_dims).astype(first_ch.dtype)
+    print('-- Combined input dimensions (expected C, Z, Y, X): ', new_input_dims, ' --')
     
     for c in range(0, 3):
         image_data[c] = imread(image_location[c])
@@ -68,12 +69,12 @@ def run(params):
         return;
     
     output_data = np.empty_like(first_ch)
-    proj_output = np.zeros([input_dims[1], input_dims[2], 3])       # TO CHECK
+    proj_output = np.zeros([3, input_dims[1], input_dims[2]])       # TO CHECK
     
     for c in range(0, 3):
         if tCount == 1:     # (image is not 3D+t)
             # Generate 2D max projection for each channel
-            proj_output[:, :, 2-c] = np.amax(image_data[c], axis = 0)
+            proj_output[2-c, :, :] = np.amax(image_data[c], axis = 0)
     
     # Saving 3 channel image as single tif
     if 'fileOutputPath_2' in params.keys():     # test mode
@@ -85,7 +86,8 @@ def run(params):
         imsave(result_location, output_data)
 
     # Saving real output
-    imsave(temp_location, proj_output.astype(np.uint8))
+    print('-- Output dimensions (expected C, Y, X): ', proj_output.shape, ' --')
+    imsave(temp_location, proj_output.astype(np.uint8), metadata={'axes': 'XYC'})
   
     aivia_path = params['CallingExecutable']
     # Added for handling testing without opening aivia
@@ -114,3 +116,4 @@ if __name__ == '__main__':
 
 # CHANGELOG
 # v1.01: - Added an extra key in params for Unit test output
+# v1.10: - Changed output format to be as GT during tests (CYX order)
