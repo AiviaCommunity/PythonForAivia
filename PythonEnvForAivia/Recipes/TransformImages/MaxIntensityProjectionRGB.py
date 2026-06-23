@@ -76,15 +76,17 @@ def run(params):
             proj_output[:, :, 2-c] = np.amax(image_data[c], axis = 0)
     
     # Saving 3 channel image as single tif
-    if 'fileOutputPath_2' in params.keys():
+    if 'fileOutputPath_2' in params.keys():     # test mode
         temp_location = params['fileOutputPath_2']
     else:
         temp_location = result_location.replace('.tif', 'tmp.tif')
-    imsave(temp_location, proj_output.astype(np.uint8))
+        
+        # Dummy save to avoid error in Aivia
+        imsave(result_location, output_data)
 
-    # Dummy save to avoid error in Aivia
-    imsave(result_location, output_data)
-    
+    # Saving real output
+    imsave(temp_location, proj_output.astype(np.uint8))
+  
     aivia_path = params['CallingExecutable']
     # Added for handling testing without opening aivia
     if aivia_path == "None":
