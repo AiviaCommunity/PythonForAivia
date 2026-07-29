@@ -66,7 +66,7 @@ def run(params):
     print(f'___ Intersection over Union = {IoU} ___')    # Value appears in the log if Verbosity option is set to 'Everything'
     
     # Display result too in a popup
-    if not 'groundTruthValue_2' in params.keys():
+    if not RTimageLocation.startswith('Tests'):
         ctypes.windll.user32.MessageBoxW(0, str(IoU), 'Intersection over Union', 0)
     
     # Convert intersection to 8-bit range
