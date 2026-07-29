@@ -5,10 +5,13 @@ import shlex
 import subprocess
 import imagecodecs
 import numpy as np
-from skimage import transform, img_as_uint, img_as_ubyte
+from skimage import transform
+from skimage.util import img_as_uint, img_as_ubyte
 from tifffile import imread, imwrite
 from os.path import dirname as up
+import re
 
+DEFAULT_OUTPUT_FOLDER = r''
 
 """
 Rotates a 2D image given the user-defined angle.
@@ -108,9 +111,27 @@ def run(params):
         # Formatting voxel calibration values
         inverted_XY_cal = 1 / XY_cal
 
-        tmp_path = result_location.replace('.tif', '-rotated.tif')
-        print('Saving image in temp location:\n', tmp_path)
-        imwrite(tmp_path, out_data, imagej=True, photometric='minisblack', metadata=meta_info,
+        # Evaluate possible output in a user-defined folder
+        if DEFAULT_OUTPUT_FOLDER:
+            output_folder = DEFAULT_OUTPUT_FOLDER
+        else:
+            output_folder = os.path.dirname(result_location)
+
+        # Attempt to collect name of current image (+bitdepth)
+        out_path = ''
+        if params.get("RawImageMetadata"):
+            match = re.search(r'^(.*?)\s\(Dims\s.*?\|\sCalibration', params['RawImageMetadata'])
+            if match is not None:
+                img_name = match.groups()[0]
+                output_name = f"{img_name}_Rot{rot_angle * -1}deg.tif"
+
+                out_path = os.path.join(output_folder, output_name)
+
+        if not out_path:
+            out_path = result_location.replace('.tif', 'tmp.tif')
+
+        print('Saving image in location:\n', out_path)
+        imwrite(out_path, out_data, imagej=True, photometric='minisblack', metadata=meta_info,
                 resolution=(inverted_XY_cal, inverted_XY_cal))
 
         # Added for handling testing without opening aivia
@@ -120,7 +141,7 @@ def run(params):
             print(f"Error: {aivia_path} does not exist")
             return
         # Run external program
-        cmdLine = 'start \"\" \"' + aivia_path + '\" \"' + tmp_path + '\"'
+        cmdLine = 'start \"\" \"' + aivia_path + '\" \"' + out_path + '\"'
 
         args = shlex.split(cmdLine)
         subprocess.run(args, shell=True)
@@ -143,3 +164,4 @@ if __name__ == '__main__':
 
 # CHANGELOG
 # v1_00: - Including isotropic scaling and proper export to Aivia
+# v1.10: - Adding default folder for potential batch functionality (input still can't be put in a workflow)
