@@ -1,3 +1,5 @@
+### UPDATE: Some recipes are not functional in Aivia 16.0. Updated recipes will be provided soon...
+
 # Python for Aivia
 
 Here you will find Python recipes and helper functions for Aivia users.
@@ -20,43 +22,47 @@ The goal of this repository is to organize the work of the Aivia team and the Ai
 
 Below is a table of implemented recipes and their image format compatibility
 
+![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png) indicates that an active unit test has been implemented for a given recipe, and that recipe is compatible with the given image format.
+
+![#f03c15](https://placehold.co/15x15/f03c15/f03c15.png) indicates that the given recipe does not have a unit test for the given image format, but is compatible with the image format
+
 Parent Directory | Recipe Name | 2D | 2D +T | 3D | 3D+T | RGB
 -|-|-|-|-|-|-
-[ProcessImages](PythonEnvForAivia/Recipes/ProcessImages)| [`AdjustGamma.py`](PythonEnvForAivia/Recipes/ProcessImages/AdjustGamma.py)|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	
-[ProcessImages](PythonEnvForAivia/Recipes/ProcessImages)| [`AdjustGamma_MagicGui.py`](PythonEnvForAivia/Recipes/ProcessImages/AdjustGamma_MagicGui.py)|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	
-[ProcessImages](PythonEnvForAivia/Recipes/ProcessImages)| [`AdjustSigmoid.py`](PythonEnvForAivia/Recipes/ProcessImages/AdjustSigmoid.py)|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	
-[ProcessImages](PythonEnvForAivia/Recipes/ProcessImages)| [`DrawArrayOfShapes_2D.py`](PythonEnvForAivia/Recipes/ProcessImages/DrawArrayOfShapes_2D.py)|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|		|		|		
-[ProcessImages](PythonEnvForAivia/Recipes/ProcessImages)| [`DrawShapes_2D.py`](PythonEnvForAivia/Recipes/ProcessImages/DrawShapes_2D.py)|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|		|		|		
-[ProcessImages](PythonEnvForAivia/Recipes/ProcessImages)| [`DrawShollCircles_2D_AiviaGui.py`](PythonEnvForAivia/Recipes/ProcessImages/DrawShollCircles_2D_AiviaGui.py)|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|		|		|		
-[ProcessImages](PythonEnvForAivia/Recipes/ProcessImages)| [`MaxMask.py`](PythonEnvForAivia/Recipes/ProcessImages/MaxMask.py)|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|	
-[ProcessImages](PythonEnvForAivia/Recipes/ProcessImages)| [`MaxSlices.py`](PythonEnvForAivia/Recipes/ProcessImages/MaxSlices.py)|		|		|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|	
-[ProcessImages](PythonEnvForAivia/Recipes/ProcessImages)| [`MeijeringNeuriteness.py`](PythonEnvForAivia/Recipes/ProcessImages/MeijeringNeuriteness.py)|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|		|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|		|		![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)
-[ProcessImages](PythonEnvForAivia/Recipes/ProcessImages)| [`MinSlices.py`](PythonEnvForAivia/Recipes/ProcessImages/MinSlices.py)|		|		|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|	
-[ProcessImages](PythonEnvForAivia/Recipes/ProcessImages)| [`MorphologicalTexture.py`](PythonEnvForAivia/Recipes/ProcessImages/MorphologicalTexture.py)|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|		
-[ProcessImages](PythonEnvForAivia/Recipes/ProcessImages)| [`ShapeIndex.py`](PythonEnvForAivia/Recipes/ProcessImages/ShapeIndex.py)|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|		
-[ProcessImages](PythonEnvForAivia/Recipes/ProcessImages)| [`Skeletonize.py`](PythonEnvForAivia/Recipes/ProcessImages/Skeletonize.py)|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|		
-[ProcessImages](PythonEnvForAivia/Recipes/ProcessImages)| [`SkeletonizeObjects.py`](PythonEnvForAivia/Recipes/ProcessImages/SkeletonizeObjects.py)|		|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|		|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|		
-[ProcessImages](PythonEnvForAivia/Recipes/ProcessImages)| [`SplitLabeledMask.py`](PythonEnvForAivia/Recipes/ProcessImages/SplitLabeledMask.py)|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|		|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|		|		
-[ProcessImages](PythonEnvForAivia/Recipes/ProcessImages)| [`SuperpixelPainter.py`](PythonEnvForAivia/Recipes/ProcessImages/SuperpixelPainter.py)|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|		|		|		|		
-[ProcessImages](PythonEnvForAivia/Recipes/ProcessImages)| [`ThresholdWithoutBorders2D.py`](PythonEnvForAivia/Recipes/ProcessImages/ThresholdWithoutBorders2D.py)|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|		|		|		
-[ProcessImages](PythonEnvForAivia/Recipes/ProcessImages)| [`ThresholdWithoutBorders3D.py`](PythonEnvForAivia/Recipes/ProcessImages/ThresholdWithoutBorders3D.py)|		|		|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|		
-[ProcessImages](PythonEnvForAivia/Recipes/ProcessImages)| [`Watershed.py`](PythonEnvForAivia/Recipes/ProcessImages/Watershed.py)|		|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|		
-[TransformImages](PythonEnvForAivia/Recipes/TransformImages)| [`MaxIntensityProjection.py`](PythonEnvForAivia/Recipes/TransformImages/MaxIntensityProjection.py)|		|		|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|		|	
-[TransformImages](PythonEnvForAivia/Recipes/TransformImages)| [`MaxIntensityProjectionRGB.py`](PythonEnvForAivia/Recipes/TransformImages/MaxIntensityProjectionRGB.py)|		|		|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|		|	
-[TransformImages](PythonEnvForAivia/Recipes/TransformImages)| [`RGBtoLuminance.py`](PythonEnvForAivia/Recipes/TransformImages/RGBtoLuminance.py)|		|		|		|		|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)
-[TransformImages](PythonEnvForAivia/Recipes/TransformImages)| [`Rotate2D.py`](PythonEnvForAivia/Recipes/TransformImages/Rotate2D.py)|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|		|		|		|	
-[TransformImages](PythonEnvForAivia/Recipes/TransformImages)| [`Rotate3D_90deg.py`](PythonEnvForAivia/Recipes/TransformImages/Rotate3D_90deg.py)|		|		|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|		|	
-[TransformImages](PythonEnvForAivia/Recipes/TransformImages)| [`ScaleImage.py`](PythonEnvForAivia/Recipes/TransformImages/ScaleImage.py)|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|	
-[TransformImages](PythonEnvForAivia/Recipes/TransformImages)| [`ScaleImage_ForStarDist.py`](PythonEnvForAivia/Recipes/TransformImages/ScaleImage_ForStarDist.py)|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|	
-[TransformImages](PythonEnvForAivia/Recipes/TransformImages)| [`StackReg_ImageAlignment.py`](PythonEnvForAivia/Recipes/TransformImages/StackReg_ImageAlignment.py)|		|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|		|		|	
-[TransformImages](PythonEnvForAivia/Recipes/TransformImages)| [`ZColorCoding.py`](PythonEnvForAivia/Recipes/TransformImages/ZColorCoding.py)|		|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|	
-[ConvertImagesForAivia](PythonEnvForAivia/Recipes/ConvertImagesForAivia)| [`AiviaExperimentCreator.py`](PythonEnvForAivia/Recipes/ConvertImagesForAivia/AiviaExperimentCreator.py)|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)
-[ConvertImagesForAivia](PythonEnvForAivia/Recipes/ConvertImagesForAivia)| [`DICOMStackToTIFF.py`](PythonEnvForAivia/Recipes/ConvertImagesForAivia/DICOMStackToTIFF.py)|		|		|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|		|	
-[ConvertImagesForAivia](PythonEnvForAivia/Recipes/ConvertImagesForAivia)| [`MultiWellPlateConverter_OperaPhenix.py`](PythonEnvForAivia/Recipes/ConvertImagesForAivia/MultiWellPlateConverter_OperaPhenix.py)|		|		|		|		|	
-[CollectImageMetrics](PythonEnvForAivia/Recipes/CollectImageMetrics)| [`CalculateIntersectionOverUnion.py`](PythonEnvForAivia/Recipes/CollectImageMetrics/CalculateIntersectionOverUnion.py)	|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|	
-[CollectImageMetrics](PythonEnvForAivia/Recipes/CollectImageMetrics)| [`ImageComparisonMetrics.py`](PythonEnvForAivia/Recipes/CollectImageMetrics/ImageComparisonMetrics.py)	|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)
-[CollectImageMetrics](PythonEnvForAivia/Recipes/CollectImageMetrics)| [`ReadTiffTags.py`](PythonEnvForAivia/Recipes/CollectImageMetrics/ReadTiffTags.py)	|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)	|	![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png)
-
+[ProcessImages](../Recipes/ProcessImages)| [`AdjustGamma.py`](../Recipes/ProcessImages/AdjustGamma.py)|	![#c5f015][g]	|	![#c5f015][g]	|	![#c5f015][g]	|	![#c5f015][g]	|	
+[ProcessImages](../Recipes/ProcessImages)| [`AdjustGamma_MagicGui.py`](../Recipes/ProcessImages/AdjustGamma_MagicGui.py)|	![#c5f015][g]	|	![#c5f015][g]	|	![#c5f015][g]	|	![#c5f015][g]	|
+[ProcessImages](../Recipes/ProcessImages)| [`AdjustSigmoid.py`](../Recipes/ProcessImages/AdjustSigmoid.py)|	![#c5f015][g]	|	![#c5f015][g]	|	![#c5f015][g]	|	![#c5f015][g]	|	
+[ProcessImages](../Recipes/ProcessImages)| [`DrawArrayOfShapes_2D.py`](../Recipes/ProcessImages/DrawArrayOfShapes_2D.py)|	![#c5f015][g]	|	![#c5f015][g]	|		|		|		
+[ProcessImages](../Recipes/ProcessImages)| [`DrawShapes_2D.py`](../Recipes/ProcessImages/DrawShapes_2D.py)|	![#c5f015][g]	|	![#c5f015][g]	|		|		|		
+[ProcessImages](../Recipes/ProcessImages)| [`DrawShollCircles_2D_AiviaGui.py`](../Recipes/ProcessImages/DrawShollCircles_2D_AiviaGui.py)|	![#c5f015][g]	|	![#c5f015][g]	|		|		|		
+[ProcessImages](../Recipes/ProcessImages)| [`MeijeringNeuriteness.py`](../Recipes/ProcessImages/MeijeringNeuriteness.py)|	![#c5f015][g]	|		|	![#c5f015][g]	|		|
+[ProcessImages](../Recipes/ProcessImages)| [`MorphologicalTexture.py`](../Recipes/ProcessImages/MorphologicalTexture.py)|	![#c5f015][g]	|	![#c5f015][g]	|	![#c5f015][g]	|	![#c5f015][g]	|		
+[ProcessImages](../Recipes/ProcessImages)| [`ShapeIndex.py`](../Recipes/ProcessImages/ShapeIndex.py)|	![#c5f015][g]	|	![#c5f015][g]	|	![#c5f015][g]	|	![#c5f015][g]	|		
+[ProcessImages](../Recipes/ProcessImages)| [`Skeletonize.py`](../Recipes/ProcessImages/Skeletonize.py)|	![#c5f015][g]	|	![#c5f015][g]	|	![#c5f015][g]	|	![#c5f015][g]	|		
+[ProcessImages](../Recipes/ProcessImages)| [`SkeletonizeObjects.py`](../Recipes/ProcessImages/SkeletonizeObjects.py)|		|		|	![#c5f015][g]	|	![#c5f015][g]	|		
+[ProcessImages](../Recipes/ProcessImages)| [`SplitLabeledMask.py`](../Recipes/ProcessImages/SplitLabeledMask.py)|	![#c5f015][g]	|		|	![#c5f015][g]	|		|		
+[ProcessImages](../Recipes/ProcessImages)| [`SuperpixelPainter.py`](../Recipes/ProcessImages/SuperpixelPainter.py)|	![#c5f015][g]	|		|		|		|		
+[ProcessImages](../Recipes/ProcessImages)| [`ThresholdWithoutBorders2D.py`](../Recipes/ProcessImages/ThresholdWithoutBorders2D.py)|	![#c5f015][g]	|	![#c5f015][g]	|		|		|		
+[ProcessImages](../Recipes/ProcessImages)| [`ThresholdWithoutBorders3D.py`](../Recipes/ProcessImages/ThresholdWithoutBorders3D.py)|		|		|	![#c5f015][g]	|	![#c5f015][g]	|		
+[ProcessImages](../Recipes/ProcessImages)| [`Watershed.py`](../Recipes/ProcessImages/Watershed.py)|	![#c5f015][g]	|	![#c5f015][g]	|	![#c5f015][g]	|	![#c5f015][g]	|		
+[TransformImages](../Recipes/TransformImages)| [`MaxIntensityProjection.py`](../Recipes/TransformImages/MaxIntensityProjection.py)|		|		|	![#c5f015][g]	|		|	
+[TransformImages](../Recipes/TransformImages)| [`MaxIntensityProjectionRGB.py`](../Recipes/TransformImages/MaxIntensityProjectionRGB.py)|		|		|	![#c5f015][g]	|		|	
+[TransformImages](../Recipes/TransformImages)| [`MaxMask.py`](../Recipes/TransformImages/MaxMask.py)|	![#c5f015][g]	|	![#c5f015][g]	|	![#c5f015][g]	|	![#c5f015][g]	|	
+[TransformImages](../Recipes/TransformImages)| [`MaxSlices.py`](../Recipes/TransformImages/MaxSlices.py)|		|		|	![#c5f015][g]	|	![#c5f015][g]	|	
+[TransformImages](../Recipes/TransformImages)| [`MinSlices.py`](../Recipes/TransformImages/MinSlices.py)|		|		|	![#c5f015][g]	|	![#c5f015][g]	|	
+[TransformImages](../Recipes/TransformImages)| [`RGBtoLuminance.py`](../Recipes/TransformImages/RGBtoLuminance.py)|		|		|		|		|	![#c5f015][g]
+[TransformImages](../Recipes/TransformImages)| [`Rotate2D.py`](../Recipes/TransformImages/Rotate2D.py)|	![#c5f015][g]	|		|		|		|	
+[TransformImages](../Recipes/TransformImages)| [`Rotate3D_90deg.py`](../Recipes/TransformImages/Rotate3D_90deg.py)|		|		|	![#c5f015][g]	|		|	
+[TransformImages](../Recipes/TransformImages)| [`ScaleImage.py`](../Recipes/TransformImages/ScaleImage.py)|	![#c5f015][g]	|	![#c5f015][g]	|	![#c5f015][g]	|	![#c5f015][g]	|	
+[TransformImages](../Recipes/TransformImages)| [`ScaleImage_ForStarDist.py`](../Recipes/TransformImages/ScaleImage_ForStarDist.py)|	![#c5f015][g]	|	![#c5f015][g]	|	![#c5f015][g]	|	![#c5f015][g]	|	
+[TransformImages](../Recipes/TransformImages)| [`StackReg_ImageAlignment.py`](../Recipes/TransformImages/StackReg_ImageAlignment.py)|		|	![#c5f015][g]	|		|		|	
+[TransformImages](../Recipes/TransformImages)| [`ZColorCoding.py`](../Recipes/TransformImages/ZColorCoding.py)|		|	![#c5f015][g]	|	![#c5f015][g]	|	![#c5f015][g]	|	
+[ConvertImagesForAivia](../Recipes/ConvertImagesForAivia)| [`AiviaExperimentCreator.py`](../Recipes/ConvertImagesForAivia/AiviaExperimentCreator.py)|	![#c5f015][g]	|	![#f03c15][r]	|	![#f03c15][r]	|	![#f03c15][r]	|	![#f03c15][r]
+[ConvertImagesForAivia](../Recipes/ConvertImagesForAivia)| [`DICOMStackToTIFF.py`](../Recipes/ConvertImagesForAivia/DICOMStackToTIFF.py)|		|		|	![#c5f015][g]	|		|	
+[CollectImageMetrics](../Recipes/CollectImageMetrics)| [`CalculateIntersectionOverUnion.py`](../Recipes/CollectImageMetrics/CalculateIntersectionOverUnion.py)	|	![#c5f015][g]	|	![#c5f015][g]	|	![#c5f015][g]	|	![#c5f015][g]	|	
+[CollectImageMetrics](../Recipes/CollectImageMetrics)| [`ImageComparisonMetrics.py`](../Recipes/CollectImageMetrics/ImageComparisonMetrics.py)	|	![#c5f015][g]	|	![#c5f015][g]	|	![#c5f015][g]	|	![#c5f015][g]	|
+ 
+[g]: https://placehold.co/15x15/c5f015/c5f015.png
+[r]: https://placehold.co/15x15/f03c15/f03c15.png
 
 
 ## Repository Organization [^](#table-of-contents)
