@@ -19,51 +19,46 @@ Unzip the content of PythonEnvForAivia.zip in a folder WITHOUT admin access rest
 # [OUTPUT Name:outputImagePath Type:string DisplayName:'To Delete']
 def run(params):
 
-    env_dir = pathlib.Path(os.path.dirname(os.path.realpath(__file__))) / 'env'
+    envDir_ = pathlib.Path(os.path.dirname(os.path.realpath(__file__))) / 'env'
+    pythonExec_ = envDir_ / 'Scripts/python.exe'
 
-    if not os.path.exists(env_dir):
+    if not os.path.exists(pythonExec_):
         # create a virtual environment
-        env_dir.mkdir(parents=False, exist_ok=True)
-        subprocess.check_call([str(Path(sys.executable).parent / 'Scripts/virtualenv.exe'), f'{env_dir}'])
+        envDir_.mkdir(parents=False, exist_ok=True)
+        subprocess.check_call([str(Path(sys.executable).parent / 'Scripts/virtualenv.exe'), f'{envDir_}'])
         
         # copy essential python packages(python312.zip) to virtual environment
         # see https://github.com/pypa/virtualenv/issues/1185
-        if not os.path.exists(env_dir/'Scripts/python312.zip'):
-            copyfile(Path(sys.executable).parent / 'python312.zip', env_dir/'Scripts/python312.zip')
+        if not os.path.exists(envDir_/'Scripts/python312.zip'):
+            copyfile(Path(sys.executable).parent / 'python312.zip', envDir_/'Scripts/python312.zip')
 
         # install requirements
         mess = 'Python packages will now be installed. An internet connection is needed.\n\n' \
-               'You can follow the addition of the packages in the following subfolder:\n' + str(env_dir) + \
+               'You can follow the addition of the packages in the following subfolder:\n' + str(envDir_) + \
                '\\Lib\\site-packages'
         Mbox('Starting installing python packages', mess, 0)
 
-        pip_path = env_dir / 'Scripts' / 'pip.exe'
+        pip_path = envDir_ / 'Scripts' / 'pip.exe'
         requirement_dir = pathlib.Path(os.path.dirname(os.path.realpath(__file__)))
         # subprocess.check_call(
         #     [str(pip_path), 'install', 'setuptools==70.0.0'])
         subprocess.check_call(
             [str(pip_path), 'install', '-r', str(requirement_dir/'requirements.txt')])
                     
-    # Check if input image exists
-    inputImagePath_ = params['inputImagePath']
-    outputImagePath_ = params['outputImagePath']
-    if not os.path.exists(inputImagePath_):
-        raise ValueError('Error: {inputImagePath_} does not exist')
-
-    # Get the path of the folder that contains this python script
-    parentFolder = str(Path(__file__).parent)
-
-    # Get the path of python executable in the virtual environment
-    pythonExec_ = parentFolder + '\\env\\Scripts\\python.exe'
+    # Check if python exists
+    if not os.path.exists(pythonExec_):
+        raise ValueError(f'Error: {pythonExec_} does not exist')
 
     # Log
     message = f'Python was installed here:\n{pythonExec_}'
     print(message)
     
-    # Load image
-    input_img = imread(inputImagePath_)
+    # Load image, to avoid error displayed in Aivia
+    inputImagePath_ = params['inputImagePath']
+    outputImagePath_ = params['outputImagePath']
     
-    imsave(outputImagePath_, input_img)
+    input_img = imread(inputImagePath_)    
+    imsave(outputImagePath_, np.zeros_like(input_img))
     
 
 def Mbox(title, text, style):
