@@ -29,6 +29,7 @@ The tree structure of the folder is as follow
   ├───FirstTimeSetup.py
   ├───requirements.txt
   ├───README.md
+  ├───_RecipeParameters				(for storage of User Interface parameters)
   └───Recipes
       └───[category subfolders]
           └───... .py
@@ -47,4 +48,3 @@ The tree structure of the folder is as follow
 ## Returns
 
 * Original image with text on top, showing what is the location of the python script that will be used
-
