@@ -30,6 +30,7 @@ The tree structure of the folder is as follow
   ├───requirements.txt
   ├───README.md
   ├───_RecipeParameters				(for storage of User Interface parameters)
+  ├───Documentation
   └───Recipes
       └───[category subfolders]
           └───... .py
