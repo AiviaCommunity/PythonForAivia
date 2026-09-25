@@ -42,8 +42,11 @@ Returns
 -------
 Aivia channel
     Result of the transform
-    
+  
+First example is a mask output, second and third are Object Set outputs  
 # [OUTPUT Name:resultPath3 Type:string DisplayName:'Branches']
+# [OUTPUT Name:resultPath3 Type:string DisplayName:'Branches' Objects:2D MinSize:0.0 MaxSize:1000000000.0]
+# [OUTPUT Name:resultPath3 Type:string DisplayName:'Branches' Objects:3D MinSize:0.0 MaxSize:1000000000.0]
 """
 
 # [INPUT Name:inputImagePath Type:string DisplayName:'Input Image']
