@@ -12,6 +12,7 @@ Can be used with timepoints too, but is not adapted to 4D/5D images.'''
 
 
 def run_test(config):
+    config['unitTest'] = True
     ground_truth_path_1 = config.pop('groundTruthPath_1')
     ground_truth_path_2 = config.pop('groundTruthPath_2')
     ground_truth_path_3 = config.pop('groundTruthPath_3')
@@ -32,6 +33,8 @@ def generate_test_method(config):
     def test_method(self):
         self.dynamic_test_generator(config)
     return test_method
+
+print("* [TEST] TransformImages > ZColorCoding")
 
 config_json_path = os.path.join(os.path.dirname(__file__), "ZColorCoding", "Config_ZColorCoding.json")
 with open(config_json_path) as f:

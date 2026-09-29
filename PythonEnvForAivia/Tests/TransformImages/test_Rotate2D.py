@@ -13,6 +13,7 @@ NOTE: Resize image option is 0 (=No) by default. A manual test with option = 1 w
 
 
 def run_test(config):
+    config['unitTest'] = True
     ground_truth_path_1 = config.pop('groundTruthPath_1')
     test_guidance = config.pop('testGuidance')
     ctypes.windll.user32.MessageBoxW(0, test_guidance, 'Test guidance', 0)
@@ -31,6 +32,8 @@ def generate_test_method(config):
     def test_method(self):
         self.dynamic_test_generator(config)
     return test_method
+
+print("* [TEST] TransformImages > Rotate2D")
 
 config_json_path = os.path.join(os.path.dirname(__file__), "Rotate2D", "Config_Rotate2D.json")
 with open(config_json_path) as f:

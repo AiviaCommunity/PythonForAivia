@@ -3,7 +3,7 @@ import numpy as np
 from skimage.io import imread, imsave
 from skimage.metrics import mean_squared_error, structural_similarity
 from skimage.exposure import match_histograms, rescale_intensity
-import ctypes
+import sys, subprocess
 
 """
 Calculates SSIM map as a result of the comparison of 2 channels and metrics values (in the log file). 
@@ -56,10 +56,10 @@ def run(params):
     # Checking existence of temporary files (individual channels)
     if not os.path.exists(RTimageLocation):
         print(f'Error: {RTimageLocation} does not exist')
-        return; 
+        return
     if not os.path.exists(GTimageLocation):
         print(f'Error: {GTimageLocation} does not exist')
-        return; 
+        return
         
     # Loading input images
     RTData = imread(RTimageLocation)
@@ -70,7 +70,7 @@ def run(params):
     # Checking dtype is the same for both input channels
     if GTData.dtype != RTData.dtype:
         error_mes = "The bit depth of your input channels is not the same. Convert one of them and retry."
-        ctypes.windll.user32.MessageBoxW(0, error_mes, 'Error', 0)
+        Mbox('Error', error_mes, 0)
         sys.exit(error_mes)
 
     # Histogram matching
@@ -103,3 +103,24 @@ def run(params):
     imsave(resultLocationAdj, matched_GTData)
     
     return valMSE, outMeanSSIM
+
+
+def Mbox(title, text, style):
+    style_tag = "OkCancel" if style == 1 else "OkOnly"
+    cmd = [
+        "powershell",
+        "-Command",
+        "Add-Type -AssemblyName Microsoft.VisualBasic; "
+        f"$x=[Microsoft.VisualBasic.Interaction]::MsgBox('{text}', "
+        f"[Microsoft.VisualBasic.MsgBoxStyle]::{style_tag}, '{title}');"
+        "Write-Output $x"
+    ]
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    try:
+        return result.stdout.strip()        # return = "Ok" or "Cancel"
+    except:
+        return None
+
+
+# CHANGELOG
+# v1.10: - Changed popup from ctypes to VB

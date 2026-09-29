@@ -47,7 +47,7 @@ IJTimeUnit = {'Minutes': 'min', 'Seconds': 's', 'Milliseconds': 'ms', 'Microseco
 # [INPUT Name:inputImagePath Type:string DisplayName:'Input Channel']
 # [INPUT Name:scaleDirection Type:int DisplayName:'Down or Upscale (0 or 1)' Default:0 Min:0 Max:1]
 # [INPUT Name:scaleFactorZ Type:double DisplayName:'Z scale factor' Default:1.5 Min:0.01 Max:20.0]
-# [INPUT Name:scaleFactorXY Type:double DisplayName:'XY scale factor' Default:2.0 Min:0.01 Max:20.0]
+# [INPUT Name:scaleFactorXY Type:double DisplayName:'XY scale factor' Default:1.5 Min:0.01 Max:20.0]
 # [OUTPUT Name:resultPath Type:string DisplayName:'Duplicate of input']
 def run(params):
     image_location = params['inputImagePath']
@@ -59,20 +59,20 @@ def run(params):
     tCount = int(params['TCount'])
     pixel_cal_tmp = params['Calibration']
     pixel_cal = pixel_cal_tmp[6:].split(', ')           # Expects calibration with 'XYZT: ' in front
-    aivia_path = params['CallingExecutable']
+    aivia_path = params['CallingExecutable'].replace('.dll', '.exe')        # Aivia 16
 
     # Getting XY and Z values                # Expecting only 'Micrometers' in this code
     XY_cal = float(pixel_cal[0].split(' ')[0])
     Z_cal = float(pixel_cal[2].split(' ')[0])
     T_cal = float(pixel_cal[3].split(' ')[0])
-    
+
     # Check real calibration
     real_XYZ_calibration, real_T_calibration = False, False
     if not 'efault' in pixel_cal[0].split(' ')[1]:      # calibration ok
         real_XYZ_calibration = True
     if not 'efault' in pixel_cal[3].split(' ')[1]:      # calibration ok
         real_T_calibration = True
-    
+
     if not os.path.exists(image_location):
         print(f"Error: {image_location} does not exist")
         return
@@ -89,18 +89,18 @@ def run(params):
         scale_factor_xy = 1.0
     if scale_factor_z == 0.0:
         scale_factor_z = 1.0
-        
-    if scale_direction == 0:        
+
+    if scale_direction == 0:
         scale_factor_xy = 1/scale_factor_xy
         scale_factor_z = 1/scale_factor_z
     else:
         scale_factor_xy = scale_factor_xy
-        scale_factor_z = scale_factor_z    
-        
+        scale_factor_z = scale_factor_z
+
     # Calculating final pixel calibration
     final_XY_cal = XY_cal / scale_factor_xy if real_XYZ_calibration else 1
     final_Z_cal = Z_cal / scale_factor_z if real_XYZ_calibration else 1
-       
+
     # Defining axes for output metadata and scale factor variable
     final_scale = None
     axes = ''
@@ -152,12 +152,12 @@ def run(params):
                 resolution=(inverted_XY_cal, inverted_XY_cal))
     else:
         # To avoid calibration in XYZ
-        imwrite(tmp_path, out_data, imagej=True, photometric='minisblack', metadata=meta_info) 
+        imwrite(tmp_path, out_data, imagej=True, photometric='minisblack', metadata=meta_info)
 
     # Added for handling testing without opening aivia
     if aivia_path == "None":
         return
-    
+
     # Dummy save
     dummy_data = np.zeros(image_data.shape, dtype=image_data.dtype)
     imwrite(result_location, dummy_data)
@@ -192,3 +192,4 @@ if __name__ == '__main__':
 # v1_30: - Fusing with parallel version updating aivia_path using new API params value
 #        - Time increment is not recognized in Aivia at the moment
 # v1_31: - Added an extra key in params for Unit test output
+# v1_32: - Aivia path for Aivia 16

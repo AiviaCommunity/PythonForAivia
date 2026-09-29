@@ -1,7 +1,7 @@
 [
     {
         "inputImagePath": "Tests\\_InputImages\\Test_8bit_YX_mitoFluo_T15_MaxIP.tif",
-        "scaleFactorXY": "2.0",
+        "scaleFactorXY": "1.5",
         "scaleFactorZ": "1.5",
         "scaleDirection": "0",
         "resultPath": "",
@@ -14,7 +14,7 @@
     },
     {
         "inputImagePath": "Tests\\_InputImages\\Test_16bit_YX_Fluo_nuclei.tif",
-        "scaleFactorXY": "2.0",
+        "scaleFactorXY": "1.5",
         "scaleFactorZ": "1.5",
         "scaleDirection": "0",
         "resultPath": "",
@@ -23,11 +23,11 @@
         "CallingExecutable": "None",
         "ZCount": 1,
         "TCount": 1,
-        "Calibration": "XYZT: 1 Default, 1 Default, 1 Default, 1 Default"
+        "Calibration": "XYZT: 0.3 micrometers, 0.3 micrometers, 1 micrometers, 1 Default"
     },
     {
         "inputImagePath": "Tests\\_InputImages\\Test_8bit_TYX_mitoFluo_MaxIP.tif",
-        "scaleFactorXY": "2.0",
+        "scaleFactorXY": "1.5",
         "scaleFactorZ": "1.5",
         "scaleDirection": "0",
         "resultPath": "",
@@ -40,7 +40,7 @@
     },
     {
         "inputImagePath": "Tests\\_InputImages\\Test_8bit_ZYX_mitoFluo_T15.tif",
-        "scaleFactorXY": "2.0",
+        "scaleFactorXY": "1.5",
         "scaleFactorZ": "1.5",
         "scaleDirection": "0",
         "resultPath": "",
@@ -53,7 +53,7 @@
     },
     {
         "inputImagePath": "Tests\\_InputImages\\Test_16bit_ZYX_mitoFluo_T15.tif",
-        "scaleFactorXY": "2.0",
+        "scaleFactorXY": "1.5",
         "scaleFactorZ": "1.5",
         "scaleDirection": "0",
         "resultPath": "",
@@ -66,7 +66,7 @@
     },
     {
         "inputImagePath": "Tests\\_InputImages\\Test_8bit_TZYX_mitoFluo.tif",
-        "scaleFactorXY": "2.0",
+        "scaleFactorXY": "1.5",
         "scaleFactorZ": "1.5",
         "scaleDirection": "0",
         "resultPath": "",
@@ -79,7 +79,7 @@
     },
     {
         "inputImagePath": "Tests\\_InputImages\\Test_16bit_TZYX_mitoFluo.tif",
-        "scaleFactorXY": "2.0",
+        "scaleFactorXY": "1.5",
         "scaleFactorZ": "1.5",
         "scaleDirection": "0",
         "resultPath": "",

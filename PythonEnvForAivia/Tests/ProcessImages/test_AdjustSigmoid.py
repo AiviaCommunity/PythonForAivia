@@ -18,6 +18,7 @@ the input image and should be parameterized carefully.'''
 
 
 def run_test(config):
+    config['unitTest'] = True
     ground_truth_path_1 = config.pop('groundTruthPath_1')
 
     result_value = AdjustSigmoid.run(params=config)
@@ -34,6 +35,8 @@ def generate_test_method(config):
     def test_method(self):
         self.dynamic_test_generator(config)
     return test_method
+
+print("* [TEST] ProcessImages > AdjustSigmoid")
 
 config_json_path = os.path.join(os.path.dirname(__file__), "AdjustSigmoid", "Config_AdjustSigmoid.json")
 with open(config_json_path) as f:

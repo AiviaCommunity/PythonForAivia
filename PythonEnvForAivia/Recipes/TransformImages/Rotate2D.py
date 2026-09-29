@@ -1,6 +1,5 @@
 import os
 import sys
-import ctypes
 import shlex
 import subprocess
 import imagecodecs
@@ -73,7 +72,7 @@ def run(params):
 
     if abs(rot_angle) > 360:
         error_mess = f"Error: {rot_angle} value is not appropriate as a rotating angle"
-        ctypes.windll.user32.MessageBoxW(0, error_mess, 'Error', 0)
+        Mbox('Error', error_mess, 0)
         sys.exit(error_mess)
 
     # Getting XY and Z calibration values                # Expecting only 'Micrometers' in this code
@@ -91,7 +90,7 @@ def run(params):
     # Checking image is not 2D+t or 3D+t
     if len(dims) > 2 or tCount > 1:
         error_mess = 'Error: Image should be 2D only.'
-        ctypes.windll.user32.MessageBoxW(0, error_mess, 'Error', 0)
+        Mbox('Error', error_mess, 0)
         sys.exit(error_mess)
 
     # Rotation
@@ -147,10 +146,30 @@ def run(params):
         subprocess.run(args, shell=True)
 
         mess = 'Rotated image with new dimensions is available in the Image Explorer'
-        ctypes.windll.user32.MessageBoxW(0, mess, 'Process complete', 0)
+        Mbox('Process complete', mess, 0)
+        imwrite(result_location, np.zeros_like(raw_data))
 
     else:
         imwrite(result_location, out_data)
+
+
+def Mbox(title, text, style):
+    style_tags = ["OkOnly", "OkCancel", "YesNo", "YesNoCancel"]
+    cmd = [
+        "powershell",
+        "-Command",
+        "Add-Type -AssemblyName Microsoft.VisualBasic; "
+        f"$x=[Microsoft.VisualBasic.Interaction]::MsgBox('{text}', "
+        f"[Microsoft.VisualBasic.MsgBoxStyle]::{style_tags[style]}, '{title}');"
+        "Write-Output $x"
+    ]
+
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    try:
+        return result.stdout.strip()  # return = "Ok" or "Cancel"
+    except:
+        return None
+
 
 if __name__ == '__main__':
     params = {'inputImagePath': r'D:\PythonCode\_tests\2D-image.tif',
@@ -165,3 +184,4 @@ if __name__ == '__main__':
 # CHANGELOG
 # v1_00: - Including isotropic scaling and proper export to Aivia
 # v1.10: - Adding default folder for potential batch functionality (input still can't be put in a workflow)
+# v1.11: - Changed ctypes Mbox to VB

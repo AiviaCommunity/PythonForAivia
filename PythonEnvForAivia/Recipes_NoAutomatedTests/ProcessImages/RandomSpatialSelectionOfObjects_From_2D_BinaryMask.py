@@ -1,4 +1,4 @@
-import ctypes
+import subprocess
 import math
 import sys
 import os.path
@@ -67,7 +67,7 @@ Note: replace output with one of the line below to change output type (objects o
 # [OUTPUT Name:resultPath Type:string DisplayName:'Random Object Selection' Objects:2D MinSize:0.5 MaxSize:50000.0]
 """
 
-DEBUG_MODE = False
+DEBUG_MODE_DEFAULT = False
 
 
 # [INPUT Name:dilateArea Type:double DisplayName:'Dilate to reach area (calibrated)' Default:1.0 Min:0.0 Max:65535.0]
@@ -86,6 +86,10 @@ def run(params):
     if not os.path.exists(image_location):
         print(f"Error: {image_location} does not exist")
         return
+
+    debug_mode = params.get('debugMode', False)
+    if not debug_mode and DEBUG_MODE_DEFAULT:
+        debug_mode = True
 
     pixel_cal_tmp = params['Calibration']
     pixel_cal = pixel_cal_tmp[6:].split(', ')           # Expects calibration with 'XYZT: ' in front
@@ -122,18 +126,21 @@ def run(params):
     # Checking image is not 2D+t or 3D+t
     if zCount > 1 or tCount > 1:
         mess = 'This recipes currently only supports 2D images without time dimension.'
-        Mbox('Error', mess, 0)
+        if not debug_mode:
+            Mbox('Error', mess, 0)
         sys.exit(mess)
 
     # Checking the provided masks are binary
     if len(np.unique(input_mask)) != 2:
         error_mess = 'Error: provided channel seems not to be a binary mask.'
-        ctypes.windll.user32.MessageBoxW(0, error_mess, 'Error', 0)
+        if not debug_mode:
+            Mbox(error_mess, 'Error', 0)
         sys.exit(error_mess)
 
     if len(np.unique(input_mask)) != 2:
         error_mess = 'Error: provided channel seems not to be a binary mask.'
-        ctypes.windll.user32.MessageBoxW(0, error_mess, 'Error', 0)
+        if not debug_mode:
+            Mbox(error_mess, 'Error', 0)
         sys.exit(error_mess)
 
     # Transforming input mask into labeled mask
@@ -160,7 +167,7 @@ def run(params):
     for lid in label_ids:
         if ACTIVATE_OPTION_1:   # Check partial overlap with the reference mask
             if not overlap_flag[lid]:
-                if DEBUG_MODE:
+                if debug_mode:
                     print(f"Label {lid} was discarded as it is not overlapping with the reference mask.")
                 continue    # next candidate
 
@@ -197,7 +204,7 @@ def run(params):
 
             # Extend mask
             new_crop, n_iter = extend_mask_to_area(crop, ref_crop, dilate_target_area)
-            if DEBUG_MODE:
+            if debug_mode:
                 print(f"Label {lid} was extended to reach the area {dilate_target_area} with {n_iter} dilation cycles.")
 
         else:
@@ -208,7 +215,7 @@ def run(params):
         output_data[minr_crop:maxr_crop, minc_crop:maxc_crop] |= new_crop       # add info into existing output mask
 
         obj_count += 1
-        if DEBUG_MODE:
+        if debug_mode:
             print(f"Label {lid} was added to output mask with bounding box: [{[minr_crop, maxr_crop, minc_crop, maxc_crop]}]")
 
         if 0 < max_object_count <= obj_count:
@@ -235,18 +242,18 @@ def extend_mask_to_area(mask, large_mask, target_area):
         curr_labels = label(m)
         if np.max(curr_labels) > 1:
             m = extract_largest_2D_object_mask(m)
-            if DEBUG_MODE:
+            if DEBUG_MODE_DEFAULT:
                 print(f"--> Found {np.max(curr_labels)} shapes after dilation fitting tissue mask. Keeping largest one only."
                       f"\n-->    New area is {m.sum()}")
 
         if m.sum() >= target_area:
             break
-        if DEBUG_MODE:
+        if DEBUG_MODE_DEFAULT:
             print(f"Current area = {m.sum()}")
         m = distance_transform_edt(~bool_mask) <= curr_radius
         m &= large_mask  # enforce overlap constraint
 
-    if DEBUG_MODE:
+    if DEBUG_MODE_DEFAULT:
         print(f"Dilation ended with final area = {m.sum()} (vs target = {target_area})")
 
     return m, iter
@@ -261,14 +268,14 @@ def extract_largest_2D_object_mask(bin_image):
     max_val = 0
     largest_object = None
     for ind, prop in enumerate(props):
-        if DEBUG_MODE:
+        if DEBUG_MODE_DEFAULT:
             print(f'Object {ind+1} area is: {prop.area}')
         if prop.area > max_val:
             max_val = prop.area
             largest_object = prop
 
     # Log
-    if DEBUG_MODE:
+    if DEBUG_MODE_DEFAULT:
         print(f'Found {len(props)} objects. Selecting the largest with area = {max_val}.')
 
     new_mask = (labeled_image == largest_object.label)
@@ -276,7 +283,21 @@ def extract_largest_2D_object_mask(bin_image):
 
 
 def Mbox(title, text, style):
-    return ctypes.windll.user32.MessageBoxW(0, text, title, style)
+    style_tags = ["OkOnly", "OkCancel", "YesNo", "YesNoCancel"]
+    cmd = [
+        "powershell",
+        "-Command",
+        "Add-Type -AssemblyName Microsoft.VisualBasic; "
+        f"$x=[Microsoft.VisualBasic.Interaction]::MsgBox('{text}', "
+        f"[Microsoft.VisualBasic.MsgBoxStyle]::{style_tags[style]}, '{title}');"
+        "Write-Output $x"
+    ]
+
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    try:
+        return result.stdout.strip()        # return = "Ok" or "Cancel"
+    except:
+        return None
 
 
 if __name__ == '__main__':
@@ -288,7 +309,8 @@ if __name__ == '__main__':
               'dilateArea': 5000,
               'exclusionDistance': 100,
               'maxObjectCount': 0,
-              'Calibration': 'XYZT: 1 micrometers, 1 micrometers, 1 micrometers, 1 Default'
+              'Calibration': 'XYZT: 1 micrometers, 1 micrometers, 1 micrometers, 1 Default',
+              'debugMode': True
               }
     run(params)
 
@@ -296,3 +318,5 @@ if __name__ == '__main__':
 #   v1_00: - First version, with several options already
 #   v1_10: - Replaced dilation to be round-shaped instead of cross-based from the iterative dilation
 #   v1_20: - Speeding up dilation with scipy distance transform
+#   v1_30: - Mbox with VB for Aivia 16
+

@@ -1,12 +1,11 @@
 import os.path
 import numpy as np
-from tifffile import imread, imsave
+from tifffile import imread, imwrite
 from skimage.segmentation import clear_border
 from skimage.measure import label
 from skimage.morphology import closing, ball
 from skimage.util import img_as_ubyte, img_as_uint
 import sys
-import ctypes
 
 """
 See: https://scikit-image.org/docs/dev/api/skimage.segmentation.html#skimage.segmentation.clear_border
@@ -97,14 +96,34 @@ def run(params):
     else:
         if np.max(mask) > 255:
             mess = f"Found {np.max(mask)} objects but image is 8-bit. Consider converting to 16-bit before."
-            ctypes.windll.user32.MessageBoxW(0, mess, 'Error', 0)
+            Mbox('Error', mess, 0)
             sys.exit(mess)
         mask = img_as_ubyte(mask)
     print(f"Max after conversion: {np.max(mask)}")
 
-    imsave(result_object_location, mask, metadata={'axes': axes})
+    imwrite(result_object_location, mask, metadata={'axes': axes})
+
+
+def Mbox(title, text, style):
+    style_tags = ["OkOnly", "OkCancel", "YesNo", "YesNoCancel"]
+    cmd = [
+        "powershell",
+        "-Command",
+        "Add-Type -AssemblyName Microsoft.VisualBasic; "
+        f"$x=[Microsoft.VisualBasic.Interaction]::MsgBox('{text}', "
+        f"[Microsoft.VisualBasic.MsgBoxStyle]::{style_tags[style]}, '{title}');"
+        "Write-Output $x"
+    ]
+
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    try:
+        return result.stdout.strip()  # return = "Ok" or "Cancel"
+    except:
+        return None
 
 
 if __name__ == '__main__':
     params = {}
     run(params)
+
+# v1.01: - Changed ctypes Mbox to VB

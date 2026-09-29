@@ -1,0 +1,38 @@
+[
+    {
+        "inputImagePath": "Tests\\_InputImages\\Test_8bit_YX_mitoSeg_T15_labeled.tif",
+        "dilation": "5",
+        "resultPath": "Tests\\ProcessImages\\Dilate_2D_Labeled_Mask\\OUT_Test_8bit_YX_mitoSeg_T15_labeled_Dilated Labeled Mask.tif",
+        "groundTruthPath_1": "Tests\\ProcessImages\\Dilate_2D_Labeled_Mask\\GT_Test_8bit_YX_mitoSeg_T15_labeled_Dilated Labeled Mask.tif",
+        "ZCount": 1,
+        "TCount": 1,
+        "Calibration": "XYZT: 1 Default, 1 Default, 1 Default, 1 Default"
+    },
+    {
+        "inputImagePath": "Tests\\_InputImages\\Test_16bit_YX_Fluo_nuclei_labeled.tif",
+        "dilation": "5",
+        "resultPath": "Tests\\ProcessImages\\Dilate_2D_Labeled_Mask\\OUT_Test_16bit_YX_Fluo_nuclei_labeled_Dilated Labeled Mask.tif",
+        "groundTruthPath_1": "Tests\\ProcessImages\\Dilate_2D_Labeled_Mask\\GT_Test_16bit_YX_Fluo_nuclei_labeled_Dilated Labeled Mask.tif",
+        "ZCount": 1,
+        "TCount": 1,
+        "Calibration": "XYZT: 1 Default, 1 Default, 1 Default, 1 Default"
+    },
+    {
+        "inputImagePath": "Tests\\_InputImages\\Test_8bit_TYX_mitoFluo_MaxIP_labeled.tif",
+        "dilation": "5",
+        "resultPath": "Tests\\ProcessImages\\Dilate_2D_Labeled_Mask\\OUT_Test_8bit_TYX_mitoFluo_MaxIP_labeled_Dilated Labeled Mask.tif",
+        "groundTruthPath_1": "Tests\\ProcessImages\\Dilate_2D_Labeled_Mask\\GT_Test_8bit_TYX_mitoFluo_MaxIP_labeled_Dilated Labeled Mask.tif",
+        "ZCount": 1,
+        "TCount": 31,
+        "Calibration": "XYZT: 1 Default, 1 Default, 1 Default, 1 Default"
+    },
+    {
+        "inputImagePath": "Tests\\_InputImages\\Test_16bit_TYX_mitoFluo_MaxIP_labeled.tif",
+        "dilation": "5",
+        "resultPath": "Tests\\ProcessImages\\Dilate_2D_Labeled_Mask\\OUT_Test_16bit_TYX_mitoFluo_MaxIP_labeled_Dilated Labeled Mask.tif",
+        "groundTruthPath_1": "Tests\\ProcessImages\\Dilate_2D_Labeled_Mask\\GT_Test_16bit_TYX_mitoFluo_MaxIP_labeled_Dilated Labeled Mask.tif",
+        "ZCount": 1,
+        "TCount": 31,
+        "Calibration": "XYZT: 1 Default, 1 Default, 1 Default, 1 Default"
+    }
+]

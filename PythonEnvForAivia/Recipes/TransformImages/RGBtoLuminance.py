@@ -25,8 +25,11 @@ else:
 
 import os.path
 import numpy as np
-import matplotlib.pyplot as plt
 from skimage.io import imread, imsave
+import wx
+import matplotlib
+matplotlib.use("WXAgg")
+import matplotlib.pyplot as plt
 
 """
 Computes the luminance of an RGB image and returns that as a new channel.
@@ -82,13 +85,13 @@ def run(params):
     show_histogram = int(params['histogram'])
     if not os.path.exists(red_c):
         print(f'Error: {red_c} does not exist')
-        return;
+        return
     if not os.path.exists(blue_c):
         print(f'Error: {blue_c} does not exist')
-        return;
+        return
     if not os.path.exists(green_c):
         print(f'Error: {green_c} does not exist')
-        return;
+        return
         
     red_data = imread(red_c)
     blue_data = imread(blue_c)
@@ -104,10 +107,19 @@ def run(params):
     gray_data = (0.3*red_data + 0.59*green_data + 0.11*blue_data).astype(red_data.dtype)
     
     if show_histogram == 1:
+        init_ui()
         ax = plt.hist(gray_data.ravel(), bins=256)
         plt.show()
 
     imsave(gray_c, gray_data)
+
+
+def init_ui():
+    app = wx.App()
+    dlg = wx.Dialog(None)
+    wx.CallLater(1, dlg.EndModal, wx.ID_OK)
+    dlg.ShowModal()
+    dlg.Destroy()
 
 
 if __name__ == '__main__':
@@ -115,3 +127,4 @@ if __name__ == '__main__':
     run(params)
 
 # v1.01: - New virtual env code for auto-activation
+# v1.02: - wxPython backend for Aivia 16 as qt does not work

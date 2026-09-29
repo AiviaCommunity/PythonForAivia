@@ -20,11 +20,11 @@ This can be changed in File > Options... > Logging.
 
 Requirements
 ------------
-watchdog (!Warning: it is not included in the virtual environment PythonVenvForAivia by default.
+watchdog (!Warning: it is not included in the virtual environment PythonEnvForAivia by default.
           You can use 'python -m pip install watchdog' manually to use this script)
 """
 
-log_dir = os.path.join(os.getenv('LOCALAPPDATA'),'DRVision Technologies LLC/Aivia 9.0.0.34168/')
+log_dir = os.path.join(os.getenv('LOCALAPPDATA'),'Leica Microsystems/Aivia 16.0.0.43753/')
 
 
 class HandleLogUpdates(FileSystemEventHandler):

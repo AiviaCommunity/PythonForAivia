@@ -1,4 +1,4 @@
-import ctypes
+import subprocess
 import sys
 import os.path
 import numpy as np
@@ -78,7 +78,8 @@ def run(params):
     # Checking image is not 2D/2D+t or 3D+t
     if len(dims) == 2 or (len(dims) == 3 and tCount > 1):
         message = 'Error: Cannot be applied to timelapses or 2D images.'
-        Mbox('Error', message, 0)
+        if not params.get('debugMode', False):
+            Mbox('Error', message, 0)
         sys.exit(message)
 
     # Seed binary mask needs to be transformed as labeled mask
@@ -94,7 +95,7 @@ def run(params):
     labeled_mask = random_walker(whole_mask, labeled_seeds, mode='cg_j', copy=True, spacing=(cal_ratio, 1.0, 1.0))
     t3 = time.perf_counter()
     print('Random Walker segmentation done in {:0.2f} seconds'.format(t3 - t2))
-    
+
     # Conversion from 32 bit to 8 or 16 bit
     if whole_mask.dtype == np.uint16:
         final_mask = img_as_uint(labeled_mask)
@@ -105,7 +106,21 @@ def run(params):
 
 
 def Mbox(title, text, style):
-    return ctypes.windll.user32.MessageBoxW(0, text, title, style)
+    style_tags = ["OkOnly", "OkCancel", "YesNo", "YesNoCancel"]
+    cmd = [
+        "powershell",
+        "-Command",
+        "Add-Type -AssemblyName Microsoft.VisualBasic; "
+        f"$x=[Microsoft.VisualBasic.Interaction]::MsgBox('{text}', "
+        f"[Microsoft.VisualBasic.MsgBoxStyle]::{style_tags[style]}, '{title}');"
+        "Write-Output $x"
+    ]
+
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    try:
+        return result.stdout.strip()        # return = "Ok" or "Cancel"
+    except:
+        return None
 
 
 if __name__ == '__main__':
@@ -113,7 +128,7 @@ if __name__ == '__main__':
               'inputSeedsImage': r'D:\PythonCode\_tests\3D Object Analysis From Seeds_test_seeds.aivia.tif',
               'resultPath': r'D:\PythonCode\_tests\test.tif',
               'Calibration': 'XYZT: 0.3225 Micrometers, 0.3225 Micrometers, 1 Micrometers, 1 Default',
-              'TCount': 1, 'thresholdVal': 0}
+              'TCount': 1, 'thresholdVal': 0, 'debugMode': True}
 
     run(params)
 

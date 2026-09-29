@@ -2,7 +2,7 @@ import os.path
 import numpy as np
 from skimage.io import imread, imsave
 from skimage.exposure import rescale_intensity
-import ctypes
+import subprocess
 
 """
 Calculates Intersection over Union value considering intensity above or equal 1 as a positive mask
@@ -42,9 +42,6 @@ def run(params):
     if not os.path.exists(RTimageLocation):
         print(f'Error: {RTimageLocation} does not exist')
         return
-    if not os.path.exists(GTimageLocation):
-        print(f'Error: {GTimageLocation} does not exist')
-        return
     
     # Loading input images
     RTData = imread(RTimageLocation)
@@ -67,7 +64,7 @@ def run(params):
     
     # Display result too in a popup
     if not RTimageLocation.startswith('Tests'):
-        ctypes.windll.user32.MessageBoxW(0, str(IoU), 'Intersection over Union', 0)
+        Mbox('Intersection over Union', str(IoU), 0)
     
     # Convert intersection to 8-bit range
     outputData = intersection_mask.astype(RTData.dtype) * np.iinfo(RTData.dtype).max
@@ -75,3 +72,25 @@ def run(params):
     imsave(resultLocation, outputData)
     
     return str(IoU)
+
+
+def Mbox(title, text, style):
+    style_tag = "OkCancel" if style == 1 else "OkOnly"
+    cmd = [
+        "powershell",
+        "-Command",
+        "Add-Type -AssemblyName Microsoft.VisualBasic; "
+        f"$x=[Microsoft.VisualBasic.Interaction]::MsgBox('{text}', "
+        f"[Microsoft.VisualBasic.MsgBoxStyle]::{style_tag}, '{title}');"
+        "Write-Output $x"
+    ]
+
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    try:
+        return result.stdout.strip()        # return = "Ok" or "Cancel"
+    except:
+        return None
+        
+
+# CHANGELOG
+# v1.10: - Changed popup from ctypes to VB

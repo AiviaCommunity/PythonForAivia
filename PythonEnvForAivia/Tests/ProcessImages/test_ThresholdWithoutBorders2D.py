@@ -13,6 +13,7 @@ This recipe only works in 2D. Use ThresholdWithoutBorders3D instead for 3D cases
 
 
 def run_test(config):
+    config['unitTest'] = True
     ground_truth_path_1 = config.pop('groundTruthPath_1')
 
     result_value = ThresholdWithoutBorders2D.run(params=config)
@@ -29,6 +30,8 @@ def generate_test_method(config):
     def test_method(self):
         self.dynamic_test_generator(config)
     return test_method
+
+print("* [TEST] ProcessImages > ThresholdWithoutBorders2D")
 
 config_json_path = os.path.join(os.path.dirname(__file__), "ThresholdWithoutBorders2D", "Config_ThresholdWithoutBorders2D.json")
 with open(config_json_path) as f:

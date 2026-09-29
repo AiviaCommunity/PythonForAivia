@@ -357,51 +357,37 @@ $window.Tag
     return json.loads(txt)
 
 
-def write_ui_param_in_file(params_ui):
+def write_ui_param_in_file(params_ui: str):
     message = ''
 
-    # Check existence of the RecipeParameters subfolder
-    def getEnvRootDir(curr_dir, level=1):
-        for i in range(level):
-            parent_dir = os.path.dirname(curr_dir)
-            if os.path.exists(os.path.join(parent_dir, r"_RecipeParameters")):
-                return parent_dir
-            curr_dir = parent_dir
-        return ''
+    curr_dir = os.path.dirname(os.path.abspath(__file__))
+    print('Saving UI parameters in: ', curr_dir)
 
-    env_root_dir = getEnvRootDir(os.path.abspath(__file__), level=3)
-    if env_root_dir:
-        print('Env Root Dir detected: ', env_root_dir)
-        ui_param_dir = os.path.join(env_root_dir, "_RecipeParameters")
-        
-        # Looking for an existing parameters file
-        ui_param_file = os.path.basename(__file__).replace('.py', '_ui-param.json')
-        ui_param_fp = os.path.join(ui_param_dir, ui_param_file)
+    # Looking for an existing parameters file
+    ui_param_file = os.path.basename(__file__).replace('.py', '_ui-param.json')
+    ui_param_fp = os.path.join(curr_dir, ui_param_file)
 
-        if os.path.exists(ui_param_fp):
-            # Read the last line and compare to existing values
-            with open(ui_param_fp, "r") as f:
-                try:
-                    last_line = next(reversed(list(f))).rstrip("\n")
-                except BaseException as e:
-                    last_line = ""
-                    print(f"Error: could not read last line of parameter file: {ui_param_fp}\n{e}")
+    if os.path.exists(ui_param_fp):
+        # Read the last line and compare to existing values
+        with open(ui_param_fp, "r") as f:
+            try:
+                last_line = next(reversed(list(f))).rstrip("\n")
+            except BaseException as e:
+                last_line = ""
+                print(f"Error: could not read last line of parameter file: {ui_param_fp}\n{e}")
 
-            if last_line:
-                if params_ui == last_line:
-                    message = f"New parameters equal previous parameters in: {ui_param_fp}.\nNothing changed!"
-                else:
-                    with open(ui_param_fp, "a") as f:
-                        f.write("\n" + params_ui)
-                    message = f"New parameters differ from previous parameters and were added to: {ui_param_fp}"
-        else:
-            with open(ui_param_fp, 'w') as f:
-                f.write(params_ui)
-                message = f"New parameters written to: {ui_param_fp}"
+        if last_line:
+            if params_ui == last_line:
+                message = f"New parameters equal previous parameters in: {ui_param_fp}.\nNothing changed!"
+            else:
+                with open(ui_param_fp, "a") as f:
+                    f.write("\n" + params_ui)
+                message = f"New parameters differ from previous parameters and were added to: {ui_param_fp}"
     else:
-        message = (f"Env directory was not detected from the current script location ({os.path.abspath(__file__)})"
-                   f"\n so assumption is that the recipe was not run from PythonEnvForAivia folder."
-                   f"\nHence, parameters are not saved in the expected '_RecipeParameters' directory.")
+        with open(ui_param_fp, 'w') as f:
+            f.write(params_ui)
+            message = f"New parameters written to: {ui_param_fp}"
+
     return message
 
 
@@ -437,3 +423,4 @@ if __name__ == '__main__':
 # v1.13: - CallingExecutable key now provides the path of a dll file. Adjusting to exe path
 # v1.20: - Adding default folder for potential batch functionality (input still can't be put in a workflow)
 # v2.00: - New UI to work with Aivia 16, Env removed
+# v2.10: - Changing location of ui-param.json file > now in the same folder as the recipe

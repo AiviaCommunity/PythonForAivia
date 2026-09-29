@@ -1,6 +1,6 @@
 import os
-import ctypes
 import sys
+import subprocess
 import numpy as np
 from skimage.io import imread, imsave
 from skimage import draw
@@ -123,7 +123,21 @@ def run(params):
 
 
 def Mbox(title, text, style):
-    return ctypes.windll.user32.MessageBoxW(0, text, title, style)
+    style_tags = ["OkOnly", "OkCancel", "YesNo", "YesNoCancel"]
+    cmd = [
+        "powershell",
+        "-Command",
+        "Add-Type -AssemblyName Microsoft.VisualBasic; "
+        f"$x=[Microsoft.VisualBasic.Interaction]::MsgBox('{text}', "
+        f"[Microsoft.VisualBasic.MsgBoxStyle]::{style_tags[style]}, '{title}');"
+        "Write-Output $x"
+    ]
+
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    try:
+        return result.stdout.strip()  # return = "Ok" or "Cancel"
+    except:
+        return None
 
 
 if __name__ == '__main__':

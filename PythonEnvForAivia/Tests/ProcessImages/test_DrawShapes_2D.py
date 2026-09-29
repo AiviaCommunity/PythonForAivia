@@ -8,12 +8,13 @@ from Tests.utils.comparison import isIdentical
 
 '''
 NOTE: When running test, a GUI will pop up for each test.  
-Press `Reset values to default` and proceed
+Select the shape `Circle`, press `Reset values to default` and proceed
 
 Create array of shapes in 2D or 2D+t images.'''
 
 
 def run_test(config):
+    config['unitTest'] = True
     ground_truth_path_1 = config.pop('groundTruthPath_1')
     test_guidance = config.pop('testGuidance')
     ctypes.windll.user32.MessageBoxW(0, test_guidance, 'Test guidance', 0)

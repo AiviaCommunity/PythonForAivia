@@ -14,6 +14,7 @@ Output path is given with "params" for test and hardcoded for regular run in Aiv
 
 
 def run_test(config):
+    config['unitTest'] = True
     ground_truth_path_2 = config.pop('groundTruthPath_2')
     file_output_value_2 = config.get('fileOutputPath_2')
 
@@ -31,6 +32,8 @@ def generate_test_method(config):
     def test_method(self):
         self.dynamic_test_generator(config)
     return test_method
+
+print("* [TEST] TransformImages > ScaleImage")
 
 config_json_path = os.path.join(os.path.dirname(__file__), "ScaleImage", "Config_ScaleImage.json")
 with open(config_json_path) as f:

@@ -15,7 +15,7 @@
         "testGuidance": "NOTE: When running test, a GUI will pop up for each test.  \nPress `Reset values to default (96 multiwell template)` and proceed\n\nCreate array of shapes in 2D or 2D+t images.",
         "ZCount": 1,
         "TCount": 1,
-        "Calibration": "XYZT: 0.3 micrometers, 0.3 micrometers, 1 Default, 1 Default"
+        "Calibration": "XYZT: 0.3 micrometers, 0.3 micrometers, 1 micrometers, 1 Default"
     },
     {
         "inputImagePath": "Tests\\_InputImages\\Test_8bit_TYX_mitoFluo_MaxIP.tif",

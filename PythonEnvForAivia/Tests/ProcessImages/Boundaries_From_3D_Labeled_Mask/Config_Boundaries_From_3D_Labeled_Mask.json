@@ -1,0 +1,10 @@
+[
+    {
+        "inputImagePath": "Tests\\_InputImages\\Test_8bit_ZYX_mitoSeg_T15_labeled.tif",
+        "resultPath": "Tests\\ProcessImages\\Boundaries_From_3D_Labeled_Mask\\OUT_Test_8bit_ZYX_mitoSeg_T15_labeled_Labeled Boundaries Mask.tif",
+        "groundTruthPath_1": "Tests\\ProcessImages\\Boundaries_From_3D_Labeled_Mask\\GT_Test_8bit_ZYX_mitoSeg_T15_labeled_Labeled Boundaries Mask.tif",
+        "ZCount": 11,
+        "TCount": 1,
+        "Calibration": "XYZT: 1 Default, 1 Default, 1 Default, 1 Default"
+    }
+]

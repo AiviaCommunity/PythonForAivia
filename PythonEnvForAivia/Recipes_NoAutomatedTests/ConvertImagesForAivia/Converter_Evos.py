@@ -1,37 +1,10 @@
-# -------- Activate virtual environment -------------------------
 import os
-import ctypes
 import sys
-from pathlib import Path
-
-
-def search_activation_path():
-    for i in range(5):
-        final_path = str(Path(__file__).parents[i]) + '\\env\\Scripts\\activate_this.py'
-        if os.path.exists(final_path):
-            return final_path
-    return ''
-
-
-activate_path = search_activation_path()
-
-if os.path.exists(activate_path):
-    exec(open(activate_path).read(), {'__file__': activate_path})
-    print(f'Aivia virtual environment activated\nUsing python: {activate_path}')
-else:
-    error_mess = f'Error: {activate_path} was not found.\n\nPlease check that:\n' \
-                 f'   1/ The \'FirstTimeSetup.py\' script was already run in Aivia,\n' \
-                 f'   2/ The current python recipe is in one of the "\\PythonEnvForAivia\\" subfolders.'
-    ctypes.windll.user32.MessageBoxW(0, error_mess, 'Error', 0)
-    sys.exit(error_mess)
-# ---------------------------------------------------------------
-
-import wx
 import numpy as np
-import concurrent.futures
 import re
 from xml.dom import minidom
 from tifffile import imread, imwrite, TiffFile, tiffcomment
+import subprocess
 
 # Folder to quickly run the script on all Excel files in it
 DEFAULT_FOLDER = r''
@@ -87,12 +60,8 @@ def run(params):
     image_extension = '.tiff'
     n_wells = '24'  # To get all images with same base name in an individual well
 
-    print('Starting wxPython app')
-    app = wx.App()
-    frame = wx.Frame(None, -1, 'Folder picker')
-
     if not DEFAULT_FOLDER:
-        input_folder = pick_folder('', frame)  # To select metadata file
+        input_folder = pick_folder('')  # To select metadata file
     else:
         input_folder = DEFAULT_FOLDER
 
@@ -100,7 +69,7 @@ def run(params):
 
     if not image_files:
         mess = 'No {} image was found. Cancelling script.'.format(image_extension)
-        concurrent.futures.ThreadPoolExecutor().submit(Mbox, 'Process aborted', mess, 0)
+        Mbox('Process aborted', mess, 0)
         sys.exit(mess)  # for log
 
     print('Detected {} {} file.'.format(len(image_files), image_extension))  # for log
@@ -247,10 +216,10 @@ def run(params):
     output_file.close()
 
     mess = 'The experiment file was saved as:\n{}.\n\nFolder containing the file will now open...'.format(output_file.name)
-    with concurrent.futures.ThreadPoolExecutor() as executor:
-        future = executor.submit(Mbox, 'Process completed', mess, 0)
+    if not params.get('debugMode', False):
+        Mbox('Process completed', mess, 0)
     print(mess)  # for log
-    
+
     # Opening Windows Explorer folder containing the output file
     try:
         os.startfile(output_folder)
@@ -386,7 +355,6 @@ def reconstruct_multidim_images(input_folder, plate_info, image_files_paths, pat
                     stack_data = np.expand_dims(stack_data, axis=1)              # Add Z
                     stack_data = np.expand_dims(stack_data, axis=1)              # Add T
 
-
                     # Prepare metadata for XML string creation
                     img_metadata['DimensionOrder'] = 'XYZTC'          # opposite of numpy CYX / default is XYZTC
                     img_metadata['Dimensions'] = img_metadata['Image size'][0] + [1, 1, len(img_metadata['ChannelNames'])]
@@ -464,18 +432,22 @@ def grid_coord(nx, ny, cen_x, gal_size_x, cen_y, gal_size_y):
     return coord.reshape(2, nx * ny).transpose()
 
 
-def pick_folder(default_dir, frame):
-    # Create open file dialog
-    openDirDialog = wx.DirDialog(frame, "Select the folder containing the tif files",
-                                 default_dir, wx.DD_DEFAULT_STYLE | wx.DD_DIR_MUST_EXIST)
+def pick_folder(default_dir):
+    cmd = [
+        "powershell",
+        "-Command",
+        "Add-Type -AssemblyName System.Windows.Forms; "
+        "$dlg=New-Object System.Windows.Forms.OpenFileDialog; "
+        "$dlg.Title='Select ONE tif in the folder containing all Evos tiff files'; "
+        f"$dlg.InitialDirectory='{default_dir}'; "
+        "$dlg.Filter='All TIFF files (*.tiff)|*.tiff'; "
+        "if($dlg.ShowDialog() -eq 'OK'){Write-Output $dlg.FileName}"
+    ]
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    filepath = result.stdout.strip()
+    folderpath = os.path.dirname(filepath)
 
-    if openDirDialog.ShowModal() == wx.ID_CANCEL:
-        sys.exit()
-
-    folder = openDirDialog.GetPath()
-    print("Selected folder: ", folder)
-    openDirDialog.Destroy()
-    return folder
+    return folderpath
 
 
 # Function to create the XML metadata that can be pushed to the ImageDescription or ome_metadata tif tags
@@ -614,7 +586,21 @@ def create_aivia_tif_xml_metadata(meta_dict):
 
 
 def Mbox(title, text, style):
-    return ctypes.windll.user32.MessageBoxW(0, text, title, style)
+    style_tags = ["OkOnly", "OkCancel", "YesNo", "YesNoCancel"]
+    cmd = [
+        "powershell",
+        "-Command",
+        "Add-Type -AssemblyName Microsoft.VisualBasic; "
+        f"$x=[Microsoft.VisualBasic.Interaction]::MsgBox('{text}', "
+        f"[Microsoft.VisualBasic.MsgBoxStyle]::{style_tags[style]}, '{title}');"
+        "Write-Output $x"
+    ]
+
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    try:
+        return result.stdout.strip()        # return = "Ok" or "Cancel"
+    except:
+        return None
 
 
 def convert_rgb_to_byte(rgb_list):
@@ -679,9 +665,10 @@ def wavelength_to_RGB(wavelength):
 
 
 if __name__ == '__main__':
-    params = {}
+    params = {'debugMode': True}
     run(params)
 
 # Changelog:
 # v1.00: - script comes from MultiWellPlateConverter_OperaPhenix_v1_01.py
 #        - Modification of metadata output (here ome-xml)
+# v1.10: - Changed Mbox and FolderPicker to VB for Aivia 16, env removed then

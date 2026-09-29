@@ -1,0 +1,7 @@
+# To get all details in the file (stdout + stderr)
+
+env\Scripts\python -m unittest discover -v . > unittest_results.txt 2>&1
+
+env\Scripts\python -m unittest -v Tests.CollectImageMetrics.test_CalculateIntersectionOverUnion > unittest_results.txt 2>&1
+
+env\Scripts\python -m unittest -v Tests.ProcessImages.test_Watershed

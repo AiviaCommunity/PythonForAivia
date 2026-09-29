@@ -74,7 +74,6 @@ def run(params):
     if input_dims.size == 2 or (input_dims.size == 3 and t_count > 1):
         sys.exit('Error: Maximum intensity projection cannot be applied to 2D images.')
     
-    output_data = np.empty_like(first_ch)
     proj_output = np.zeros([3, input_dims[1], input_dims[2]]).astype(first_ch.dtype)       # Z and T dims are needed to be read by Aivia
     
     for c in range(0, 3):
@@ -100,7 +99,7 @@ def run(params):
     
     # Saving 3 channel image as single tif
     if 'fileOutputPath_2' in params.keys():     # test mode
-        temp_location = params['fileOutputPath_2']
+        out_path = params['fileOutputPath_2']
     else:
         # Evaluate possible output in a user-defined folder
         if DEFAULT_OUTPUT_FOLDER:
@@ -123,7 +122,8 @@ def run(params):
             out_path = result_location.replace('.tif', 'tmp.tif')
         
         # Dummy save to avoid error in Aivia
-        imwrite(result_location, output_data)
+        dummy_output = np.empty_like(first_ch)
+        imwrite(result_location, dummy_output)
 
     # Saving real output
     print('-- Output dimensions (expected C, T, Z, Y, X): ', proj_output.shape, ' --')
@@ -400,3 +400,4 @@ if __name__ == '__main__':
 # v1.10: - Changed output format to be as GT during tests (CYX order)
 # v1.11: - params['CallingExecutable'] points to a dll file instead of exe in Aivia 16+
 # v1.20: - Change in way to save the file, to avoid losing pixel calibration
+# v1.30: - Bug fixed with output (unit test or not)

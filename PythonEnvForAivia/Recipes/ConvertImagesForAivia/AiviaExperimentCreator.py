@@ -1,37 +1,11 @@
-# -------- Activate virtual environment -------------------------
 import os
-import ctypes
+import subprocess
 import sys
-from pathlib import Path
-
-def search_activation_path():
-    for i in range(5):
-        final_path = str(Path(__file__).parents[i]) + '\\env\\Scripts\\activate_this.py'
-        if os.path.exists(final_path):
-            return final_path
-    return ''
-
-activate_path = search_activation_path()
-
-if os.path.exists(activate_path):
-    exec(open(activate_path).read(), {'__file__': activate_path})
-    print(f'Aivia virtual environment activated\nUsing python: {activate_path}')
-else:
-    error_mess = f'Error: {activate_path} was not found.\n\nPlease check that:\n' \
-                 f'   1/ The \'FirstTimeSetup.py\' script was already run in Aivia,\n' \
-                 f'   2/ The current python recipe is in one of the "\\PythonEnvForAivia\\" subfolders.'
-    ctypes.windll.user32.MessageBoxW(0, error_mess, 'Error', 0)
-    sys.exit(error_mess)
-# ---------------------------------------------------------------
-
-
-import wx
 from tifffile import TiffFile
 import numpy as np
 import math
 import datetime
 import re
-import concurrent.futures
 
 # Folder to quickly run the script on all Excel files in it
 DEFAULT_FOLDER = ''     # r''
@@ -85,23 +59,23 @@ def run(params):
 
     # Choose files (or rely on an hard coded default folder)
     # For unittest
-    input_folder = params.get('inputDirectory')
+    input_folder = params.get('inputDirectory', None)
         
     if not input_folder:    # when run from Aivia
         input_folder = DEFAULT_FOLDER
     
-    ans = 6         # init for OK answer
+    ans = "Yes"         # init for OK answer
     group_list = []
     n_groups = 0
 
-    while ans == 6 and n_groups < 96:
+    while ans == "Yes" and n_groups < 96:
         new_list = pick_files(input_folder)
         group_list.append(new_list)
         input_folder = os.path.dirname(group_list[n_groups][0])
         ans = Mbox("Continue?", "Do you want to add another group of images?", 3)
         n_groups += 1
 
-    if ans == 2:        # CANCEL
+    if ans == "Cancel":        # CANCEL
         sys.exit('Script aborted by user.')
 
     if len(group_list) < 1:
@@ -110,15 +84,11 @@ def run(params):
         sys.exit(error_msg)
 
     # Prompt for user to see how many tables will be processed
-    mess = '{} groups of files were selected.\nPress OK to continue.'.format(n_groups) + \
-           '\nA confirmation popup message will inform you when the process is complete.'
-    with concurrent.futures.ThreadPoolExecutor() as executor:
-        future = executor.submit(Mbox, 'Detected tables', mess, 1)
-        ans = future.result()
-
+    mess = '{} groups of files were selected.\nPress OK to continue.'.format(n_groups)
+    ans = Mbox('Detected tables', mess, 1)
     print(mess)  # for log
 
-    if ans == 2:
+    if ans == "Cancel":
         sys.exit('Process terminated by user')
 
     # Standardizing n groups to existing layouts
@@ -135,6 +105,7 @@ def run(params):
     image_size_x = image_size_y = 1000       # value in MICRONS!
 
     # Attempt to collect real size from first image
+    tmp_pix_size = None
     try:
         with TiffFile(group_list[0][0]) as tmp_img:
             tmp_tif_tags = tmp_img.pages[0].tags
@@ -148,13 +119,13 @@ def run(params):
             except Exception as e:
                 print('Could not read image pixel resolution in Aivia 14.1 format. Trying <14.1\nError code: ', e)
 
-            if not tmp_pix_size:
+            if tmp_pix_size is None:
                 try:
                     tmp_pix_size = float(re.search(r' PixelSizeX="(?P<pxsize>.+)"\sPixelSizeY',
                                                    tmp_img_desc).group('pxsize'))
                 except Exception as e:
                     print('Could not read image pixel resolution. Set to 1.\nError code: ', e)
-                tmp_px_size = 1
+                    tmp_pix_size = 1.0
 
             image_size_x = tmp_pix_size * tmp_width
             image_size_y = tmp_pix_size * tmp_height
@@ -259,14 +230,15 @@ def run(params):
     output_file.write(str_to_write)
     output_file.close()
 
-    mess = 'The experiment file was saved as:\n{}'.format(output_file.name)
-    with concurrent.futures.ThreadPoolExecutor() as executor:
-        future = executor.submit(Mbox, 'Process completed', mess, 0)
-    print(mess)  # for
-
     # If run from Aivia, not unittest
-    if not params.get('inputDirectory'):
+    if not params.get('inputDirectory', False):
+        mess = (f'The experiment file was saved as:\n{output_file.name}\n'
+                f'The output folder will open now.\n'
+                f'It is normal to see "Error Encountered" at the bottom of the recipe console as no image is output.')
         os.startfile(input_folder)
+
+        Mbox('Process completed', mess, 0)
+        print(mess)  # for log
 
 
 def well_coord(args):
@@ -292,23 +264,39 @@ def grid_coord(nx, ny, cen_x, gal_size_x, cen_y, gal_size_y):
 
 
 def pick_files(default_dir):
-    print('Starting wxPython app')
-    app = wx.App()
-
-    # Create open file dialog
-    openFileDialog = wx.FileDialog(None, "Select a list of images representing the same experimental conditions",
-                                   default_dir, "", "Image files (*.*)|*.*",
-                                   wx.FD_OPEN | wx.FD_FILE_MUST_EXIST | wx.FD_MULTIPLE)
-
-    openFileDialog.ShowModal()
-    filenames = openFileDialog.GetPaths()
-    print("Selected table(s): ", filenames)
-    openFileDialog.Destroy()
-    return filenames
+    cmd = [
+        "powershell",
+        "-Command",
+        "Add-Type -AssemblyName System.Windows.Forms; "
+        "$dlg=New-Object System.Windows.Forms.OpenFileDialog; "
+        "$dlg.Multiselect=$true; "
+        "$dlg.Title='Select files (multi-selection with Ctrl key)'; "
+        f"$dlg.InitialDirectory='{default_dir}'; "
+        "$dlg.Filter='All files (*.*)|*.*'; "
+        "if($dlg.ShowDialog() -eq 'OK'){$dlg.FileNames | ForEach-Object {Write-Output $_}}"
+    ]
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    filepaths = result.stdout.strip().splitlines()
+    print("Selected table(s): ", filepaths)
+    return filepaths
 
 
 def Mbox(title, text, style):
-    return ctypes.windll.user32.MessageBoxW(0, text, title, style)
+    style_tags = ["OkOnly", "OkCancel", "YesNo", "YesNoCancel"]
+    cmd = [
+        "powershell",
+        "-Command",
+        "Add-Type -AssemblyName Microsoft.VisualBasic; "
+        f"$x=[Microsoft.VisualBasic.Interaction]::MsgBox('{text}', "
+        f"[Microsoft.VisualBasic.MsgBoxStyle]::{style_tags[style]}, '{title}');"
+        "Write-Output $x"
+    ]
+
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    try:
+        return result.stdout.strip()  # return = "Ok" or "Cancel"
+    except:
+        return None
 
 
 if __name__ == '__main__':
@@ -324,3 +312,4 @@ if __name__ == '__main__':
 # v1.32: - Support for pixel size metadata from Aivia 14.1. Added several new layouts
 #        - Added handling of unittest I/O
 # v1.33: - Added key in params for output path of file during tests
+# v1.40: - Changed ctypes Mbox and wx FilePicker to VB, and then removing Env need

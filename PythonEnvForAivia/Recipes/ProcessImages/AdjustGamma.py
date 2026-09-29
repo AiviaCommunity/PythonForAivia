@@ -38,7 +38,7 @@ def run(params):
     
     if not os.path.exists(image_location):
         print(f'Error: {image_location} does not exist')
-        return;
+        return
         
     image_data = imread(image_location)
     output_data = empty_like(image_data)
@@ -50,7 +50,7 @@ if __name__ == '__main__':
     params = {}
     params['inputImagePath'] = 'test.png'
     params['resultPath'] = 'testResult.png'
-    params['gamma'] = 1.0;
+    params['gamma'] = 1.0
     
     run(params)
 

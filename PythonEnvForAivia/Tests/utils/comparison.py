@@ -21,10 +21,14 @@ def isIdentical(image_path1, image_path2):
         data2 = tif2.asarray()
         
         print(f"Shape of GT = {data1.shape}\nShape of OUT = {data2.shape}")
-        
+
+        # Reduce dimensions if a dimension is 1
+        if data1.shape != data2.shape:
+            data1 = np.squeeze(data1)
+            data2 = np.squeeze(data2)
+
         # Compare the arrays
         return np.array_equal(data1, data2)
-
 
 
 def sort_json(data):

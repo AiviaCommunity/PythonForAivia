@@ -1,6 +1,6 @@
 import os.path
 import numpy as np
-from tifffile import imread, imsave
+from tifffile import imread, imwrite
 from skimage.feature import shape_index
 from skimage.util import img_as_ubyte, img_as_uint
 
@@ -53,6 +53,7 @@ def run(params):
     sigma = float(params['sigma'])
     tCount = int(params['TCount'])
     zCount = int(params['ZCount'])
+
     if not os.path.exists(image_location):
         print(f"Error: {image_location} does not exist")
         return
@@ -91,7 +92,7 @@ def run(params):
     else:
         shape_image = img_as_ubyte(shape_image)
 
-    imsave(result_location, shape_image, metadata={'axes': axes})
+    imwrite(result_location, shape_image, metadata={'axes': axes})
 
 
 if __name__ == '__main__':

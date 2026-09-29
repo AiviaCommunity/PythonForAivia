@@ -18,6 +18,7 @@ Computes a skeleton of the input image based on the thinning of its binarization
 
 
 def run_test(config):
+    config['unitTest'] = True
     ground_truth_path_1 = config.pop('groundTruthPath_1')
 
     result_value = Skeletonize.run(params=config)
@@ -34,6 +35,8 @@ def generate_test_method(config):
     def test_method(self):
         self.dynamic_test_generator(config)
     return test_method
+
+print("* [TEST] ProcessImages > Skeletonize")
 
 config_json_path = os.path.join(os.path.dirname(__file__), "Skeletonize", "Config_Skeletonize.json")
 with open(config_json_path) as f:

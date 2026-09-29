@@ -12,6 +12,7 @@ User can choose center position spacing and number of circles.'''
 
 
 def run_test(config):
+    config['unitTest'] = True
     ground_truth_path_1 = config.pop('groundTruthPath_1')
 
     result_value = DrawShollCircles_2D_AiviaGui.run(params=config)
@@ -28,6 +29,8 @@ def generate_test_method(config):
     def test_method(self):
         self.dynamic_test_generator(config)
     return test_method
+
+print("* [TEST] ProcessImages > DrawShollCircles_2D_AiviaGui")
 
 config_json_path = os.path.join(os.path.dirname(__file__), "DrawShollCircles_2D_AiviaGui", "Config_DrawShollCircles_2D_AiviaGui.json")
 with open(config_json_path) as f:

@@ -19,6 +19,7 @@ Different values indicate convexity/concavitiy and shapes:
 
 
 def run_test(config):
+    config['unitTest'] = True
     ground_truth_path_1 = config.pop('groundTruthPath_1')
 
     result_value = ShapeIndex.run(params=config)
@@ -35,6 +36,8 @@ def generate_test_method(config):
     def test_method(self):
         self.dynamic_test_generator(config)
     return test_method
+
+print("* [TEST] ProcessImages > ShapeIndex")
 
 config_json_path = os.path.join(os.path.dirname(__file__), "ShapeIndex", "Config_ShapeIndex.json")
 with open(config_json_path) as f:

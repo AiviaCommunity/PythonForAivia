@@ -1,0 +1,13 @@
+[
+    {
+        "inputRawImagePath2": "Tests\\_InputImages\\Test_8bit_TYX_mitoFluo_MaxIP.tif",
+        "inputRawImagePath1": "Tests\\_InputImages\\Test_8bit_TYX_mitoFluo_MaxIP.tif",
+        "resultPath2": "Tests\\TransformImages\\StackReg_2DImageAlignment_2channels\\OUT_Test_8bit_TYX_mitoFluo_MaxIP_Registered Ch 1.tif",
+        "groundTruthPath_1": "Tests\\TransformImages\\StackReg_2DImageAlignment_2channels\\GT_Test_8bit_TYX_mitoFluo_MaxIP_Registered Ch 1.tif",
+        "resultPath1": "Tests\\TransformImages\\StackReg_2DImageAlignment_2channels\\OUT_Test_8bit_TYX_mitoFluo_MaxIP_Registered Ch 2.tif",
+        "groundTruthPath_2": "Tests\\TransformImages\\StackReg_2DImageAlignment_2channels\\GT_Test_8bit_TYX_mitoFluo_MaxIP_Registered Ch 2.tif",
+        "ZCount": 1,
+        "TCount": 31,
+        "Calibration": "XYZT: 1 Default, 1 Default, 1 Default, 1 Default"
+    }
+]

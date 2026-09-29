@@ -12,6 +12,7 @@ the mask image is BELOW a specified threshold (t).'''
 
 
 def run_test(config):
+    config['unitTest'] = True
     ground_truth_path_1 = config.pop('groundTruthPath_1')
 
     result_value = MaxMask.run(params=config)
@@ -28,6 +29,8 @@ def generate_test_method(config):
     def test_method(self):
         self.dynamic_test_generator(config)
     return test_method
+
+print("* [TEST] ProcessImages > MaxMask")
 
 config_json_path = os.path.join(os.path.dirname(__file__), "MaxMask", "Config_MaxMask.json")
 with open(config_json_path) as f:

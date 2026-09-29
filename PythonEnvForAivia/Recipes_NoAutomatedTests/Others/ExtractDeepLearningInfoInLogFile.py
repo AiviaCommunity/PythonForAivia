@@ -25,10 +25,12 @@ else:
 # ---------------------------------------------------------------
 
 import wx
+import matplotlib
+matplotlib.use("WXAgg")         # for proper init with Aivia 16
 import matplotlib.pyplot as plt
 from matplotlib.widgets import RadioButtons
 import re
-import concurrent.futures
+import subprocess
 
 """
 Extracts Deep Learning training info (epochs with their relative loss and validation loss values)
@@ -65,9 +67,12 @@ def run(params):
     col2 = 'r'          # red
 
     # GUI to select a log file
-    print('Starting wxPython app')
-    app = wx.App()
-    logfile = pick_file()
+    if params.get('debugMode', False):
+        logfile = params.get('logFile', '')
+    else:
+        print('Starting wxPython app')
+        app = wx.App()
+        logfile = pick_file()
     print('-- Selected file: {}--'.format(logfile))
 
     # Check if log file is from local Aivia or Google Cloud Platform
@@ -93,13 +98,13 @@ def run(params):
 
     # If nothing found, exit
     if list_n_epoch is None:
-        concurrent.futures.ThreadPoolExecutor().submit(Mbox, 'No info found',
-                                                       'No Deep Learning training info found in this log.', 0)
+        Mbox('No info found','No Deep Learning training info found in this log.', 0)
         sys.exit("No Deep Learning training info found in this log.")
 
     print('-- Found {} DL training blocks --'.format(len(list_n_epoch)))
 
     # Init chart
+    init_ui()
     # fig = plt.figure(figsize=plt.figaspect(0.4))
     # ax1 = fig.add_subplot(111)
     fig, ax1 = plt.subplots(figsize=plt.figaspect(0.4))
@@ -256,11 +261,35 @@ def pick_file():
     return fname
 
 
+def init_ui():
+    app = wx.App()
+    dlg = wx.Dialog(None)
+    wx.CallLater(1, dlg.EndModal, wx.ID_OK)
+    dlg.ShowModal()
+    dlg.Destroy()
+
+
 def Mbox(title, text, style):
-    return ctypes.windll.user32.MessageBoxW(0, text, title, style)
+    style_tags = ["OkOnly", "OkCancel", "YesNo", "YesNoCancel"]
+    cmd = [
+        "powershell",
+        "-Command",
+        "Add-Type -AssemblyName Microsoft.VisualBasic; "
+        f"$x=[Microsoft.VisualBasic.Interaction]::MsgBox('{text}', "
+        f"[Microsoft.VisualBasic.MsgBoxStyle]::{style_tags[style]}, '{title}');"
+        "Write-Output $x"
+    ]
+
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    try:
+        return result.stdout.strip()        # return = "Ok" or "Cancel"
+    except:
+        return None
+
 
 if __name__ == '__main__':
-    params = {}
+    params = {'debugMode': True,
+              'logFile': r''}
     run(params)
     # image_location = params['inputImagePath']
     # result_location = params['resultPath']
@@ -270,3 +299,4 @@ if __name__ == '__main__':
 # v1.10: - Bug fixed with wxPython app not being run in v1.00
 # v1.20: - New virtual env code for auto-activation
 # v1.21: - Correcting the mistake of opening the log file as 'r+'. Also fixing some display missing (axis title)
+# v1.30: - Changed Mbox to VB

@@ -15,6 +15,7 @@ Works only when there is no time dimension (yet).'''
 
 
 def run_test(config):
+    config['unitTest'] = True
     ground_truth_path_1 = config.pop('groundTruthPath_1')
 
     result_value = SplitLabeledMask.run(params=config)
@@ -31,6 +32,8 @@ def generate_test_method(config):
     def test_method(self):
         self.dynamic_test_generator(config)
     return test_method
+
+print("* [TEST] ProcessImages > SplitLabeledMask")
 
 config_json_path = os.path.join(os.path.dirname(__file__), "SplitLabeledMask", "Config_SplitLabeledMask.json")
 with open(config_json_path) as f:

@@ -32,7 +32,6 @@ from skimage.util import img_as_ubyte
 from skimage.transform import rescale, resize
 import math
 import time
-
 import wx
 import wx.lib.agw.floatspin as FS
 
@@ -118,12 +117,24 @@ def paint_superpixels(image_location):
     (N, M) array
         Binary mask based on the user's painting.
     """
-    app = wx.App()    
+    init_ui()
+    app = wx.App.Get()
+    if app is None:
+        app = wx.App()
+        print('Starting wxPython app')
     frame = MyFrame(image_location)
     app.MainLoop()
 
     return frame.mask[:, :, 0]
-    
+
+
+def init_ui():
+    app = wx.App()
+    dlg = wx.Dialog(None)
+    wx.CallLater(1, dlg.EndModal, wx.ID_OK)
+    dlg.ShowModal()
+    dlg.Destroy()
+
 
 class MyFrame(wx.Frame):
 
@@ -482,3 +493,4 @@ if __name__ == '__main__':
 # v1.03: - Adding button to toggle the display of the boundaries and mask
 # v1.04: - Add ability to zoom in/out with scroll of the mouse
 # v1.05: - Resizing from the original image if image is downscaled to match window size
+# v1.10: - Adding an init function to start UI app, then later UI gets the existing app

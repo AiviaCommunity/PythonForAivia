@@ -24,6 +24,7 @@ IMPORTANT: Input channels need to have the same bit depth'''
 
 
 def run_test(config):
+    config['unitTest'] = True
     ground_truth_path_1 = config.pop('groundTruthPath_1')
     ground_truth_path_2 = config.pop('groundTruthPath_2')
     ground_truth_value_list_3 = config.pop('groundTruthValueList_3')
@@ -47,6 +48,8 @@ def generate_test_method(config):
     def test_method(self):
         self.dynamic_test_generator(config)
     return test_method
+
+print("* [TEST] CollectImageMetrics > ImageComparisonMetrics")
 
 config_json_path = os.path.join(os.path.dirname(__file__), "ImageComparisonMetrics", "Config_ImageComparisonMetrics.json")
 with open(config_json_path) as f:

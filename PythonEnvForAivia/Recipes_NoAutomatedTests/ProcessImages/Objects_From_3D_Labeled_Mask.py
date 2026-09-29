@@ -1,4 +1,4 @@
-import ctypes
+import subprocess
 import sys
 import os.path
 import numpy as np
@@ -36,7 +36,7 @@ Note: replace output with one of the line below to change output type (objects o
 
 
 # [INPUT Name:inputImagePath Type:string DisplayName:'Labeled Mask']
-# [OUTPUT Name:resultPath Type:string DisplayName:’Objects from labels’ Objects:3D MinSize:0.5 MaxSize:50000.0]
+# [OUTPUT Name:resultPath Type:string DisplayName:'Objects from labels' Objects:3D MinSize:0.5 MaxSize:50000.0]
 def run(params):
     image_location = params['inputImagePath']
     result_location = params['resultPath']
@@ -66,7 +66,21 @@ def run(params):
 
 
 def Mbox(title, text, style):
-    return ctypes.windll.user32.MessageBoxW(0, text, title, style)
+    style_tags = ["OkOnly", "OkCancel", "YesNo", "YesNoCancel"]
+    cmd = [
+        "powershell",
+        "-Command",
+        "Add-Type -AssemblyName Microsoft.VisualBasic; "
+        f"$x=[Microsoft.VisualBasic.Interaction]::MsgBox('{text}', "
+        f"[Microsoft.VisualBasic.MsgBoxStyle]::{style_tags[style]}, '{title}');"
+        "Write-Output $x"
+    ]
+
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    try:
+        return result.stdout.strip()        # return = "Ok" or "Cancel"
+    except:
+        return None
 
 
 if __name__ == '__main__':
@@ -78,3 +92,4 @@ if __name__ == '__main__':
 
 # CHANGELOG
 #   v1_00: - From Split_3D_Labeled_Mask_1_10.py
+#   v1_10: - Mbox with VB for Aivia 16

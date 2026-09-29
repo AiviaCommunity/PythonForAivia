@@ -11,6 +11,7 @@ Simple watershed.'''
 
 
 def run_test(config):
+    config['unitTest'] = True
     ground_truth_path_1 = config.pop('groundTruthPath_1')
 
     result_value = Watershed.run(params=config)
@@ -27,6 +28,8 @@ def generate_test_method(config):
     def test_method(self):
         self.dynamic_test_generator(config)
     return test_method
+
+print("* [TEST] ProcessImages > Watershed")
 
 config_json_path = os.path.join(os.path.dirname(__file__), "Watershed", "Config_Watershed.json")
 with open(config_json_path) as f:

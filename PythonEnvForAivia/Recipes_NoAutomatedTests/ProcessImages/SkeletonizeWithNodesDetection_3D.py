@@ -7,11 +7,12 @@ from skimage.filters import gaussian, median
 from scipy.ndimage import label
 import math
 from datetime import datetime
+import json, subprocess, sys
 
 np.seterr(divide='ignore', invalid='ignore')
 
-skeleton_dilation_size = 2
-node_dilation_size = 4
+skeleton_dilation_size = 1
+node_dilation_size = 2
 
 """
 See: https://scikit-image.org/docs/dev/api/skimage.morphology.html#skimage.morphology.skeletonize
@@ -21,6 +22,9 @@ Computes a skeleton of the input image based on the thinning of its binarization
 Open or close filters can be used to process the skeleton.
 Then branching nodes are detected and dilated to be subtracted to the dilated skeleton, thus giving
 branches with some thickness for Aivia to pick them as objects.
+
+Batch mode: if all parameters are set to 0, batch mode is activated and will try to collect previous 
+parameter values from the companion "...ui-param.json" file.
 
 Requirements
 ------------
@@ -42,7 +46,7 @@ Returns
 -------
 Aivia channel
     Result of the transform
-  
+    
 First example is a mask output, second and third are Object Set outputs  
 # [OUTPUT Name:resultPath3 Type:string DisplayName:'Branches']
 # [OUTPUT Name:resultPath3 Type:string DisplayName:'Branches' Objects:2D MinSize:0.0 MaxSize:1000000000.0]
@@ -62,16 +66,38 @@ def run(params):
     skeleton_p = params['resultPath']
     nodes_map_p = params['resultPath2']
     branches_map_p = params['resultPath3']
-    threshold = int(params['threshold'])
 
-    close_radius = int(params['closeRadius'])
+    params_as_json = {k: params[k] for k in ['threshold', 'filterType', 'filterRadius', 'closeRadius']}
+    params_as_json_str = json.dumps(params_as_json)
+
+    # Batch mode: if all parameters = 0, try to capture last settings
+    if all([p == '0' for p in params_as_json.values()]):
+        print('BATCH MODE ACTIVATED: trying to collect previous values')
+        batch_params_as_json = read_ui_param_from_file()
+
+        try:
+            threshold = int(batch_params_as_json['threshold'])
+            close_radius = int(batch_params_as_json['closeRadius'])
+            filter_radius = int(batch_params_as_json['filterRadius'])
+            filter_type = int(batch_params_as_json['filterType'])
+            print(f"Successful transfer of previous parameters ({batch_params_as_json})")
+        except BaseException as e:
+            mess = (f"At least one of the parameters ({params_as_json} vs {batch_params_as_json}) "
+                    f"could not be loaded correctly from the parameter file", e)
+            Mbox("Error", mess, 0)
+            sys.exit(mess)
+
+    else:
+        # Manual input
+        threshold = int(params['threshold'])
+        close_radius = int(params['closeRadius'])
+        filter_radius = int(params['filterRadius'])
+        filter_type = int(params['filterType'])
+
     open_skeleton = False
     if close_radius < 0:
         close_radius = -close_radius
         open_skeleton = True
-
-    filter_radius = int(params['filterRadius'])
-    filter_type = int(params['filterType'])
 
     tCount = int(params['TCount'])
     zCount = int(params['ZCount'])
@@ -242,6 +268,9 @@ def run(params):
     imsave(nodes_map_p, dilated_nodes, imagej=True, photometric='minisblack', metadata=meta_info)
     imsave(branches_map_p, dilated_branches, imagej=True, photometric='minisblack', metadata=meta_info)
 
+    # Saving parameters to json companion file for further batch
+    write_ui_param_in_file(params_as_json_str)
+
 
 def crop_array(arr, central_coords, crop_radius):
     dims = arr.shape
@@ -264,6 +293,81 @@ def crop_array(arr, central_coords, crop_radius):
     return cropped_arr
 
 
+def read_ui_param_from_file():
+    out_dict = None
+    ui_param_file_p = os.path.abspath(__file__).replace('.py', '_ui-param.json')
+    if os.path.exists(ui_param_file_p):
+        with open(ui_param_file_p, "r") as f:
+            # Read the last line
+            try:
+                last_line = next(reversed(list(f))).rstrip("\n")
+            except BaseException as e:
+                last_line = ""
+                print(f"Error: could not read last line of parameter file: {ui_param_file_p}\n{e}")
+
+            # Trying to convert line to dict
+            try:
+                out_dict = json.loads(last_line)
+            except BaseException as e:
+                print(f"Error: could not extract json info from last line of parameter file: {ui_param_file_p}\n{e}")
+    else:
+        print(f"Error: parameter file does not exist: {ui_param_file_p}")
+
+    return out_dict
+
+
+def write_ui_param_in_file(params_ui: str):
+    message = ''
+
+    curr_dir = os.path.dirname(os.path.abspath(__file__))
+    print('Saving UI parameters in: ', curr_dir)
+
+    # Looking for an existing parameters file
+    ui_param_file = os.path.basename(__file__).replace('.py', '_ui-param.json')
+    ui_param_fp = os.path.join(curr_dir, ui_param_file)
+
+    if os.path.exists(ui_param_fp):
+        # Read the last line and compare to existing values
+        with open(ui_param_fp, "r") as f:
+            try:
+                last_line = next(reversed(list(f))).rstrip("\n")
+            except BaseException as e:
+                last_line = ""
+                print(f"Error: could not read last line of parameter file: {ui_param_fp}\n{e}")
+
+        if last_line:
+            if params_ui == last_line:
+                message = f"New parameters equal previous parameters in: {ui_param_fp}.\nNothing changed!"
+            else:
+                with open(ui_param_fp, "a") as f:
+                    f.write("\n" + params_ui)
+                message = f"New parameters differ from previous parameters and were added to: {ui_param_fp}"
+    else:
+        with open(ui_param_fp, 'w') as f:
+            f.write(params_ui)
+            message = f"New parameters written to: {ui_param_fp}"
+
+    return message
+
+
+def Mbox(title, text, style):
+    style_tags = ["OkOnly", "OkCancel", "YesNo", "YesNoCancel"]
+    cmd = [
+        "powershell",
+        "-Command",
+        "Add-Type -AssemblyName Microsoft.VisualBasic; "
+        f"$x=[Microsoft.VisualBasic.Interaction]::MsgBox('{text}', "
+        f"[Microsoft.VisualBasic.MsgBoxStyle]::{style_tags[style]}, '{title}');"
+        "Write-Output $x"
+    ]
+
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    try:
+        return result.stdout.strip()        # return = "Ok" or "Cancel"
+    except:
+        return None
+
+
 if __name__ == '__main__':
     params = {
         'inputImagePath': r'UntitledZ.aivia.tif',
@@ -283,3 +387,4 @@ if __name__ == '__main__':
 # CHANGELOG:
 #   v1.00: - Version using cropped 3*3 kernels on each pixel/voxel of the skeleton to detect nodes
 #   v1.10: - Replacing 'selem' by 'footprint' for morphomathematical functions and fixed 3D footprint format for dilation
+#   v1.20: - With batch ability

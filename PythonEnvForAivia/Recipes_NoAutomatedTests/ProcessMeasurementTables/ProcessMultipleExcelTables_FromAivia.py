@@ -4,7 +4,6 @@ import ctypes
 import sys
 from pathlib import Path
 
-
 def search_activation_path():
     for i in range(5):
         final_path = str(Path(__file__).parents[i]) + '\\env\\Scripts\\activate_this.py'
@@ -25,17 +24,15 @@ else:
     sys.exit(error_mess)
 # ---------------------------------------------------------------
 
+
 import pandas as pd
-import wx
-import concurrent.futures
-import openpyxl.utils.cell
-from magicgui import magicgui
 import re
 from datetime import datetime
 import numpy as np
 from skimage.io import imread, imsave
+import subprocess, json
 
-debug_mode = False
+DEBUG_MODE = False
 
 """
 Convert multiple Excel spreadsheets (in the same input folder or in a batch series of subfolders) 
@@ -115,57 +112,17 @@ relationship_measurements_stats_todrop = {'Branch Angle': 'Total',
                                           'Is On Nuclear Membrane': 'Average', 'Is In Nucleus': 'Average'}
 
 # reference names for the object classification results >> need to be searched in FULL tab name
-class_group_ref = ['Class Group', 'Class Numb er']           # "Group" in Aivia 13.x-, "Number" in Aivia 14.x+
+class_group_ref = ['Class Group', 'Class Number']           # "Group" in Aivia 13.x-, "Number" in Aivia 14.x+
 class_group_cut_ref = [st[-14:] for st in class_group_ref]      # Tab names are cut. In Aivia 14.x, it's 14 characters.
 class_conf_ref = ['Class Confidence']
 class_conf_cut_ref = [st[-14:] for st in class_conf_ref]
 
 ui_message = "Notes for multiwell plate:" \
-             "\n* If a multiwell format exists, data of images in the same well are stacked altogether" \
-             "\n(becomes 1 column = 1 measurement from 1 well)." \
-             "\n* For statistics, results will group images per well."
+             "&#10;* If a multiwell format exists, data of images in the same well are stacked altogether" \
+             "&#10;(becomes 1 column = 1 measurement from 1 well)." \
+             "&#10;* For statistics, results will group images per well."
 
 final_name_prefix = 'Analysis Summary'
-
-
-@magicgui(persist=True, layout='form',
-          ch1={"label": "Excel table location:\n(tooltip available)", "widget_type": "RadioButtons", 'choices': choice_list1},
-          ch2={"label": "Multi-table process:", "widget_type": "RadioButtons", 'choices': choice_list2},
-          ch3={"label": "Time dimension in data:", "widget_type": "RadioButtons", 'choices': choice_list3},
-          ch4={"label": "Action to do on tables:", "widget_type": "RadioButtons", 'choices': choice_list4},
-          spacer={"label": "  ", "widget_type": "Label"},
-          text={"label": ui_message, "widget_type": "Label"},
-          call_button="Run")
-def get_scenario(ch1=choice_list1[0], ch2=choice_list2[0], ch3=choice_list3[0], ch4=choice_list4[0],
-                 spacer='', text=''):
-    """
-    :param ch1:
-        For batch result, select one xlsx table, an automatic search is performed to process other tables in the same batch.
-    :param ch2:
-    :param ch3:"widget_type": "LineEdit",
-    :param ch4:
-    :param text:
-    :return:
-    """
-    pass
-
-
-@get_scenario.ch3.changed.connect
-def change_ch3_callback():
-    if get_scenario.ch3.value == choice_list3[1]:
-        pass                                            # TODO
-
-
-@get_scenario.called.connect
-def close_GUI_callback():
-    get_scenario.close()
-
-
-get_scenario.show(run=True)
-choice_1 = get_scenario.ch1.value
-choice_2 = get_scenario.ch2.value
-choice_3 = get_scenario.ch3.value
-choice_4 = get_scenario.ch4.value
 
 
 # [INPUT Name:inputPath Type:string DisplayName:'Any channel']
@@ -173,9 +130,32 @@ choice_4 = get_scenario.ch4.value
 def run(params):
     input_p = params['inputPath']
     result_p = params['resultPath']
-    global choice_list1, choice_list2, choice_list3, choice_list4
-    global relationships, relationship_ID_headers, relationship_measurements
+    global relationships, relationship_ID_headers, relationship_measurements, ui_message, final_name_prefix
     global class_group_ref, class_group_cut_ref, class_conf_ref, class_conf_cut_ref
+
+    # First UI
+    # Each entry is expected to have: label, widget_type, choices (if needed)
+    # A file browser is automatically bound to a "BrowseButton" in the same grid no. Same with "CallButton" and "Cancel"
+    # Slider choices = min, max, step, init-value (all should be integer) | &#10; for line break in labels
+    ui_width, ui_height = 600, 460
+    info_dict = {'Choice1': {"widget_type": "RadioButtons", "label": "Excel table location:",
+                             'choices': choice_list1},
+                 'Choice2': {"widget_type": "RadioButtons", "label": "Multi-table process:",
+                             'choices': choice_list2},
+                 'Choice3': {"widget_type": "RadioButtons", "label": "Time dimension in data:",
+                             'choices': choice_list3},
+                 'Choice4': {"widget_type": "RadioButtons", "label": "Action to do on tables:",
+                             'choices': choice_list4},
+                 'Txt1': {"widget_type": "Label", "label": ui_message},
+                 'CallButton': {"widget_type": "OKButton", "label": "Run"}
+                 }
+
+    params_ui = ask_parameters_wpf(info_dict, ui_width, ui_height)
+
+    choice_1 = params_ui['Choice1']
+    choice_2 = params_ui['Choice2']
+    choice_3 = params_ui['Choice3']
+    choice_4 = params_ui['Choice4']
 
     do_multiple_files_as_cols = False  # Default action when combining multiple spreadsheets
     do_combine_meas_tabs = False  # Combining measurement tabs into one (for the same object subset)
@@ -208,7 +188,7 @@ def run(params):
     add_summary = False  # Used to know if the tab is missing from the beginning
     contains_tps = False  # If tables contain timepoints (form also asks the same, but this will check if true or not)
 
-    # Choose files (or rely on an hard coded default folder)
+    # Choose files (or rely on a hard coded default folder)
     input_folder = DEFAULT_FOLDER
     if input_folder != "":
         # Preparing file list
@@ -218,7 +198,7 @@ def run(params):
                                and not f.startswith('._') and not f.startswith('Analysis Summary'))]
 
     else:
-        indiv_path_list = pick_files()
+        indiv_path_list = pick_files(None)
         input_folder = os.path.dirname(indiv_path_list[0])
 
     # [From Workflow / Aivia 11.0+]: Collecting main folder
@@ -265,15 +245,14 @@ def run(params):
         stop_with_error_popup(error_msg)
 
     # Prompt for user to see how many tables will be processed
-    mess = '{} Excel files were detected.\nPress OK to continue.'.format(len(indiv_path_list)) + \
-           '\nA confirmation popup message will inform you when the process is complete.'
-    print(mess)  # for log
-    with concurrent.futures.ThreadPoolExecutor() as executor:
-        future = executor.submit(Mbox, 'Detected tables', mess, 1)
-        ans = future.result()
+    if not DEBUG_MODE:
+        mess = '{} Excel files were detected.\nPress OK to continue.'.format(len(indiv_path_list)) + \
+               '\nA confirmation popup message will inform you when the process is complete.'
+        print(mess)  # for log
+        ans = Mbox('Detected tables', mess, 1)
 
-    if ans == 2:
-        sys.exit('Process terminated by user')
+        if ans == "Cancel":
+            sys.exit('Process terminated by user')
 
     # Sort files using subfolders numbers (necessary due to the absence of zero-filling, i.e. 8, 9, 10, 11, etc.)
     if do_scan_workflow_folders:
@@ -320,6 +299,7 @@ def run(params):
     class_names = []
 
     # Main LOOP -----------------------------------------------------------------------------------------------
+    print(f"************************************\n***** STARTING PROCESSING LOOP *****\n************************************")
     for file_index, input_file in enumerate(final_input_list):
         if len(final_input_list) > 1:
             indiv_path_list = [input_file]  # List of tables is trimmed down to one item to invoke separate processing
@@ -417,6 +397,8 @@ def run(params):
                         prefix_name = clean_excel_name(os.path.basename(f))
 
                         # Start looping over the different sheets
+                        if DEBUG_MODE:
+                            print(f"1/ Looping over sheets to transfer data to df_grouped")
                         for i_t, t in enumerate(tab_names):
                             real_t = real_tab_names_ref[i_t]
                             if process_wells and same_well:
@@ -490,6 +472,8 @@ def run(params):
                                 r_t = real_tab_names_ref_tmp[i_t]
 
                                 # Processing only the tabs which were selected
+                                if DEBUG_MODE:
+                                    print(f"1/ Looping over sheets to transfer data to df_grouped")
                                 if r_t in real_tab_names_ref:
                                     # Adding prefix (file name) to first column in the raw table
                                     df_raw[t].iloc[:, 0] = [prefix_name + "_" + r for r in df_raw[t].iloc[:, 0]]
@@ -504,6 +488,8 @@ def run(params):
         # --- COMBINE TABS into one if no timepoints in data (scenario A-D...) ------------------------------
         summary_lbl = 'Summary'     # Important for the further processing of the summary tab which name can vary
 
+        if DEBUG_MODE:
+            print(f"2/ Combine df_grouped 'sheets' into one if requested")
         if not contains_tps and (do_combine_meas_tabs or do_multiple_files_as_cols):
             # Init
             col_headers = ['Summary', *list(df_grouped[list(df_grouped.keys())[-1]].columns[1:])]
@@ -530,6 +516,8 @@ def run(params):
                             all_meas_names.extend(tmp_df.columns[1:])
 
                 # Specific to neurons: split dendrite trees from segments
+                if DEBUG_MODE:
+                    print(f"2b/ Separate Dendrites and Dendrite Segments")
                 if 'Dendrite Set' in df_grouped.keys():
                     df_grouped_to_add = {}
                     order_of_keys = []
@@ -554,6 +542,8 @@ def run(params):
 
                 # --- Process RELATIONSHIPS between object sets (see definition before the def run) ---
                 # Select all tabs where the primary object exists         # E.g. 'Cells (1)'
+                if DEBUG_MODE:
+                    print(f"3/ Process relationships upon hardcoded dictionary definitions")
                 relationship_parent_tabs = []
                 for rel_k in relationships.keys():
                     relationship_parent_tabs += [[it_k, rel_k] for it_k in df_grouped.keys() if rel_k in it_k]
@@ -590,24 +580,25 @@ def run(params):
                         for s_t in s_valid_tab_list[0]:
                             available_meas += df_grouped[s_t].columns[1:].tolist()
 
-                        # GUI to select measurements and statistics
-                        @magicgui(persist=True, layout='horizontal',
-                                  total_selection={"label": "Total:", "widget_type": "Select", 'choices': available_meas},
-                                  average_selection={"label": "Average:", "widget_type": "Select", 'choices': available_meas})
-                        def meas_gui_selector(total_selection=available_meas[0], average_selection=available_meas[0]):
-                            pass
-
-                        @meas_gui_selector.called.connect
-                        def close_GUI_callback():
-                            meas_gui_selector.close()
-
                         if not relationship_meas_stats_sel:
-                            meas_gui_selector.show(run=True)        # returns only the selected items
+                            # GUI to select measurements and statistics
+                            # Each entry is expected to have: label, widget_type, choices (if needed)
+                            # A file browser is automatically bound to a "BrowseButton" in the same grid no. Same with "CallButton" and "Cancel"
+                            # Slider choices = min, max, step, init-value (all should be integer) | &#10; for line break in labels
+                            ui_width, ui_height = 400, 600
+                            info_dict = {'TextExample': {"widget_type": "Label",
+                                                         "label": "Select measurements with their corresponding stats"
+                                                                  "&#10; (CTRL key for multiple selection)"},
+                                         'LB_total': {"label": "Total:", "widget_type": "ListBox",
+                                                'choices': available_meas},
+                                         'LB_avg': {"label": "Average:", "widget_type": "ListBox",
+                                                'choices': available_meas},
+                                         'CallButton': {"label": "Run", "widget_type": "OKButton"}
+                                         }
 
-                            relationship_meas_stats_sel = [
-                                meas_gui_selector.total_selection.value,
-                                meas_gui_selector.average_selection.value
-                            ]
+                            params_ui = ask_parameters_wpf(info_dict, ui_width, ui_height)
+
+                            relationship_meas_stats_sel = [params_ui["LB_total"], params_ui["LB_avg"]]
 
                         # Calculating relationship-based stats
                         id_header = relationship_ID_headers[p_name]
@@ -635,6 +626,8 @@ def run(params):
                     secondary_tab_list.clear()
 
                 # Collecting summary values
+                if DEBUG_MODE:
+                    print(f"4/ Get summary additional values (count, %) in 'Summary' sheet")
                 for k in df_grouped.keys():
                     if not k.endswith('Summary'):
                         total_counts.append(df_grouped[k].shape[0])
@@ -690,23 +683,28 @@ def run(params):
                 # Chasing counts only for object sets, not for single measurements
                 object_set_ref = ''
                 for k in df_grouped.keys():
-                    _, object_set = get_split_name(k)
+                    if not object_set_ref or object_set_ref != 'Object 1':      # MOD for v2.34
+                        _, object_set = get_split_name(k)               # TODO: raise error if only 1 object set because some measurements can have '...'
                     if object_set == '':        # If only one object set, name is not present
                         object_set = 'Object 1'
-                    elif object_set == '--incomplete--':
-                        Mbox('Error', 'An unexpected error occurred, please contact Aivia team.\n\nError message:\n'
-                                      'Incomplete object set detected in "do_multiple_files_as_cols" bloc (line~700).', 0)
-                        sys.exit('')
+                    # elif object_set == '--incomplete--':          # No need to stop the script
+                    #     Mbox('Error', 'An unexpected error occurred, please contact Aivia team.\n\nError message:\n'
+                    #                   'Incomplete object set detected in "do_multiple_files_as_cols" bloc (line~700).', 0)
+                    #     sys.exit('')
 
-                    if not k.endswith('Summary') and not any([k.endswith(cgref) for cgref in class_group_cut_ref]):
-                        if object_set != object_set_ref:
-                            total_counts.append(df_grouped[k].count()[1:])
-                            new_row = dict(zip(list(empty_row.keys()),
-                                               ['Total number_{}'.format(object_set), *total_counts[t]]))
-                            df_summary_to_add = pd.concat([df_summary_to_add, pd.DataFrame([new_row])], ignore_index=True)
+                    if DEBUG_MODE:
+                        print(f"4/ Get summary additional values (count, %) in 'Summary' sheet")
 
-                            object_set_ref = object_set
-                            t += 1
+                    if object_set != '--incomplete--':
+                        if not k.endswith('Summary') and not any([k.endswith(cgref) for cgref in class_group_cut_ref]):
+                            if object_set != object_set_ref:
+                                total_counts.append(df_grouped[k].count()[1:])
+                                new_row = dict(zip(list(empty_row.keys()),
+                                                   ['Total number_{}'.format(object_set), *total_counts[t]]))
+                                df_summary_to_add = pd.concat([df_summary_to_add, pd.DataFrame([new_row])], ignore_index=True)
+
+                                object_set_ref = object_set
+                                t += 1
 
                     elif any([k.endswith(cgref) for cgref in class_group_cut_ref]):
                         class_tab_names = get_class_tab_names(df_grouped)
@@ -793,7 +791,7 @@ def run(params):
 
             # Resizing columns
             for c in range(0, len(df_grouped[summary_lbl].columns)):
-                col_letter = openpyxl.utils.cell.get_column_letter(c + 1)
+                col_letter = get_column_letter(c + 1)
                 # Get longest text
                 len_longest_text = df_grouped[summary_lbl].iloc[:, c].map(str).str.len().max()
                 writer.sheets[summary_lbl].column_dimensions[col_letter].width = len_longest_text * 1.5
@@ -803,7 +801,7 @@ def run(params):
 
                 # Resizing columns
                 for c in range(0, len(df_grouped[sh].columns)):
-                    col_letter = openpyxl.utils.cell.get_column_letter(c + 1)
+                    col_letter = get_column_letter(c + 1)
                     len_longest_text = len(str(df_grouped[sh].columns[c]))
                     if c == 0 and df_grouped[sh].shape[0] > 1:  # First column with measurement name and object names
                         if len(str(df_grouped[sh].iloc[1, 0])) > len_longest_text:
@@ -821,7 +819,7 @@ def run(params):
                 # Checking well name compared to previous table
                 current_well = well_ref_for_tables[file_index]
                 if current_well != well_ref or file_index == len(final_input_list) - 1:
-                    if temp_tab:
+                    if temp_tab is not None:
                         # Combine summary tabs and add to final super table
 
                         # Add latest summary tab to final super table
@@ -906,7 +904,7 @@ def run(params):
 
             # Resizing columns
             for c in range(0, len(df_big_summary.columns)):
-                col_letter = openpyxl.utils.cell.get_column_letter(c + 1)
+                col_letter = get_column_letter(c + 1)
                 # Get longest text
                 len_longest_text = max(
                     [df_big_summary.iloc[:, c].map(str).str.len().max(), len(df_big_summary.columns[c])])
@@ -921,7 +919,7 @@ def run(params):
     Mbox('Table processed', final_mess, 0)
 
     # Opening the output folder in Windows
-    os.startfile(output_folder)
+    subprocess.run(["explorer.exe", output_folder])
 
     # Creates a zero-filled image as output
     if input_p:
@@ -986,7 +984,7 @@ def combine_tabs(df_raw):
 
     for k in df_raw.keys():
         # Don't need the summary tab if included
-        if debug_mode:
+        if DEBUG_MODE:
             print(f"Processing {k} tab")
 
         if k == 'Summary' or '.Summary' in k:
@@ -1241,6 +1239,14 @@ def clean_excel_name(tmp_name: str):
     return tmp_name.removesuffix('_PrintToExcel.xlsx')
 
 
+def get_column_letter(col_num):
+    result = ""
+    while col_num > 0:
+        col_num, remainder = divmod(col_num - 1, 26)
+        result = chr(65 + remainder) + result
+    return result
+
+
 def get_split_name(txt: str):
     # Check if previous object set name is present in txt
     # prev_obj_name = '' if it is for the first measurement tab or if there is only one object set with no child objects
@@ -1274,20 +1280,20 @@ def get_split_name(txt: str):
 
 
 def get_class_names(no_of_classes):
-    @magicgui(persist=True,
-              classnames={"label": f"Specify the names of the object classes, separated with only a comma\n"
-                                   f"(e.g. First Class,Second Class,Unselected):\n\n"
+    # Each entry is expected to have: label, widget_type, choices (if needed)
+    # A file browser is automatically bound to a "BrowseButton" in the same grid no. Same with "CallButton" and "Cancel"
+    # Slider choices = min, max, step, init-value (all should be integer) | &#10; for line break in labels
+    ui_width, ui_height = 500, 200
+    info_dict = {'Classes': {"label": f"Specify the names of the object classes, separated with only a comma &#10;"
+                                   f"(e.g. First Class,Second Class,Unselected): &#10;&#10;"
                                    f"Number of expected classes = {no_of_classes}",
-                          "widget_type": "TextEdit"},)
-    def get_names(classnames=''):
-        pass
+                          "widget_type": "TextBox"},
+                 'CallButton': {"label": "Proceed", "widget_type": "OKButton"}
+                 }
 
-    @get_names.called.connect
-    def close_GUI_callback():
-        get_names.close()
+    params_ui = ask_parameters_wpf(info_dict, ui_width, ui_height)
 
-    get_names.show(run=True)
-    collected_names = (get_names.classnames.value).split(',')
+    collected_names = params_ui['Classes'].split(',')
 
     # Check on number of classes
     final_names = [''] * no_of_classes
@@ -1302,19 +1308,365 @@ def get_class_names(no_of_classes):
     return final_names
 
 
-def pick_files():
-    print('Starting wxPython app')
-    app = wx.App()
+def ask_parameters_wpf(input_dict, ui_wi, ui_he, margin_v: int = 10):
 
-    # Create open file dialog
-    openFileDialog = wx.FileDialog(None, "Select a results table (xlsx) to process", ".\\", "",
-                                   "Excel files (*.xlsx)|*.xlsx", wx.FD_OPEN | wx.FD_FILE_MUST_EXIST | wx.FD_MULTIPLE)
+    # Functions to create XAML code
+    def create_radiobutton_xaml(dict_key, value_list):
+        code = ''
+        name_list = [f"{dict_key}RB{n}" for n in range(1, len(value_list) + 1)]
 
-    openFileDialog.ShowModal()
-    filenames = openFileDialog.GetPaths()
-    print("Selected table(s): ", filenames)
-    openFileDialog.Destroy()
-    return filenames
+        is_checked = 'IsChecked="True" '
+        for i in range(len(name_list)):
+            code += f'<RadioButton Name="{name_list[i]}" {is_checked}Content="{value_list[i]}"/>'
+            is_checked = ''  # reset
+
+        return code
+
+    def create_combobox_xaml(value_list):
+        code = ''
+        for i in range(len(value_list)):
+            code += f'<ComboBoxItem Content="{value_list[i]}"/>'
+
+        return code
+
+    def create_listbox_xaml(list_name, value_list):
+        code = f'<ListBox Name="{list_name}" SelectionMode="Extended">'
+
+        for i in range(len(value_list)):
+            code += f'<ListBoxItem>{value_list[i]}</ListBoxItem>'
+
+        return code + '</ListBox>'
+
+    def add_xaml_block_from_dict(input_key, input_value: dict, grid_number, margin_value):
+        xaml_block = ''
+        add_extra_grid_number = False
+        if input_value["widget_type"] == "FileDialog":
+            xaml_block = rf'''
+                <TextBlock Grid.Row="{grid_number}" Margin="0,0,0,5" Text="{input_value['label']}"/>
+                <DockPanel Grid.Row="{grid_number + 1}" Margin="0,0,0,{margin_value}">
+                    <TextBox Name="{input_key}" Width="350" Margin="0,0,5,0"/>
+                    <Button Name="BrowseButton" Width="80" Content="Browse"/>
+                </DockPanel>
+                '''
+            add_extra_grid_number = True
+        elif input_value["widget_type"] == "Label":
+            xaml_block = rf'''
+                <StackPanel Grid.Row="{grid_number}" Margin="{margin_value}">
+                    <TextBlock Name="{input_key}" Text="{input_value['label']}" TextWrapping="Wrap"/>
+                </StackPanel>
+                '''
+        elif input_value["widget_type"] in ["Int", "Double", "TextBox"]:
+            default_v = input_value.get('choices', '')
+            xaml_block = rf'''
+                <StackPanel Grid.Row="{grid_number}" Margin="{margin_value}">
+                    <TextBlock Text="{input_value['label']}"/>
+                    <TextBox Name="{input_key}" Text="{default_v}"/>
+                </StackPanel>
+                '''
+        elif input_value["widget_type"] == "Slider":
+            minv, maxv, stepv, initv = input_value["choices"]
+            xaml_block = rf'''
+                <StackPanel Grid.Row="{grid_number}" Margin="{margin_value}">
+                    <TextBlock Text="{input_value['label']}"/>
+                    <Slider Name="{input_key}" Minimum="{minv}" Maximum="{maxv}" TickFrequency="{stepv}" IsSnapToTickEnabled="True" Value="{initv}"/>
+                    <TextBlock Name="SLIDER_{input_key}" Text="{input_value['choices'][3]}" HorizontalAlignment="Center"/>
+                </StackPanel>
+                '''
+        elif input_value["widget_type"] == "CheckBox":
+            is_checked = input_value.get('choices', 'False')
+            xaml_block = rf'''
+                <CheckBox Grid.Row="{grid_number}" Name="{input_key}" Margin="0,0,0,{margin_value}" Content="{input_value['label']}" IsChecked="{is_checked}"/>
+                '''
+        elif input_value["widget_type"] == "RadioButtons":
+            xaml_block = rf'''
+                <GroupBox Grid.Row="{grid_number}" Header="{input_value['label']}" Margin="0,0,0,{margin_value}">
+                    <StackPanel>{create_radiobutton_xaml(input_key, input_value['choices'])}</StackPanel>
+                </GroupBox>
+                '''
+        elif input_value["widget_type"] == "ComboBox":
+            xaml_block = rf'''
+                <GroupBox Grid.Row="{grid_number}" Header="{input_value['label']}" Margin="0,0,0,{margin_value}">
+                    <ComboBox Name="{input_key}" SelectedIndex="0">{create_combobox_xaml(input_value['choices'])}</ComboBox>
+                </GroupBox>
+                '''
+        elif input_value["widget_type"] == "ListBox":
+            xaml_block = rf'''
+                <GroupBox Grid.Row="{grid_number}" Header="{input_value['label']}" Margin="0,0,0,{margin_value}">
+                    {create_listbox_xaml(input_key, input_value['choices'])}
+                </GroupBox>
+                '''
+        elif input_value["widget_type"] == "OKButton":
+            xaml_block = rf'''
+                <StackPanel Grid.Row="{grid_number}" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Name="{input_key}" Width="70" Margin="{int(margin_value / 2)}" Content="{input_value['label']}"/>
+                    <Button Name="CancelButton" Width="70" Margin="{int(margin_value / 2)}" Content="Cancel"/>
+                </StackPanel>
+                '''
+        return xaml_block, add_extra_grid_number
+
+    def create_xaml_code(input_dict, width, height):
+        n_def = len(input_dict)
+        if "FilePath" in input_dict:
+            n_def += 1  # For Browse button
+
+        # Code for row definitions
+        row_def_code = ''.join([f'<RowDefinition Height="Auto"/>' for _ in range(n_def)])
+
+        # Code for all items
+        all_block_code = ''
+        grid_no = 0
+        for k, v in input_dict.items():
+            code, do_increment_grid_no = add_xaml_block_from_dict(k, v, grid_no, margin_v)
+            all_block_code += code
+            grid_no = grid_no + 2 if do_increment_grid_no else grid_no + 1
+
+        xaml_code = rf'''
+            <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    Title="Aivia Parameters" Width="{width}" Height="{height}"
+                    WindowStartupLocation="CenterScreen">
+
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>{row_def_code}</Grid.RowDefinitions>
+                    {all_block_code}
+                </Grid>
+            </Window>
+        '''
+        return xaml_code
+
+    # Functions to create PowerShell code
+    def ps_find(full_dict):
+        names = []
+        for k in full_dict.keys():
+            if full_dict[k]['widget_type'] == "RadioButtons":
+                names += [f"{k}RB{n}" for n in range(1, len(full_dict[k]['choices']) + 1)]
+            elif full_dict[k]['widget_type'] == "FileDialog":
+                names += [k, "BrowseButton"]
+            elif full_dict[k]['widget_type'] == "OKButton":
+                names += [k, "CancelButton"]
+            elif full_dict[k]['widget_type'] == "Slider":
+                names += [k, f"SLIDER_{k}"]
+            else:
+                names.append(k)
+
+        return "\n".join(
+            f'${name} = W "{name}"'
+            for name in names
+        )
+
+    def create_slider_update_code(full_dict):
+        entries = []
+        for k in full_dict.keys():
+            if full_dict[k]['widget_type'] == "Slider":
+                entries.append(k)
+
+        return "\n".join(
+            f'${entry}.Add_ValueChanged({{$SLIDER_{entry}.Text = [int]${entry}.Value}})'
+            for entry in entries
+        )
+
+    def ps_click(control, code):
+        return f'''
+${control}.Add_Click({{
+{code}
+}})
+'''
+
+    def ps_file_dialog(target, file_filter):
+        return f'''
+$dlg = New-Object System.Windows.Forms.OpenFileDialog
+$dlg.Filter = "{file_filter}"
+
+if($dlg.ShowDialog() -eq 'OK')
+{{
+    ${target}.Text = $dlg.FileName
+}}
+'''
+
+    def ps_radio_choice(var_name, value_list):
+        blocks = []
+        name_list = [f"{var_name}RB{n}" for n in range(1, len(value_list) + 1)]
+
+        for i in range(len(name_list)):
+            if i == 0:
+                prefix = f"if(${name_list[i]}.IsChecked)"
+            elif i < len(name_list) - 1:
+                prefix = f"elseif(${name_list[i]}.IsChecked)"
+            else:
+                prefix = "else"
+
+            blocks.append(f'''
+{prefix} {{${var_name} = "{value_list[i]}"}}
+''')
+
+        return "\n".join(blocks)
+
+    def ps_combobox_choice(var_name, value_list):
+        blocks = [f'switch (${var_name}.SelectedIndex) {{']
+
+        for i in range(len(value_list)):
+            blocks.append(f'''
+{i} {{${var_name} = "{value_list[i]}"}}
+''')
+        blocks.append('}')
+        return "\n".join(blocks)
+
+    # Expect dict in the form of keys = variable names, values = dict{"label", "widget_type", "choices"...}
+    def ps_json_return(fields):
+        # Specific function to return multiple choices for a MultiSelection element
+        def ps_selected_items(list_name):
+            return f'''
+            @(
+                ${list_name}.SelectedItems | ForEach-Object {{ $_.Content }}
+            )
+            '''
+
+        content = ""
+        for k in fields.keys():
+            var_type = fields[k].get("widget_type")
+            if var_type == "TextBox":
+                content += f"    {k} = ${k}.Text\n"
+            elif var_type == "Int":
+                content += f"    {k} = [int]${k}.Text\n"
+            elif var_type == "Double":
+                content += f"    {k} = [double]${k}.Text\n"
+            elif var_type == "Slider":
+                content += f"    {k} = [int]${k}.Value\n"
+            elif var_type == "CheckBox":
+                content += f"    {k} = ${k}.IsChecked\n"
+            elif var_type == "RadioButtons":
+                content += f"    {k} = ${k}\n"
+            elif var_type == "ComboBox":
+                content += f"    {k} = ${k}\n"
+            elif var_type == "ListBox":
+                content += f"    {k} = {ps_selected_items(k)}\n"
+            elif var_type == "FileDialog":
+                content += f"    {k} = ${k}.Text\n"
+
+        return f'''
+        $result = @{{
+        {content}
+        }}
+
+        $window.Tag = $result | ConvertTo-Json -Compress
+        $window.Close()
+        '''
+
+    def create_fdialog_button_call_code(input_dict):
+        button_call_code = ''
+        all_widget_types = [v['widget_type'] for k, v in input_dict.items()]
+        if "FileDialog" in all_widget_types:
+            all_filedialogs = [(k, v) for k, v in input_dict.items() if v['widget_type'] == "FileDialog"]
+
+            if all_filedialogs:
+                for k, v in all_filedialogs:
+                    button_call_code += f'{ps_click("BrowseButton", ps_file_dialog(k, v["choices"]))}'
+
+        return button_call_code
+
+    def create_radiobuttons_code(input_dict):
+        radiobuttons_code = ''
+        all_widget_types = [v['widget_type'] for k, v in input_dict.items()]
+        if "RadioButtons" in all_widget_types:
+            all_rb = [(k, v) for k, v in input_dict.items() if v['widget_type'] == "RadioButtons"]
+
+            if all_rb:
+                for k, v in all_rb:
+                    radiobuttons_code += f'{ps_radio_choice(k, v['choices'])}'
+
+        return radiobuttons_code
+
+    def create_combobox_code(input_dict):
+        combobox_code = ''
+        all_widget_types = [v['widget_type'] for k, v in input_dict.items()]
+        if "RadioButtons" in all_widget_types:
+            all_cb = [(k, v) for k, v in input_dict.items() if v['widget_type'] == "ComboBox"]
+
+            if all_cb:
+                for k, v in all_cb:
+                    combobox_code += f'{ps_combobox_choice(k, v['choices'])}'
+
+        return combobox_code
+
+    # Now preparing the final Powershell Script
+    ps_script = f'''
+Add-Type -AssemblyName PresentationFramework
+Add-Type -AssemblyName System.Windows.Forms
+
+[xml]$xaml = @"
+{create_xaml_code(input_dict, ui_wi, ui_he)}
+"@
+
+$reader = New-Object System.Xml.XmlNodeReader $xaml
+try {{
+    $window = [Windows.Markup.XamlReader]::Load($reader)
+}}
+catch {{
+    $_.Exception
+    $_.Exception.InnerException
+    $_.Exception.InnerException.InnerException
+}}
+
+function W($name) {{ $window.FindName($name) }}
+
+{ps_find(input_dict)}
+{create_slider_update_code(input_dict)}
+
+{create_fdialog_button_call_code(input_dict)}
+
+$CallButton.Add_Click({{
+    {create_radiobuttons_code(input_dict)}
+    {create_combobox_code(input_dict)}
+    {ps_json_return(input_dict)}
+}})
+
+$CancelButton.Add_Click({{
+    $window.Tag = ""
+    $window.Close()
+}})
+
+[void]$window.ShowDialog()
+
+$window.Tag
+'''
+    # print(ps_script)
+
+    result = subprocess.run(
+        ["powershell", "-NoProfile", "-Command", ps_script],
+        capture_output=True,
+        text=True
+    )
+
+    # print("RC=", result.returncode)
+    # print("STDOUT=", repr(result.stdout))
+    # print("STDERR=", repr(result.stderr))
+
+    txt = result.stdout.strip()
+    print("UI Output: ", txt)
+
+    if not txt:
+        print("No output detected")
+        return None
+
+    return json.loads(txt)
+
+
+def pick_files(default_dir: None):
+    cmd = [
+        "powershell",
+        "-Command",
+        "Add-Type -AssemblyName System.Windows.Forms; "
+        "$dlg=New-Object System.Windows.Forms.OpenFileDialog; "
+        "$dlg.Multiselect=$true; "
+        "$dlg.Title='Select one or more result tables (xlsx) to process (multi-selection with Ctrl key)'; "
+        f"$dlg.InitialDirectory='{default_dir}'; "
+        "$dlg.Filter='Excel files (*.xlsx)|*.xlsx'; "
+        "if($dlg.ShowDialog() -eq 'OK'){$dlg.FileNames | ForEach-Object {Write-Output $_}}"
+    ]
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    filepaths = result.stdout.strip().splitlines()
+    print("Selected table(s): ", filepaths)
+    return filepaths
 
 
 def remove_double_empty_rows(df):
@@ -1360,11 +1712,8 @@ def show_estimated_time(t1, nb_of_tables):
            'Extra time is expected for the processing of the data.' \
            ''.format(duration, nb_of_tables, total_duration)
 
-    with concurrent.futures.ThreadPoolExecutor() as executor:
-        future = executor.submit(Mbox, 'Estimated reading time', mess, 1)
-        ans = future.result()
-
-    if ans == 2:
+    ans = Mbox('Estimated reading time', mess, 1)
+    if ans == "Cancel":
         sys.exit('Process terminated by user')
 
 
@@ -1374,7 +1723,21 @@ def stop_with_error_popup(error_message):
 
 
 def Mbox(title, text, style):
-    return ctypes.windll.user32.MessageBoxW(0, text, title, style)
+    style_tags = ["OkOnly", "OkCancel", "YesNo", "YesNoCancel"]
+    cmd = [
+        "powershell",
+        "-Command",
+        "Add-Type -AssemblyName Microsoft.VisualBasic; "
+        f"$x=[Microsoft.VisualBasic.Interaction]::MsgBox('{text}', "
+        f"[Microsoft.VisualBasic.MsgBoxStyle]::{style_tags[style]}, '{title}');"
+        "Write-Output $x"
+    ]
+
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    try:
+        return result.stdout.strip()        # return = "Ok" or "Cancel"
+    except:
+        return None
 
 
 if __name__ == '__main__':
@@ -1438,6 +1801,9 @@ if __name__ == '__main__':
 # v2.33: - Better handling of measurement names from Aivia 15.0, to avoid truncated names (such as "Class Confidence")
 #        - Dismissed use of clean tab name function as it is introducing errors with Aivia 14/15 tab name format.
 #        - Change in get_split_name function as Aivia 14/15 introduce '...' in the middle of tab names
+# v2.34: - Fixing an issue with Measurement names containing '...' and single Object Set case
+#        - More log prints added to ease debugging
+# v2.40: - Changed Mbox ctypes, wx and MagicGui to VB for Aivia 16.
 
 # TODO: progress bar with file in Recipes folder: '_progress_bar_file 1_from 10_'
 # TODO: Warning message when Neuron set detected but no ID

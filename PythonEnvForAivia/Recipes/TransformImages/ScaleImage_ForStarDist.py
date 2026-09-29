@@ -1,5 +1,4 @@
 import os.path
-import ctypes
 import shlex
 import subprocess
 import imagecodecs
@@ -52,7 +51,7 @@ IJTimeUnit = {'Minutes': 'min', 'Seconds': 's', 'Milliseconds': 'ms', 'Microseco
 
 # [INPUT Name:inputImagePath Type:string DisplayName:'Input Channel']
 # [INPUT Name:performZscaling Type:int DisplayName:'Perform Z scaling (1=Yes)' Default:1 Min:0 Max:1]
-# [INPUT Name:typicalObjDiam Type:double DisplayName:'Typical Object Diameter' Default:10.0 Min:0.001 Max:1000.0]
+# [INPUT Name:typicalObjDiam Type:double DisplayName:'Typical Object Diameter' Default:20.0 Min:0.001 Max:1000.0]
 # [OUTPUT Name:resultPath Type:string DisplayName:'Duplicate of input']
 def run(params):
     image_location = params['inputImagePath']
@@ -63,11 +62,11 @@ def run(params):
     tCount = int(params['TCount'])
     pixel_cal_tmp = params['Calibration']
     pixel_cal = pixel_cal_tmp[6:].split(', ')  # Expects calibration with 'XYZT: ' in front
-    aivia_path = params['CallingExecutable']
+    aivia_path = params['CallingExecutable'].replace('.dll', '.exe')        # Aivia 16
 
     if typical_diameter == 0.0:
         error_mess = 'Error: typical diameter value was not provided.'
-        ctypes.windll.user32.MessageBoxW(0, error_mess, 'Error', 0)
+        Mbox('Error', error_mess, 0)
         sys.exit(error_mess)
 
     # Getting XY and Z values                # Expecting only 'Micrometers' in this code
@@ -101,15 +100,15 @@ def run(params):
     if abs(scale_factor_xy - 1) < conversion_threshold:
         mess = 'Scaling cancelled: scaling factor ({}) is close ' \
                'to 1 so StarDist can be run directly on raw image'.format(scale_factor_xy)
-        ctypes.windll.user32.MessageBoxW(0, mess, 'Scaling cancelled', 0)
+        Mbox('Scaling cancelled', mess, 0)
         sys.exit(mess)
 
     # Showing scale factor and printing in log for backward scaling (important for multichannel images)
     mess = 'Calculated scaling factor to remember for backward conversion: {:.3f}.\n\n' \
            'Value is also available in the log (Help menu > Open log) where you can search for ' \
            '"Scaling factor for StarDist".'.format(scale_factor_xy)
-    if not aivia_path == "None":
-        ctypes.windll.user32.MessageBoxW(0, mess, 'Scaling factor to remember', 0)
+    if not aivia_path == "None" and not params.get('unitTest', False):
+        Mbox('Scaling factor to remember', mess, 0)
     print(mess)
 
     # Z scaling factor
@@ -175,7 +174,7 @@ def run(params):
     # Added for handling testing without opening aivia
     if aivia_path == "None":
         return
-    
+
     # Dummy save
     dummy_data = np.zeros(image_data.shape, dtype=image_data.dtype)
     imwrite(result_location, dummy_data)
@@ -185,6 +184,24 @@ def run(params):
 
     args = shlex.split(cmdLine)
     subprocess.run(args, shell=True)
+
+
+def Mbox(title, text, style):
+    style_tags = ["OkOnly", "OkCancel", "YesNo", "YesNoCancel"]
+    cmd = [
+        "powershell",
+        "-Command",
+        "Add-Type -AssemblyName Microsoft.VisualBasic; "
+        f"$x=[Microsoft.VisualBasic.Interaction]::MsgBox('{text}', "
+        f"[Microsoft.VisualBasic.MsgBoxStyle]::{style_tags[style]}, '{title}');"
+        "Write-Output $x"
+    ]
+
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    try:
+        return result.stdout.strip()  # return = "Ok" or "Cancel"
+    except:
+        return None
 
 
 if __name__ == '__main__':
@@ -203,3 +220,4 @@ if __name__ == '__main__':
 # CHANGELOG
 # v1_00: - Comes from ScaleImage_1_30_noGUI_IJstyle.py
 # v1_01: - Added an extra key in params for Unit test output
+# v1_02: - Aivia path for Aivia 16

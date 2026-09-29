@@ -1,19 +1,19 @@
-setuptools==80.9.0	# 15.0 used setuptools==70.0.0 # Keep in first position
+setuptools==80.9.0	# Keep in first position, 15.0 used setuptools==70.0.0 // 80.9.0
 numpy==1.26.4
-imagecodecs==2025.3.30	# 15.0 used imagecodecs==2024.9.22
-magicgui==0.10.2 	# previous was magicgui==0.9.1 
+imagecodecs==2025.3.30	# 15.0 used imagecodecs==2024.9.22 // 2025.3.30
+magicgui==0.10.2 	# previous was magicgui==0.9.1 // 0.10.2
 matplotlib==3.10.9	# previous was matplotlib==3.9.0
 openpyxl==3.1.5 	# latest on June 23, 2026
 pandas==2.2.3 		# 16.0 uses 2.2.2
 pillow==11.3.0		# 15.0 used pillow==10.3.0
-pydicom==3.0.1 		# latest is 3.0.2
-PySide6==6.11.1		# previous was PySide6==6.7.3
+# pydicom==3.0.1 		# latest is 3.0.2
+PySide6==6.11.1		# previous was PySide6==6.7.3 // 6.11.1, 6.10.3
 pystackreg==0.2.8  	# latest on June 23, 2026
-QtPy==2.4.3 		# previous was QtPy==2.4.1
+QtPy==2.4.3 		# previous was QtPy==2.4.1 // 2.4.3
 scikit-image==0.23.2	# no change
 seaborn==0.13.2  	# latest on June 23, 2026
 tifffile==2024.5.22	# no change
-wxPython==4.2.5		# previous was wxPython==4.2.2 
+wxPython==4.2.5		# previous was wxPython==4.2.2 // 4.2.5
 xlrd==2.0.2			# previous was xlrd==2.0.1
 
 # pythonnet==3.0.3	# TEST, not to be run with QT UI

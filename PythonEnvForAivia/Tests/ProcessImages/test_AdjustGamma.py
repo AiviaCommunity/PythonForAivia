@@ -11,6 +11,7 @@ Adjusts gamma of the input channel pixelwise according to O = I**gamma.'''
 
 
 def run_test(config):
+    config['unitTest'] = True
     ground_truth_path_1 = config.pop('groundTruthPath_1')
 
     result_value = AdjustGamma.run(params=config)
@@ -27,6 +28,8 @@ def generate_test_method(config):
     def test_method(self):
         self.dynamic_test_generator(config)
     return test_method
+
+print("* [TEST] ProcessImages > AdjustGamma")
 
 config_json_path = os.path.join(os.path.dirname(__file__), "AdjustGamma", "Config_AdjustGamma.json")
 with open(config_json_path) as f:

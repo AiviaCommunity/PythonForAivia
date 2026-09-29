@@ -1,7 +1,7 @@
 import os.path
 import numpy as np
 from skimage.io import imread, imsave
-import ctypes
+import subprocess
 import sys
 
 """
@@ -51,7 +51,7 @@ def run(params):
     
     if len(dims) == 2 or (len(dims) == 3 and tCount > 1):
         error_mes = "Error: Minimum intensity projection cannot be applied to 2D images."
-        ctypes.windll.user32.MessageBoxW(0, error_mes, 'Error', 0)
+        Mbox('Error', error_mes, 0)
         sys.exit(error_mes)
     
     if tCount == 1:
@@ -72,10 +72,28 @@ def run(params):
     imsave(result_location, output_data)
 
 
+def Mbox(title, text, style):
+    style_tags = ["OkOnly", "OkCancel", "YesNo", "YesNoCancel"]
+    cmd = [
+        "powershell",
+        "-Command",
+        "Add-Type -AssemblyName Microsoft.VisualBasic; "
+        f"$x=[Microsoft.VisualBasic.Interaction]::MsgBox('{text}', "
+        f"[Microsoft.VisualBasic.MsgBoxStyle]::{style_tags[style]}, '{title}');"
+        "Write-Output $x"
+    ]
+
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    try:
+        return result.stdout.strip()  # return = "Ok" or "Cancel"
+    except:
+        return None
+
+
 if __name__ == '__main__':
     params = {}
     params['inputImagePath'] = 'test.png'
     params['resultPath'] = 'testResult.png'
-    params['width'] = 2;
+    params['width'] = 2
     
     run(params)

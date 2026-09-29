@@ -41,7 +41,7 @@ def run(params):
     threshold = int(params['threshold'])
     if not os.path.exists(image_location):
         print(f'Error: {image_location} does not exist')
-        return;
+        return
         
     image_data = imread(image_location)
     mask_data = imread(mask_location)

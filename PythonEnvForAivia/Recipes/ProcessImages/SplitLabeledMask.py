@@ -1,9 +1,8 @@
-import ctypes
 import sys
-import os.path
 import numpy as np
 from skimage.io import imread, imsave
 from skimage import segmentation
+import subprocess
 
 """
 Separates labeled objects in a mask (2D or 3D).
@@ -38,9 +37,6 @@ def run(params):
     image_location = params['inputImagePath']
     result_location = params['resultPath']
     tCount = int(params['TCount'])
-    if not os.path.exists(image_location):
-        print(f"Error: {image_location} does not exist")
-        return
 
     image_data = imread(image_location)
     dims = image_data.shape
@@ -62,7 +58,21 @@ def run(params):
 
 
 def Mbox(title, text, style):
-    return ctypes.windll.user32.MessageBoxW(0, text, title, style)
+    style_tags = ["OkOnly", "OkCancel", "YesNo", "YesNoCancel"]
+    cmd = [
+        "powershell",
+        "-Command",
+        "Add-Type -AssemblyName Microsoft.VisualBasic; "
+        f"$x=[Microsoft.VisualBasic.Interaction]::MsgBox('{text}', "
+        f"[Microsoft.VisualBasic.MsgBoxStyle]::{style_tags[style]}, '{title}');"
+        "Write-Output $x"
+    ]
+
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    try:
+        return result.stdout.strip()  # return = "Ok" or "Cancel"
+    except:
+        return None
 
 
 if __name__ == '__main__':
@@ -71,3 +81,6 @@ if __name__ == '__main__':
               'TCount': 1}
 
     run(params)
+
+# CHANGELOG:
+# v1.01: - Changed ctypes popup to Powershell/VB

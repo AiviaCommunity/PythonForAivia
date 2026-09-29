@@ -1,6 +1,6 @@
 import os.path
 import numpy as np
-from tifffile import imread, imsave
+from tifffile import imread, imwrite
 from skimage.segmentation import clear_border
 from skimage.morphology import closing, disk
 from skimage.util import img_as_ubyte, img_as_uint
@@ -87,7 +87,7 @@ def run(params):
     else:
         mask = img_as_ubyte(mask)
 
-    imsave(result_object_location, mask, metadata={'axes': axes})
+    imwrite(result_object_location, mask, metadata={'axes': axes})
 
 
 if __name__ == '__main__':

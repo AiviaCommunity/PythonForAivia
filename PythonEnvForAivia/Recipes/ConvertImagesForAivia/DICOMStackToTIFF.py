@@ -17,7 +17,7 @@ def dicom_to_tiff(dicom_directory, bit_depth='16', output_path=None):
     ------------
     numpy
     skimage
-    pydicom (!Warning: it is not included in the virtual environment PythonVenvForAivia by default.
+    pydicom (!Warning: it is not included in the virtual environment PythonEnvForAivia by default.
               You can use 'python -m pip install pydicom' manually to use this script)
     
     Parameters
@@ -74,4 +74,4 @@ def dicom_to_tiff(dicom_directory, bit_depth='16', output_path=None):
     imsave(output_path, np.swapaxes(array_data, 0, 2))
     print(f"3D TIFF saved to {output_path}")
 
-    return output_path;
+    return output_path

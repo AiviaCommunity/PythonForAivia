@@ -18,6 +18,7 @@ Works only in 3D.'''
 
 
 def run_test(config):
+    config['unitTest'] = True
     ground_truth_path_1 = config.pop('groundTruthPath_1')
 
     result_value = MaxSlices.run(params=config)
@@ -34,6 +35,8 @@ def generate_test_method(config):
     def test_method(self):
         self.dynamic_test_generator(config)
     return test_method
+
+print("* [TEST] ProcessImages > MaxSlices")
 
 config_json_path = os.path.join(os.path.dirname(__file__), "MaxSlices", "Config_MaxSlices.json")
 with open(config_json_path) as f:
