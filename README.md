@@ -1,5 +1,3 @@
-### UPDATE: Some recipes are not functional in Aivia 16.0. Updated recipes will be provided soon...
-
 # Python for Aivia
 
 Here you will find Python recipes and helper functions for Aivia users.
